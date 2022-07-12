@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace GameShop.Data.Migrations
 {
-    public partial class addmigrationinitial : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -129,6 +129,31 @@ namespace GameShop.Data.Migrations
                         principalColumn: "GenreID",
                         onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.InsertData(
+                table: "Games",
+                columns: new[] { "GameID", "BaseEntityID", "CreatedDate", "Description", "GameName", "Gameplay", "Price", "Status", "UpdatedDate" },
+                values: new object[] { 1, 0, new DateTime(2022, 7, 12, 20, 49, 0, 594, DateTimeKind.Local).AddTicks(4078), "The best game in the world", "Grand Theft Auto V", "Destroy the city", 250000m, 1, new DateTime(2022, 7, 12, 20, 49, 0, 595, DateTimeKind.Local).AddTicks(722) });
+
+            migrationBuilder.InsertData(
+                table: "Genres",
+                columns: new[] { "GenreID", "GenreName" },
+                values: new object[,]
+                {
+                    { 1, "Action" },
+                    { 2, "Open-World" },
+                    { 3, "Multiplayer" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "GameinGenre",
+                columns: new[] { "GenreID", "GameID" },
+                values: new object[] { 1, 1 });
+
+            migrationBuilder.InsertData(
+                table: "GameinGenre",
+                columns: new[] { "GenreID", "GameID" },
+                values: new object[] { 2, 1 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_GameinGenre_GameID",

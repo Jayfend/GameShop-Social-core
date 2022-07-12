@@ -1,5 +1,6 @@
 ﻿using GameShop.Data.Configurations;
 using GameShop.Data.Entities;
+using GameShop.Data.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Protocols;
 using System;
@@ -22,6 +23,8 @@ namespace GameShop.Data.EF
             modelBuilder.ApplyConfiguration(new SRMConfiguration());
             modelBuilder.ApplyConfiguration(new SRRConfiguration());
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Seed();
         }
         public DbSet<Game> Games { get; set; }
         public DbSet<Genre> Genres { get; set; }

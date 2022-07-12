@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GameShop.Data.Migrations
 {
     [DbContext(typeof(GameShopDbContext))]
-    [Migration("20220712083901_add-migration initial")]
-    partial class addmigrationinitial
+    [Migration("20220712134900_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -86,6 +86,21 @@ namespace GameShop.Data.Migrations
                     b.HasKey("GameID");
 
                     b.ToTable("Games");
+
+                    b.HasData(
+                        new
+                        {
+                            GameID = 1,
+                            BaseEntityID = 0,
+                            CreatedDate = new DateTime(2022, 7, 12, 20, 49, 0, 594, DateTimeKind.Local).AddTicks(4078),
+                            Description = "The best game in the world",
+                            Discount = 0,
+                            GameName = "Grand Theft Auto V",
+                            Gameplay = "Destroy the city",
+                            Price = 250000m,
+                            Status = 1,
+                            UpdatedDate = new DateTime(2022, 7, 12, 20, 49, 0, 595, DateTimeKind.Local).AddTicks(722)
+                        });
                 });
 
             modelBuilder.Entity("GameShop.Data.Entities.GameinGenre", b =>
@@ -101,6 +116,18 @@ namespace GameShop.Data.Migrations
                     b.HasIndex("GameID");
 
                     b.ToTable("GameinGenre");
+
+                    b.HasData(
+                        new
+                        {
+                            GenreID = 1,
+                            GameID = 1
+                        },
+                        new
+                        {
+                            GenreID = 2,
+                            GameID = 1
+                        });
                 });
 
             modelBuilder.Entity("GameShop.Data.Entities.Genre", b =>
@@ -116,6 +143,23 @@ namespace GameShop.Data.Migrations
                     b.HasKey("GenreID");
 
                     b.ToTable("Genres");
+
+                    b.HasData(
+                        new
+                        {
+                            GenreID = 1,
+                            GenreName = "Action"
+                        },
+                        new
+                        {
+                            GenreID = 2,
+                            GenreName = "Open-World"
+                        },
+                        new
+                        {
+                            GenreID = 3,
+                            GenreName = "Multiplayer"
+                        });
                 });
 
             modelBuilder.Entity("GameShop.Data.Entities.SystemRequirementMin", b =>

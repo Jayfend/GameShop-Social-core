@@ -26,6 +26,7 @@ namespace GameShop.Data.EF
 
             modelBuilder.Seed();
         }
+        public DbSet<GameinGenre> GameinGenres { get; set; }
         public DbSet<Game> Games { get; set; }
         public DbSet<Genre> Genres { get; set; }
         public DbSet <SystemRequirementMin> SystemRequirementMin { get; set; }

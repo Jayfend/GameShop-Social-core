@@ -133,7 +133,7 @@ namespace GameShop.Data.Migrations
             migrationBuilder.InsertData(
                 table: "Games",
                 columns: new[] { "GameID", "BaseEntityID", "CreatedDate", "Description", "GameName", "Gameplay", "Price", "Status", "UpdatedDate" },
-                values: new object[] { 1, 0, new DateTime(2022, 7, 12, 20, 49, 0, 594, DateTimeKind.Local).AddTicks(4078), "The best game in the world", "Grand Theft Auto V", "Destroy the city", 250000m, 1, new DateTime(2022, 7, 12, 20, 49, 0, 595, DateTimeKind.Local).AddTicks(722) });
+                values: new object[] { 1, 0, new DateTime(2022, 7, 14, 15, 44, 22, 460, DateTimeKind.Local).AddTicks(3781), "The best game in the world", "Grand Theft Auto V", "Destroy the city", 250000m, 1, new DateTime(2022, 7, 14, 15, 44, 22, 461, DateTimeKind.Local).AddTicks(2153) });
 
             migrationBuilder.InsertData(
                 table: "Genres",

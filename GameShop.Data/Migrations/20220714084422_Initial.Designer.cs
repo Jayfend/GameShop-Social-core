@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GameShop.Data.Migrations
 {
     [DbContext(typeof(GameShopDbContext))]
-    [Migration("20220712134900_Initial")]
+    [Migration("20220714084422_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -92,14 +92,14 @@ namespace GameShop.Data.Migrations
                         {
                             GameID = 1,
                             BaseEntityID = 0,
-                            CreatedDate = new DateTime(2022, 7, 12, 20, 49, 0, 594, DateTimeKind.Local).AddTicks(4078),
+                            CreatedDate = new DateTime(2022, 7, 14, 15, 44, 22, 460, DateTimeKind.Local).AddTicks(3781),
                             Description = "The best game in the world",
                             Discount = 0,
                             GameName = "Grand Theft Auto V",
                             Gameplay = "Destroy the city",
                             Price = 250000m,
                             Status = 1,
-                            UpdatedDate = new DateTime(2022, 7, 12, 20, 49, 0, 595, DateTimeKind.Local).AddTicks(722)
+                            UpdatedDate = new DateTime(2022, 7, 14, 15, 44, 22, 461, DateTimeKind.Local).AddTicks(2153)
                         });
                 });
 

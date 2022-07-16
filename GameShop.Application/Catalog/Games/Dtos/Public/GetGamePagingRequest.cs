@@ -7,6 +7,6 @@ namespace GameShop.Application.Catalog.Games.Dtos.Public
 {
     public class GetGamePagingRequest : PagingRequestBase
     {
-        public int GenreIDs { get; set; }
+        public int? GenreID { get; set; }
     }
 }

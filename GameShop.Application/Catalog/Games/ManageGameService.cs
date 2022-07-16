@@ -96,12 +96,36 @@ namespace GameShop.Application.Catalog.Games
 
         public async Task<bool> Update(GameEditRequest request)
         {
-            throw new NotImplementedException();
+            var game = await _context.Games.FindAsync(request.GameID);
+            if(game == null)
+            {
+                return false;
+            }
+            else
+            { game.GameName = request.GameName;
+              
+                game.Discount = request.Discount;
+                game.Description = request.Description;
+                game.Gameplay = request.Gameplay;
+                game.UpdatedDate = DateTime.Now;
+                await _context.SaveChangesAsync();
+                return true;
+            }
         }
 
         public async Task<bool> UpdatePrice(int GameID, decimal newPrice)
         {
-            throw new NotImplementedException();
+            var game = await _context.Games.FindAsync(GameID);
+            if (game == null)
+            {
+                return false;
+            }
+            else
+            {
+                game.Price = newPrice;
+                 await _context.SaveChangesAsync();
+                return true;
+            }
         }
     }
 }

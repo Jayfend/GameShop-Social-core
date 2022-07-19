@@ -1,12 +1,18 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
+	  <FrameworkReference Include="Microsoft.AspNetCore.App"/>
+    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="3.1.27" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\GameShop.Data\GameShop.Data.csproj" />
     <ProjectReference Include="..\GameShop.Utilities\GameShop.Utilities.csproj" />
+    <ProjectReference Include="..\GameShop.ViewModel\GameShop.ViewModels.csproj" />
   </ItemGroup>
 
 </Project>

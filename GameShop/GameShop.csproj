@@ -4,5 +4,20 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="Models\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\GameShop.Application\GameShop.Application.csproj" />
+    <ProjectReference Include="..\GameShop.Data\GameShop.Data.csproj" />
+    <ProjectReference Include="..\GameShop.Utilities\GameShop.Utilities.csproj" />
+    <ProjectReference Include="..\GameShop.ViewModel\GameShop.ViewModels.csproj" />
+  </ItemGroup>
+
 
 </Project>

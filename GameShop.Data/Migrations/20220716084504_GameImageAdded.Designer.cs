@@ -4,14 +4,16 @@ using GameShop.Data.EF;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace GameShop.Data.Migrations
 {
     [DbContext(typeof(GameShopDbContext))]
-    partial class GameShopDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220716084504_GameImageAdded")]
+    partial class GameImageAdded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -90,14 +92,14 @@ namespace GameShop.Data.Migrations
                         {
                             GameID = 1,
                             BaseEntityID = 0,
-                            CreatedDate = new DateTime(2022, 7, 17, 22, 29, 41, 692, DateTimeKind.Local).AddTicks(3585),
+                            CreatedDate = new DateTime(2022, 7, 16, 15, 45, 3, 802, DateTimeKind.Local).AddTicks(8251),
                             Description = "The best game in the world",
                             Discount = 0,
                             GameName = "Grand Theft Auto V",
                             Gameplay = "Destroy the city",
                             Price = 250000m,
                             Status = 1,
-                            UpdatedDate = new DateTime(2022, 7, 17, 22, 29, 41, 693, DateTimeKind.Local).AddTicks(808)
+                            UpdatedDate = new DateTime(2022, 7, 16, 15, 45, 3, 803, DateTimeKind.Local).AddTicks(8628)
                         });
                 });
 
@@ -118,8 +120,8 @@ namespace GameShop.Data.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<long>("Filesize")
-                        .HasColumnType("bigint");
+                    b.Property<int>("Filesize")
+                        .HasColumnType("int");
 
                     b.Property<int>("GameID")
                         .HasColumnType("int");

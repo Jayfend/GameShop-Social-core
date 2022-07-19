@@ -1,12 +1,12 @@
-﻿using GameShop.Application.Catalog.Games.Dtos.Manage;
-using GameShop.Application.Dtos;
-using GameShop.Data.EF;
+﻿using GameShop.Data.EF;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using GameShop.ViewModels.Catalog.Games;
+using GameShop.ViewModels.Common;
 
 namespace GameShop.Application.Catalog.Games
 {
@@ -17,7 +17,27 @@ namespace GameShop.Application.Catalog.Games
         {
             _context = context;
         }
-        public async Task<PagedResult<GameViewModel>> GetAllbyGenreID(Dtos.Public.GetGamePagingRequest request)
+
+        public async Task<List<GameViewModel>> GetAll()
+        {
+            
+
+            var data = await _context.Games.Select(x => new GameViewModel()
+                 {
+                     GameID = x.GameID,
+                     GameName = x.GameName,
+                     Gameplay = x.Gameplay,
+                     Price = x.Price,
+                     Discount = x.Discount,
+                     Description = x.Description,
+                     GenreID = _context.GameinGenres.FirstOrDefault(g=>g.GameID == x.GameID).GenreID,
+                     CreatedDate = x.CreatedDate,
+                     UpdatedDate = x.UpdatedDate
+                 }).ToListAsync();
+            return data;
+        }
+
+        public async Task<PagedResult<GameViewModel>> GetAllbyGenreID(GetPublicGamePagingRequest request)
         {
 
             var query = from p in _context.Games

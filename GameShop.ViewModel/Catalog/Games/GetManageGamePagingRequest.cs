@@ -1,11 +1,11 @@
-﻿using GameShop.Application.Dtos;
+﻿using GameShop.ViewModels.Common;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace GameShop.Application.Catalog.Games.Dtos.Manage
+namespace GameShop.ViewModels.Catalog.Games
 {
-    public class GetGamePagingRequest : PagingRequestBase
+    public class GetManageGamePagingRequest : PagingRequestBase
     {
         public string Keyword { get; set; }
         public List<int> GenreIDs { get; set; }

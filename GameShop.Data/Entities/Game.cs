@@ -16,5 +16,6 @@ namespace GameShop.Data.Entities
         public List<GameinGenre> GameInGenres { get; set; }
         public SystemRequirementMin SystemRequirementMin { get; set; }
         public SystemRequirementRecommended SystemRequirementRecommended { get; set; }
+        public List<GameImage> GameImages { get; set; }
     }
 }

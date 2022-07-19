@@ -22,6 +22,7 @@ namespace GameShop.Data.EF
             modelBuilder.ApplyConfiguration(new GameinGenreConfguration());
             modelBuilder.ApplyConfiguration(new SRMConfiguration());
             modelBuilder.ApplyConfiguration(new SRRConfiguration());
+            modelBuilder.ApplyConfiguration(new GameImageConfiguration());
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Seed();
@@ -31,5 +32,6 @@ namespace GameShop.Data.EF
         public DbSet<Genre> Genres { get; set; }
         public DbSet <SystemRequirementMin> SystemRequirementMin { get; set; }
         public DbSet<SystemRequirementRecommended> SystemRequirementRecommended { get; set; }
+        public DbSet<GameImage> GameImages { get; set; }
     }
 }

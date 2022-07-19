@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace GameShop.Application.Dtos
+namespace GameShop.ViewModels.Common
 {
     public class PagedResult<T>
     {

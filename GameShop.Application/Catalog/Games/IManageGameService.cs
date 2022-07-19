@@ -1,5 +1,6 @@
-﻿using GameShop.Application.Catalog.Games.Dtos.Manage;
-using GameShop.Application.Dtos;
+﻿using GameShop.ViewModels.Catalog.Games;
+using GameShop.ViewModels.Common;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -14,6 +15,11 @@ namespace GameShop.Application.Catalog.Games
         Task<bool> Delete(int GameID);
         Task<bool> UpdatePrice(int GameID, Decimal newPrice);
         Task<List<GameViewModel>> GetAll();
-        Task<PagedResult<GameViewModel>> GetAllPaging(GetGamePagingRequest request);
+        Task<string> Savefile(IFormFile file);
+        Task<PagedResult<GameViewModel>> GetAllPaging(GetManageGamePagingRequest request);
+        Task<bool> AddImages(int GameID, List<IFormFile> files);
+        Task<int> RemoveImage(int ImageID);
+        Task<int> UpdateImage(int ImageID, string caption, bool isDefault);
+       
     }
 }

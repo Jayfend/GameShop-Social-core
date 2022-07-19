@@ -1,6 +1,6 @@
-﻿using GameShop.Application.Catalog.Games.Dtos.Manage;
-using GameShop.Application.Catalog.Games.Dtos.Public;
-using GameShop.Application.Dtos;
+﻿
+using GameShop.ViewModels.Catalog.Games;
+using GameShop.ViewModels.Common;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -10,6 +10,7 @@ namespace GameShop.Application.Catalog.Games
 {
     public interface IPublicGameService
     {
-        public Task<PagedResult<GameViewModel>> GetAllbyGenreID(Dtos.Public.GetGamePagingRequest request);
+        public Task<PagedResult<GameViewModel>> GetAllbyGenreID(GetPublicGamePagingRequest request);
+        public Task<List<GameViewModel>> GetAll();
     }
 }

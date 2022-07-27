@@ -13,6 +13,7 @@ namespace GameShop.Application.Catalog.Games
     public class PublicGameService : IPublicGameService
     {
         private readonly GameShopDbContext _context;
+
         public PublicGameService(GameShopDbContext context)
         {
             _context = context;
@@ -20,7 +21,6 @@ namespace GameShop.Application.Catalog.Games
 
         public async Task<List<GameViewModel>> GetAll()
         {
-
             var data = await _context.Games.Select(x => new GameViewModel()
             {
                 GameID = x.GameID,
@@ -28,15 +28,16 @@ namespace GameShop.Application.Catalog.Games
                 Gameplay = x.Gameplay,
                 Price = x.Price,
                 Discount = x.Discount,
-                GenreIDs=new List<int>(),
+                GenreIDs = new List<int>(),
                 Description = x.Description,
                 CreatedDate = x.CreatedDate,
                 UpdatedDate = x.UpdatedDate
             }).ToListAsync();
-             foreach(var game in data)
+            var genrelist = from g in _context.GameinGenres select g;
+            foreach (var game in data)
             {
-                var genres = await _context.GameinGenres.Where(x => x.GameID == game.GameID).ToListAsync();
-                foreach(var genre in genres)
+                var genres = genrelist.Where(x => x.GameID == game.GameID).ToList();
+                foreach (var genre in genres)
                 {
                     game.GenreIDs.Add(genre.GenreID);
                 }
@@ -46,16 +47,14 @@ namespace GameShop.Application.Catalog.Games
 
         public async Task<PagedResult<GameViewModel>> GetAllbyGenreID(GetPublicGamePagingRequest request)
         {
-
             var query = from p in _context.Games
                         join gig in _context.GameinGenres on p.GameID equals gig.GameID
                         join g in _context.Genres on gig.GenreID equals g.GenreID
                         select new { p, gig };
             // filter
-            if (request.GenreID.HasValue && request.GenreID.Value>0)
+            if (request.GenreID.HasValue && request.GenreID.Value > 0)
             {
-                query = query.Where(x => x.gig.GenreID==request.GenreID);
-
+                query = query.Where(x => x.gig.GenreID == request.GenreID);
             }
 
             //paging
@@ -74,9 +73,10 @@ namespace GameShop.Application.Catalog.Games
                     CreatedDate = x.p.CreatedDate,
                     UpdatedDate = x.p.UpdatedDate
                 }).ToListAsync();
+            var genrelist = from g in _context.GameinGenres select g;
             foreach (var game in data)
             {
-                var genres = await _context.GameinGenres.Where(x => x.GameID == game.GameID).ToListAsync();
+                var genres = genrelist.Where(x => x.GameID == game.GameID).ToList();
                 foreach (var genre in genres)
                 {
                     game.GenreIDs.Add(genre.GenreID);
@@ -89,8 +89,6 @@ namespace GameShop.Application.Catalog.Games
                 Items = data
             };
             return pagedResult;
-
         }
-      
     }
 }

@@ -15,5 +15,6 @@ namespace GameShop.Data.Entities
         public string AdditionalNotes { get; set; }
         public Game Game { get; set; }
         public int GameID { get; set; }
+        public string Soundcard { get; set; }
     }
 }

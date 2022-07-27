@@ -1,5 +1,4 @@
-﻿
-using GameShop.ViewModels.Catalog.Games;
+﻿using GameShop.ViewModels.Catalog.Games;
 using GameShop.ViewModels.Common;
 using System;
 using System.Collections.Generic;

@@ -12,8 +12,10 @@ namespace GameShop.ViewModels.Catalog.Games
         public int Discount { get; set; }
         public string Description { get; set; }
         public string Gameplay { get; set; }
-        public int GenreID { get; set; }
+        public List<int> GenreIDs { get; set; }
+        public int Status { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime UpdatedDate { get; set; }
+        
     }
 }

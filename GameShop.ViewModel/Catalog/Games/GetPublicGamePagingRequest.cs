@@ -8,5 +8,6 @@ namespace GameShop.ViewModels.Catalog.Games
     public class GetPublicGamePagingRequest : PagingRequestBase
     {
         public int? GenreID { get; set; }
+        
     }
 }

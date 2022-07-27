@@ -1,4 +1,5 @@
 using GameShop.Application.Catalog.Games;
+using GameShop.Application.Common;
 using GameShop.Data.EF;
 using GameShop.Utilities.Constants;
 using Microsoft.AspNetCore.Builder;
@@ -34,6 +35,9 @@ namespace GameShop
             services.AddDbContext<GameShopDbContext>(options =>
        options.UseSqlServer(Configuration.GetConnectionString(SystemConstant.MainConnectionString)));
             services.AddTransient<IPublicGameService, PublicGameService>();
+            services.AddTransient<IStorageService, FileStorageService>();
+            services.AddTransient<IManageGameService, ManageGameService>();
+            
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Swagger GameShop Api", Version = "v1" });

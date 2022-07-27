@@ -20,20 +20,27 @@ namespace GameShop.Application.Catalog.Games
 
         public async Task<List<GameViewModel>> GetAll()
         {
-            
 
             var data = await _context.Games.Select(x => new GameViewModel()
-                 {
-                     GameID = x.GameID,
-                     GameName = x.GameName,
-                     Gameplay = x.Gameplay,
-                     Price = x.Price,
-                     Discount = x.Discount,
-                     Description = x.Description,
-                     GenreID = _context.GameinGenres.FirstOrDefault(g=>g.GameID == x.GameID).GenreID,
-                     CreatedDate = x.CreatedDate,
-                     UpdatedDate = x.UpdatedDate
-                 }).ToListAsync();
+            {
+                GameID = x.GameID,
+                GameName = x.GameName,
+                Gameplay = x.Gameplay,
+                Price = x.Price,
+                Discount = x.Discount,
+                GenreIDs=new List<int>(),
+                Description = x.Description,
+                CreatedDate = x.CreatedDate,
+                UpdatedDate = x.UpdatedDate
+            }).ToListAsync();
+             foreach(var game in data)
+            {
+                var genres = await _context.GameinGenres.Where(x => x.GameID == game.GameID).ToListAsync();
+                foreach(var genre in genres)
+                {
+                    game.GenreIDs.Add(genre.GenreID);
+                }
+            }
             return data;
         }
 
@@ -62,11 +69,19 @@ namespace GameShop.Application.Catalog.Games
                     Gameplay = x.p.Gameplay,
                     Price = x.p.Price,
                     Discount = x.p.Discount,
+                    GenreIDs = new List<int>(),
                     Description = x.p.Description,
-                    GenreID = x.gig.GenreID,
                     CreatedDate = x.p.CreatedDate,
                     UpdatedDate = x.p.UpdatedDate
                 }).ToListAsync();
+            foreach (var game in data)
+            {
+                var genres = await _context.GameinGenres.Where(x => x.GameID == game.GameID).ToListAsync();
+                foreach (var genre in genres)
+                {
+                    game.GenreIDs.Add(genre.GenreID);
+                }
+            }
             //select and projection
             var pagedResult = new PagedResult<GameViewModel>()
             {
@@ -76,5 +91,6 @@ namespace GameShop.Application.Catalog.Games
             return pagedResult;
 
         }
+      
     }
 }

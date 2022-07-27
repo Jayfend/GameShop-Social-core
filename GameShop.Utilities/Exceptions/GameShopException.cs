@@ -10,5 +10,15 @@ namespace GameShop.Utilities.Exceptions
         {
 
         }
+       
+        public GameShopException(string message)
+            : base(message)
+        {
+        }
+
+        public GameShopException(string message, Exception inner)
+            : base(message, inner)
+        {
+        }
     }
 }

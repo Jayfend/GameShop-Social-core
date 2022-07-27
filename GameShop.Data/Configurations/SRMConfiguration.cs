@@ -12,6 +12,9 @@ namespace GameShop.Data.Configurations
         public void Configure(EntityTypeBuilder<SystemRequirementMin> builder)
         {
             builder.HasKey(x => x.SRMID);
+            builder.HasOne(sr => sr.Game)
+                   .WithOne(x => x.SystemRequirementMin)
+                   .HasForeignKey<SystemRequirementMin>(sr => sr.GameID);
         }
     }
 }

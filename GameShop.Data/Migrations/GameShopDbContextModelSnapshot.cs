@@ -90,14 +90,27 @@ namespace GameShop.Data.Migrations
                         {
                             GameID = 1,
                             BaseEntityID = 0,
-                            CreatedDate = new DateTime(2022, 7, 17, 22, 29, 41, 692, DateTimeKind.Local).AddTicks(3585),
+                            CreatedDate = new DateTime(2022, 7, 20, 16, 40, 27, 266, DateTimeKind.Local).AddTicks(5169),
                             Description = "The best game in the world",
                             Discount = 0,
                             GameName = "Grand Theft Auto V",
                             Gameplay = "Destroy the city",
                             Price = 250000m,
                             Status = 1,
-                            UpdatedDate = new DateTime(2022, 7, 17, 22, 29, 41, 693, DateTimeKind.Local).AddTicks(808)
+                            UpdatedDate = new DateTime(2022, 7, 20, 16, 40, 27, 267, DateTimeKind.Local).AddTicks(1905)
+                        },
+                        new
+                        {
+                            GameID = 2,
+                            BaseEntityID = 0,
+                            CreatedDate = new DateTime(2022, 7, 20, 16, 40, 27, 267, DateTimeKind.Local).AddTicks(2396),
+                            Description = "Back to the cowboy town",
+                            Discount = 20,
+                            GameName = "Red Dead Redemption 2",
+                            Gameplay = "Discover the cowboy world",
+                            Price = 250000m,
+                            Status = 1,
+                            UpdatedDate = new DateTime(2022, 7, 20, 16, 40, 27, 267, DateTimeKind.Local).AddTicks(2419)
                         });
                 });
 
@@ -165,6 +178,16 @@ namespace GameShop.Data.Migrations
                         {
                             GenreID = 2,
                             GameID = 1
+                        },
+                        new
+                        {
+                            GenreID = 3,
+                            GameID = 2
+                        },
+                        new
+                        {
+                            GenreID = 2,
+                            GameID = 2
                         });
                 });
 
@@ -225,6 +248,9 @@ namespace GameShop.Data.Migrations
                     b.Property<string>("Processor")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Soundcard")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Storage")
                         .HasColumnType("nvarchar(max)");
 
@@ -234,6 +260,32 @@ namespace GameShop.Data.Migrations
                         .IsUnique();
 
                     b.ToTable("SystemRequirementMin");
+
+                    b.HasData(
+                        new
+                        {
+                            SRMID = 1,
+                            AdditionalNotes = "",
+                            GameID = 1,
+                            Graphics = "NVIDIA 9800 GT 1GB / AMD HD 4870 1GB (DX 10, 10.1, 11)",
+                            Memory = "4 GB RAM",
+                            OS = "Windows 10 64 Bit, Windows 8.1 64 Bit, Windows 8 64 Bit, Windows 7 64 Bit Service Pack 1",
+                            Processor = "Intel Core 2 Quad CPU Q6600 @ 2.40GHz (4 CPUs) / AMD Phenom 9850 Quad-Core Processor (4 CPUs) @ 2.5GHz",
+                            Soundcard = "100% DirectX 10 compatible",
+                            Storage = "72 GB available space"
+                        },
+                        new
+                        {
+                            SRMID = 2,
+                            AdditionalNotes = "",
+                            GameID = 2,
+                            Graphics = "NVIDIA 9800 GT 1GB / AMD HD 4870 1GB (DX 10, 10.1, 11)",
+                            Memory = "4 GB RAM",
+                            OS = "Windows 10 64 Bit, Windows 8.1 64 Bit, Windows 8 64 Bit, Windows 7 64 Bit Service Pack 1",
+                            Processor = "Intel Core 2 Quad CPU Q6600 @ 2.40GHz (4 CPUs) / AMD Phenom 9850 Quad-Core Processor (4 CPUs) @ 2.5GHz",
+                            Soundcard = "100% DirectX 10 compatible",
+                            Storage = "72 GB available space"
+                        });
                 });
 
             modelBuilder.Entity("GameShop.Data.Entities.SystemRequirementRecommended", b =>
@@ -261,6 +313,9 @@ namespace GameShop.Data.Migrations
                     b.Property<string>("Processor")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Soundcard")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Storage")
                         .HasColumnType("nvarchar(max)");
 
@@ -270,6 +325,32 @@ namespace GameShop.Data.Migrations
                         .IsUnique();
 
                     b.ToTable("SystemRequirementRecommended");
+
+                    b.HasData(
+                        new
+                        {
+                            SRRID = 1,
+                            AdditionalNotes = "",
+                            GameID = 1,
+                            Graphics = "NVIDIA GTX 660 2GB / AMD HD 7870 2GB",
+                            Memory = "8 GB RAM",
+                            OS = "Windows 10 64 Bit, Windows 8.1 64 Bit, Windows 8 64 Bit, Windows 7 64 Bit Service Pack 1",
+                            Processor = " Intel Core i5 3470 @ 3.2GHz (4 CPUs) / AMD X8 FX-8350 @ 4GHz (8 CPUs)",
+                            Soundcard = "100% DirectX 10 compatible",
+                            Storage = "72 GB available space"
+                        },
+                        new
+                        {
+                            SRRID = 2,
+                            AdditionalNotes = "",
+                            GameID = 2,
+                            Graphics = "NVIDIA GTX 660 2GB / AMD HD 7870 2GB",
+                            Memory = "8 GB RAM",
+                            OS = "Windows 10 64 Bit, Windows 8.1 64 Bit, Windows 8 64 Bit, Windows 7 64 Bit Service Pack 1",
+                            Processor = " Intel Core i5 3470 @ 3.2GHz (4 CPUs) / AMD X8 FX-8350 @ 4GHz (8 CPUs)",
+                            Soundcard = "100% DirectX 10 compatible",
+                            Storage = "72 GB available space"
+                        });
                 });
 
             modelBuilder.Entity("GameShop.Data.Entities.GameImage", b =>

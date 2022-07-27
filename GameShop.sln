@@ -11,7 +11,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GameShop.Application", "Gam
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GameShop.Utilities", "GameShop.Utilities\GameShop.Utilities.csproj", "{1AD4EB0E-08CF-4DAA-8017-65999BA079CB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameShop.ViewModels", "GameShop.ViewModel\GameShop.ViewModels.csproj", "{502EF1D5-891E-41F6-8ECC-271683F8DA90}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GameShop.ViewModels", "GameShop.ViewModel\GameShop.ViewModels.csproj", "{502EF1D5-891E-41F6-8ECC-271683F8DA90}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1.Infrastructure", "1.Infrastructure", "{821D6AA6-E746-4CFB-B40C-F4AAD645E1D0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2.Domain", "2.Domain", "{3EBB16EE-BD86-4CEC-A452-ABF3C2C6F562}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3.Hosts", "3.Hosts", "{E66E1561-FF09-4924-9BF5-C74228797E29}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -42,6 +48,13 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{CF6AA629-3C9E-4109-AD76-8C565F1FA52A} = {E66E1561-FF09-4924-9BF5-C74228797E29}
+		{99D67003-E9BD-4DEF-84BD-ADBB15C34334} = {3EBB16EE-BD86-4CEC-A452-ABF3C2C6F562}
+		{9E32065B-FDAD-430A-AADD-ADEA964038FF} = {3EBB16EE-BD86-4CEC-A452-ABF3C2C6F562}
+		{1AD4EB0E-08CF-4DAA-8017-65999BA079CB} = {821D6AA6-E746-4CFB-B40C-F4AAD645E1D0}
+		{502EF1D5-891E-41F6-8ECC-271683F8DA90} = {821D6AA6-E746-4CFB-B40C-F4AAD645E1D0}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {79CD1954-EC0C-4066-8FE6-15B16E53FF44}

@@ -40,9 +40,10 @@ namespace GameShop.Application.Catalog.Games
                 CreatedDate = DateTime.Now,
                 UpdatedDate = DateTime.Now,
             };
+            var genrelist = from g in _context.Genres select g;
             foreach (var genrequest in request.Genrerequests)
             {
-                var genre = await _context.Genres.FirstOrDefaultAsync(x => x.GenreID == genrequest.GenreID);
+                var genre = genrelist.FirstOrDefault(x => x.GenreID == genrequest.GenreID);
                 if (genre == null)
                 {
                     var newgenre = new Genre()
@@ -68,6 +69,35 @@ namespace GameShop.Application.Catalog.Games
                     _context.GameinGenres.Add(newgameingenre);
                 }
             }
+
+            //foreach (var genrequest in request.Genrerequests)
+            //{
+            //    var genre = await _context.Genres.FirstOrDefaultAsync(x => x.GenreID == genrequest.GenreID);
+            //    if (genre == null)
+            //    {
+            //        var newgenre = new Genre()
+            //        {
+            //            GenreID = genrequest.GenreID,
+            //            GenreName = genrequest.GenreName,
+            //        };
+            //        _context.Genres.Add(newgenre);
+            //        var newgameingenre = new GameinGenre()
+            //        {
+            //            Game = game,
+            //            Genre = newgenre
+            //        };
+            //        _context.GameinGenres.Add(newgameingenre);
+            //    }
+            //    else
+            //    {
+            //        var newgameingenre = new GameinGenre()
+            //        {
+            //            Game = game,
+            //            Genre = genre
+            //        };
+            //        _context.GameinGenres.Add(newgameingenre);
+            //    }
+            //}
 
             if (request.ThumbnailImage != null)
             {
@@ -143,9 +173,10 @@ namespace GameShop.Application.Catalog.Games
                     CreatedDate = x.p.CreatedDate,
                     UpdatedDate = x.p.UpdatedDate
                 }).ToListAsync();
+            var genrelist = from g in _context.GameinGenres select g;
             foreach (var game in data)
             {
-                var genres = await _context.GameinGenres.Where(x => x.GameID == game.GameID).ToListAsync();
+                var genres = genrelist.Where(x => x.GameID == game.GameID).ToList();
                 foreach (var genre in genres)
                 {
                     game.GenreIDs.Add(genre.GenreID);

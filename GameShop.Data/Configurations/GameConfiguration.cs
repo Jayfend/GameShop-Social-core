@@ -18,8 +18,6 @@ namespace GameShop.Data.Configurations
             builder.Property(x => x.Discount).IsRequired().HasDefaultValue(0);
             builder.Property(x => x.Description).IsRequired();
             builder.Property(x => x.Gameplay).IsRequired();
-           
-
         }
     }
 }

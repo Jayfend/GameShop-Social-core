@@ -1,21 +1,17 @@
 using GameShop.Application.Catalog.Games;
 using GameShop.Application.Common;
+using GameShop.Application.System.Users;
 using GameShop.Data.EF;
+using GameShop.Data.Entities;
 using GameShop.Utilities.Constants;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace GameShop
 {
@@ -33,11 +29,18 @@ namespace GameShop
         {
             services.AddControllers();
             services.AddDbContext<GameShopDbContext>(options =>
-       options.UseSqlServer(Configuration.GetConnectionString(SystemConstant.MainConnectionString)));
+            options.UseSqlServer(Configuration.GetConnectionString(SystemConstant.MainConnectionString)));
+            services.AddIdentity<AppUser, AppRole>()
+               .AddEntityFrameworkStores<GameShopDbContext>()
+               .AddDefaultTokenProviders();
             services.AddTransient<IPublicGameService, PublicGameService>();
             services.AddTransient<IStorageService, FileStorageService>();
             services.AddTransient<IManageGameService, ManageGameService>();
-            
+            services.AddTransient<UserManager<AppUser>, UserManager<AppUser>>();
+            services.AddTransient<SignInManager<AppUser>, SignInManager<AppUser>>();
+            services.AddTransient<RoleManager<AppRole>, RoleManager<AppRole>>();
+            services.AddTransient<IUserService, UserService>();
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Swagger GameShop Api", Version = "v1" });

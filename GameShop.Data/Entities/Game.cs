@@ -6,7 +6,7 @@ using System.Text;
 namespace GameShop.Data.Entities
 {
     public class Game : BaseEntity
-    { 
+    {
         public int GameID { get; set; }
         public string GameName { get; set; }
         public Decimal Price { get; set; }
@@ -17,5 +17,6 @@ namespace GameShop.Data.Entities
         public SystemRequirementMin SystemRequirementMin { get; set; }
         public SystemRequirementRecommended SystemRequirementRecommended { get; set; }
         public List<GameImage> GameImages { get; set; }
+        public OrderedGame OrderedGame { get; set; }
     }
 }

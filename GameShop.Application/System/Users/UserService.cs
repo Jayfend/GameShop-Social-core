@@ -49,10 +49,11 @@ namespace GameShop.Application.System.Users
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
             var token = new JwtSecurityToken(_config["Tokens:Key"],
-                _config["Token:Ussuer"],
+                _config["Token:Issuer"],
                 claims,
                 expires: DateTime.Now.AddHours(3),
                 signingCredentials: creds
+
                 );
             return new JwtSecurityTokenHandler().WriteToken(token);
         }

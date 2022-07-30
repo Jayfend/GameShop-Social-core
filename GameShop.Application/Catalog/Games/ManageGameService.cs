@@ -70,35 +70,6 @@ namespace GameShop.Application.Catalog.Games
                 }
             }
 
-            //foreach (var genrequest in request.Genrerequests)
-            //{
-            //    var genre = await _context.Genres.FirstOrDefaultAsync(x => x.GenreID == genrequest.GenreID);
-            //    if (genre == null)
-            //    {
-            //        var newgenre = new Genre()
-            //        {
-            //            GenreID = genrequest.GenreID,
-            //            GenreName = genrequest.GenreName,
-            //        };
-            //        _context.Genres.Add(newgenre);
-            //        var newgameingenre = new GameinGenre()
-            //        {
-            //            Game = game,
-            //            Genre = newgenre
-            //        };
-            //        _context.GameinGenres.Add(newgameingenre);
-            //    }
-            //    else
-            //    {
-            //        var newgameingenre = new GameinGenre()
-            //        {
-            //            Game = game,
-            //            Genre = genre
-            //        };
-            //        _context.GameinGenres.Add(newgameingenre);
-            //    }
-            //}
-
             if (request.ThumbnailImage != null)
             {
                 game.GameImages = new List<GameImage>()

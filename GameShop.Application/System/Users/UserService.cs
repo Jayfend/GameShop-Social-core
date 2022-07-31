@@ -38,7 +38,7 @@ namespace GameShop.Application.System.Users
             {
                 return null;
             }
-            var roles = _userManager.GetRolesAsync(user);
+            var roles = await _userManager.GetRolesAsync(user);
             var claims = new[]
             {
                 new Claim(ClaimTypes.Email,user.Email),
@@ -47,14 +47,13 @@ namespace GameShop.Application.System.Users
              };
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Tokens:Key"]));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
-            var token = new JwtSecurityToken(_config["Tokens:Key"],
-                _config["Token:Issuer"],
+            string _issuer = _config.GetValue<string>("Tokens:Issuer");
+            var token = new JwtSecurityToken(
+                issuer: _issuer,
+                audience: _issuer,
                 claims,
                 expires: DateTime.Now.AddHours(3),
-                signingCredentials: creds
-
-                );
+                signingCredentials: creds);
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 

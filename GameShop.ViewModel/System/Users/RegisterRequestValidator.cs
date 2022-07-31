@@ -15,6 +15,8 @@ namespace GameShop.ViewModels.System.Users
             RuleFor(x => x.LastName).NotEmpty().WithMessage("Last name is required")
                 .MaximumLength(200).WithMessage("Last name can not over 200 characters");
 
+            RuleFor(x => x.Dob).NotEmpty().WithMessage("Date of birth is required");
+
             RuleFor(x => x.Dob).GreaterThan(DateTime.Now.AddYears(-100)).WithMessage("Birthday cannot greater than 100 years");
 
             RuleFor(x => x.Email).NotEmpty().WithMessage("Email is required")

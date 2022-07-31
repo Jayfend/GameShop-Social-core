@@ -1,6 +1,7 @@
 ﻿using GameShop.Application.Catalog.Games;
 using GameShop.ViewModels.Catalog.GameImages;
 using GameShop.ViewModels.Catalog.Games;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -10,6 +11,7 @@ namespace GameShop.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class GamesController : ControllerBase
     {
         private readonly IPublicGameService _publicGameService;

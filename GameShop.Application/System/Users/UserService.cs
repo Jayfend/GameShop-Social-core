@@ -33,7 +33,7 @@ namespace GameShop.Application.System.Users
             {
                 return null;
             }
-            var result = await _signInManager.PasswordSignInAsync(user, request.Password, request.Rememberme, true);
+            var result = await _signInManager.PasswordSignInAsync(user, request.Password, request.RememberMe, true);
             if (!result.Succeeded)
             {
                 return null;

@@ -1,4 +1,3 @@
-using FluentValidation;
 using FluentValidation.AspNetCore;
 using GameShop.Application.Catalog.Games;
 using GameShop.Application.Common;

@@ -31,6 +31,7 @@ namespace GameShop.Controllers
             {
                 return BadRequest("User or Password is incorrect");
             }
+
             return Ok(resultToken);
         }
 
@@ -48,6 +49,13 @@ namespace GameShop.Controllers
                 return BadRequest("Register Failed");
             }
             return Ok();
+        }
+
+        [HttpGet("paging")]
+        public async Task<IActionResult> GetAllPaging([FromQuery] GetUserPagingRequest request)
+        {
+            var games = await _userService.GetUsersPaging(request);
+            return Ok(games);
         }
     }
 }

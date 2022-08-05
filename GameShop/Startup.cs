@@ -37,9 +37,8 @@ namespace GameShop
             services.AddIdentity<AppUser, AppRole>()
                .AddEntityFrameworkStores<GameShopDbContext>()
                .AddDefaultTokenProviders();
-            services.AddTransient<IPublicGameService, PublicGameService>();
+            services.AddTransient<IGameService, GameService>();
             services.AddTransient<IStorageService, FileStorageService>();
-            services.AddTransient<IManageGameService, ManageGameService>();
             services.AddTransient<UserManager<AppUser>, UserManager<AppUser>>();
             services.AddTransient<SignInManager<AppUser>, SignInManager<AppUser>>();
             services.AddTransient<RoleManager<AppRole>, RoleManager<AppRole>>();

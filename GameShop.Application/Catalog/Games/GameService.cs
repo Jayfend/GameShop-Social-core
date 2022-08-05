@@ -17,12 +17,12 @@ using GameShop.ViewModels.Catalog.GameImages;
 
 namespace GameShop.Application.Catalog.Games
 {
-    public class ManageGameService : IManageGameService
+    public class GameService : IGameService
     {
         private readonly GameShopDbContext _context;
         private readonly IStorageService _storageService;
 
-        public ManageGameService(GameShopDbContext context, IStorageService storageService)
+        public GameService(GameShopDbContext context, IStorageService storageService)
         {
             _context = context;
             _storageService = storageService;
@@ -206,14 +206,6 @@ namespace GameShop.Application.Catalog.Games
             }
         }
 
-        public async Task<string> Savefile(IFormFile file)
-        {
-            var originalFileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
-            var filename = $"{Guid.NewGuid()}{Path.GetExtension(originalFileName)}";
-            await _storageService.SaveFileAsync(file.OpenReadStream(), filename);
-            return filename;
-        }
-
         public async Task<GameViewModel> GetById(int GameID)
         {
             var game = await _context.Games.FindAsync(GameID);
@@ -331,6 +323,86 @@ namespace GameShop.Application.Catalog.Games
                 SortOrder = image.SortOrder,
             };
             return imageview;
+        }
+
+        public async Task<List<GameViewModel>> GetAll()
+        {
+            var data = await _context.Games.Select(x => new GameViewModel()
+            {
+                GameID = x.GameID,
+                GameName = x.GameName,
+                Gameplay = x.Gameplay,
+                Price = x.Price,
+                Discount = x.Discount,
+                GenreIDs = new List<int>(),
+                Description = x.Description,
+                CreatedDate = x.CreatedDate,
+                UpdatedDate = x.UpdatedDate
+            }).ToListAsync();
+            var genrelist = from g in _context.GameinGenres select g;
+            foreach (var game in data)
+            {
+                var genres = genrelist.Where(x => x.GameID == game.GameID).ToList();
+                foreach (var genre in genres)
+                {
+                    game.GenreIDs.Add(genre.GenreID);
+                }
+            }
+            return data;
+        }
+
+        public async Task<PagedResult<GameViewModel>> GetAllbyGenreID(GetPublicGamePagingRequest request)
+        {
+            var query = from p in _context.Games
+                        join gig in _context.GameinGenres on p.GameID equals gig.GameID
+                        join g in _context.Genres on gig.GenreID equals g.GenreID
+                        select new { p, gig };
+            // filter
+            if (request.GenreID.HasValue && request.GenreID.Value > 0)
+            {
+                query = query.Where(x => x.gig.GenreID == request.GenreID);
+            }
+
+            //paging
+            int totalrow = await query.CountAsync();
+            var data = await query.Skip((request.PageIndex - 1) * request.PageSize)
+                .Take(request.PageSize)
+                .Select(x => new GameViewModel()
+                {
+                    GameID = x.p.GameID,
+                    GameName = x.p.GameName,
+                    Gameplay = x.p.Gameplay,
+                    Price = x.p.Price,
+                    Discount = x.p.Discount,
+                    GenreIDs = new List<int>(),
+                    Description = x.p.Description,
+                    CreatedDate = x.p.CreatedDate,
+                    UpdatedDate = x.p.UpdatedDate
+                }).ToListAsync();
+            var genrelist = from g in _context.GameinGenres select g;
+            foreach (var game in data)
+            {
+                var genres = genrelist.Where(x => x.GameID == game.GameID).ToList();
+                foreach (var genre in genres)
+                {
+                    game.GenreIDs.Add(genre.GenreID);
+                }
+            }
+            //select and projection
+            var pagedResult = new PagedResult<GameViewModel>()
+            {
+                TotalRecord = totalrow,
+                Items = data
+            };
+            return pagedResult;
+        }
+
+        public async Task<string> Savefile(IFormFile file)
+        {
+            var originalFileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
+            var filename = $"{Guid.NewGuid()}{Path.GetExtension(originalFileName)}";
+            await _storageService.SaveFileAsync(file.OpenReadStream(), filename);
+            return filename;
         }
     }
 }

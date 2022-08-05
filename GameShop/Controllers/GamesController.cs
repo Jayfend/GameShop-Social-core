@@ -14,29 +14,27 @@ namespace GameShop.Controllers
     [Authorize]
     public class GamesController : ControllerBase
     {
-        private readonly IPublicGameService _publicGameService;
-        private readonly IManageGameService _manageGameService;
+        private readonly IGameService _gameService;
 
-        public GamesController(IPublicGameService publicGameService, IManageGameService manageGameService)
+        public GamesController(IGameService gameService)
         {
-            _publicGameService = publicGameService;
-            _manageGameService = manageGameService;
+            _gameService = gameService;
         }
 
         //https:://localhost:port/game
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            var games = await _publicGameService.GetAll();
+            var games = await _gameService.GetAll();
             return Ok(games);
         }
 
         /* https:://localhost:port/game/public-paging */
 
         [HttpGet("public-paging")]
-        public async Task<IActionResult> Get([FromQuery] GetPublicGamePagingRequest request)
+        public async Task<IActionResult> GetAllPaging([FromQuery] GetPublicGamePagingRequest request)
         {
-            var games = await _publicGameService.GetAllbyGenreID(request);
+            var games = await _gameService.GetAllbyGenreID(request);
             return Ok(games);
         }
 
@@ -45,7 +43,7 @@ namespace GameShop.Controllers
         [HttpGet("{GameID}")]
         public async Task<IActionResult> GetById(int GameID)
         {
-            var games = await _manageGameService.GetById(GameID);
+            var games = await _gameService.GetById(GameID);
             if (games == null)
             {
                 return NotFound();
@@ -60,19 +58,19 @@ namespace GameShop.Controllers
             {
                 return BadRequest(ModelState);
             }
-            var gameID = await _manageGameService.Create(request);
+            var gameID = await _gameService.Create(request);
             if (gameID == 0)
             {
                 return BadRequest();
             }
-            var game = await _manageGameService.GetById(gameID);
+            var game = await _gameService.GetById(gameID);
             return Created(nameof(GetById), game);
         }
 
         [HttpPut]
         public async Task<IActionResult> Update([FromBody] GameEditRequest request)
         {
-            var affedtedResult = await _manageGameService.Update(request);
+            var affedtedResult = await _gameService.Update(request);
             if (affedtedResult == 0)
             {
                 return BadRequest();
@@ -84,7 +82,7 @@ namespace GameShop.Controllers
         [HttpDelete("{GameID}")]
         public async Task<IActionResult> Delete(int GameID)
         {
-            var affedtedResult = await _manageGameService.Delete(GameID);
+            var affedtedResult = await _gameService.Delete(GameID);
             if (affedtedResult == 0)
             {
                 return BadRequest();
@@ -96,7 +94,7 @@ namespace GameShop.Controllers
         [HttpPatch("price/{GameID}/{newPrice}")]
         public async Task<IActionResult> UpdatePrice(int GameID, decimal newPrice)
         {
-            var isSuccess = await _manageGameService.UpdatePrice(GameID, newPrice);
+            var isSuccess = await _gameService.UpdatePrice(GameID, newPrice);
             if (isSuccess == false)
             {
                 return BadRequest();
@@ -115,12 +113,12 @@ namespace GameShop.Controllers
             }
             else
             {
-                var imageid = await _manageGameService.AddImage(GameID, request);
+                var imageid = await _gameService.AddImage(GameID, request);
                 if (imageid == 0)
                 {
                     return BadRequest();
                 }
-                var image = await _manageGameService.GetImageById(imageid);
+                var image = await _gameService.GetImageById(imageid);
                 return CreatedAtAction(nameof(GetImageByID), new { ImageID = imageid, GameID = GameID }, image);
             }
         }
@@ -128,7 +126,7 @@ namespace GameShop.Controllers
         [HttpGet("{GameID}/Images/{ImageID}")]
         public async Task<IActionResult> GetImageByID(int GameID, int ImageID)
         {
-            var image = await _manageGameService.GetImageById(ImageID);
+            var image = await _gameService.GetImageById(ImageID);
             if (image == null)
             {
                 return BadRequest("Could not find this image");
@@ -139,7 +137,7 @@ namespace GameShop.Controllers
         [HttpGet("{GameID}/Images")]
         public async Task<IActionResult> GetListImages(int GameID)
         {
-            var ListImage = await _manageGameService.GetListImages(GameID);
+            var ListImage = await _gameService.GetListImages(GameID);
             if (ListImage == null)
             {
                 return BadRequest("Could not find this image");
@@ -154,7 +152,7 @@ namespace GameShop.Controllers
             {
                 return BadRequest(ModelState);
             }
-            var result = await _manageGameService.UpdateImage(ImageID, request);
+            var result = await _gameService.UpdateImage(ImageID, request);
             if (result == 0)
                 return BadRequest();
             return Ok();
@@ -167,7 +165,7 @@ namespace GameShop.Controllers
             {
                 return BadRequest(ModelState);
             }
-            var result = await _manageGameService.RemoveImage(ImageID);
+            var result = await _gameService.RemoveImage(ImageID);
             if (result == 0)
             {
                 return BadRequest();

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace GameShop.Application.Catalog.Games
 {
-    public interface IManageGameService
+    public interface IGameService
     {
         Task<int> Create(GameCreateRequest request);
 
@@ -20,6 +20,10 @@ namespace GameShop.Application.Catalog.Games
         Task<bool> UpdatePrice(int GameID, Decimal newPrice);
 
         Task<string> Savefile(IFormFile file);
+
+        Task<PagedResult<GameViewModel>> GetAllbyGenreID(GetPublicGamePagingRequest request);
+
+        Task<List<GameViewModel>> GetAll();
 
         Task<PagedResult<GameViewModel>> GetAllPaging(GetManageGamePagingRequest request);
 

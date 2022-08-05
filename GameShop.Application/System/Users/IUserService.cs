@@ -1,4 +1,5 @@
-﻿using GameShop.ViewModels.System.Users;
+﻿using GameShop.ViewModels.Common;
+using GameShop.ViewModels.System.Users;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -11,5 +12,7 @@ namespace GameShop.Application.System.Users
         Task<string> Authenticate(LoginRequest request);
 
         Task<bool> Register(RegisterRequest request);
+
+        Task<PagedResult<UserViewModel>> GetUsersPaging(GetUserPagingRequest request);
     }
 }

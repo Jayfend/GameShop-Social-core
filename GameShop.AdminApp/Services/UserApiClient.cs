@@ -45,5 +45,17 @@ namespace GameShop.AdminApp.Services
             var users = JsonConvert.DeserializeObject<PagedResult<UserViewModel>>(body);
             return users;
         }
+
+        public async Task<bool> RegisterUser(RegisterRequest request)
+        {
+            var client = _httpClientFactory.CreateClient();
+            client.BaseAddress = new Uri(_configuration.GetValue<string>("BaseAddress"));
+
+            var json = JsonConvert.SerializeObject(request);
+            var httpcontent = new StringContent(json, Encoding.UTF8, "application/json");
+
+            var response = await client.PostAsync("api/Users/Register", httpcontent);
+            return response.IsSuccessStatusCode;
+        }
     }
 }

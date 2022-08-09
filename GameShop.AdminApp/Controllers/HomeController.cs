@@ -10,8 +10,7 @@ using System.Threading.Tasks;
 
 namespace GameShop.AdminApp.Controllers
 {
-    [Authorize]
-    public class HomeController : Controller
+    public class HomeController : BaseController
     {
         private readonly ILogger<HomeController> _logger;
 

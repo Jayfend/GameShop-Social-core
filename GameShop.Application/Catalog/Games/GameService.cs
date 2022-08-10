@@ -156,7 +156,9 @@ namespace GameShop.Application.Catalog.Games
             //select and projection
             var pagedResult = new PagedResult<GameViewModel>()
             {
-                TotalRecord = totalrow,
+                TotalRecords = totalrow,
+                PageIndex = request.PageIndex,
+                PageSize = request.PageSize,
                 Items = data
             };
             return pagedResult;
@@ -391,7 +393,9 @@ namespace GameShop.Application.Catalog.Games
             //select and projection
             var pagedResult = new PagedResult<GameViewModel>()
             {
-                TotalRecord = totalrow,
+                TotalRecords = totalrow,
+                PageSize = request.PageSize,
+                PageIndex = request.PageIndex,
                 Items = data
             };
             return pagedResult;

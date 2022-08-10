@@ -16,5 +16,7 @@ namespace GameShop.AdminApp.Services
         Task<ApiResult<bool>> UpdateUser(UserUpdateRequest request);
 
         Task<ApiResult<UserViewModel>> GetById(Guid id);
+
+        Task<ApiResult<bool>> Delete(Guid id);
     }
 }

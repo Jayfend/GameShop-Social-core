@@ -106,7 +106,7 @@ namespace GameShop.Application.System.Users
             //4. Select and projection
             var pagedResult = new PagedResult<UserViewModel>()
             {
-                TotalRecord = totalrow,
+                TotalRecords = totalrow,
                 PageIndex = request.PageIndex,
                 PageSize = request.PageSize,
                 Items = data

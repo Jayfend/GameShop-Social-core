@@ -34,6 +34,10 @@ namespace GameShop.AdminApp.Controllers
                 PageIndex = pageIndex,
                 PageSize = pageSize
             };
+            if (TempData["result"] != null)
+            {
+                ViewBag.SuccessMsg = TempData["result"];
+            }
             var data = await _userApiClient.GetUsersPaging(request);
             return View(data.ResultObj);
         }
@@ -54,6 +58,7 @@ namespace GameShop.AdminApp.Controllers
             var result = await _userApiClient.RegisterUser(request);
             if (result.IsSuccessed)
             {
+                TempData["result"] = "Thêm người dùng thành công !";
                 return RedirectToAction("Index");
             }
             ModelState.AddModelError("", result.Message);
@@ -78,6 +83,7 @@ namespace GameShop.AdminApp.Controllers
             var result = await _userApiClient.Delete(request.Id);
             if (result.IsSuccessed)
             {
+                TempData["result"] = "Xóa người dùng thành công";
                 return RedirectToAction("Index");
             }
 
@@ -116,6 +122,7 @@ namespace GameShop.AdminApp.Controllers
             var result = await _userApiClient.UpdateUser(request);
             if (result.IsSuccessed)
             {
+                TempData["result"] = "Cập nhật người dùng thành công !";
                 return RedirectToAction("Index");
             }
             ModelState.AddModelError("", result.Message);

@@ -1,6 +1,7 @@
 using FluentValidation.AspNetCore;
 using GameShop.Application.Catalog.Games;
 using GameShop.Application.Common;
+using GameShop.Application.System.Roles;
 using GameShop.Application.System.Users;
 using GameShop.Data.EF;
 using GameShop.Data.Entities;
@@ -43,6 +44,7 @@ namespace GameShop
             services.AddTransient<SignInManager<AppUser>, SignInManager<AppUser>>();
             services.AddTransient<RoleManager<AppRole>, RoleManager<AppRole>>();
             services.AddTransient<IUserService, UserService>();
+            services.AddTransient<IRoleService, RoleService>();
             //services.AddTransient<IValidator<LoginRequest>, LoginRequestValidator>();
             services.AddControllers()
              .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<LoginRequestValidator>());

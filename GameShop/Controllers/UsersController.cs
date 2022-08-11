@@ -67,6 +67,21 @@ namespace GameShop.Controllers
             return Ok(result);
         }
 
+        [HttpPut("{id}/roles")]
+        public async Task<IActionResult> RoleAssign(Guid Id, [FromBody] RoleAssignRequest request)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var result = await _userService.RoleAssign(Id, request);
+            if (!result.IsSuccessed)
+            {
+                return BadRequest(result);
+            }
+            return Ok(result);
+        }
+
         [HttpGet("paging")]
         public async Task<IActionResult> GetAllPaging([FromQuery] GetUserPagingRequest request)
         {

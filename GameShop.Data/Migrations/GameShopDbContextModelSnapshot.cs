@@ -50,6 +50,24 @@ namespace GameShop.Data.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("8d04dce2-969a-435d-bba4-df3f325983dc"),
+                            ConcurrencyStamp = "44fdf704-bebf-4b1a-b7d1-11ef051c70ce",
+                            Description = "Administrator role",
+                            Name = "admin",
+                            NormalizedName = "ADMIN"
+                        },
+                        new
+                        {
+                            Id = new Guid("52503f03-bdea-4bf8-8a1a-d21ae2646483"),
+                            ConcurrencyStamp = "247d7ce0-292b-48b7-a705-73c4c4dda2ad",
+                            Description = "User role",
+                            Name = "User",
+                            NormalizedName = "USER"
+                        });
                 });
 
             modelBuilder.Entity("GameShop.Data.Entities.AppUser", b =>
@@ -129,6 +147,27 @@ namespace GameShop.Data.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("69bd714f-9576-45ba-b5b7-f00649be00de"),
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "ebd228a0-9b3d-4064-82ba-87530a5e6488",
+                            Dob = new DateTime(2001, 7, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "leenguyen1721@gmail.com",
+                            EmailConfirmed = true,
+                            FirstName = "Luan",
+                            LastName = "Nguyen Phung Le",
+                            LockoutEnabled = false,
+                            NormalizedEmail = "LEENGUYEN1721@gmail.com",
+                            NormalizedUserName = "JAYFEND",
+                            PasswordHash = "AQAAAAEAACcQAAAAEH+a0BCdwYygVrw8pFTT8ezOM6W7Tuxhw08yulZVQTB5+rSg+Crtn3YnUf0BdPa49w==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "",
+                            TwoFactorEnabled = false,
+                            UserName = "Jayfend"
+                        });
                 });
 
             modelBuilder.Entity("GameShop.Data.Entities.Cart", b =>
@@ -208,27 +247,27 @@ namespace GameShop.Data.Migrations
                         {
                             GameID = 1,
                             BaseEntityID = 0,
-                            CreatedDate = new DateTime(2022, 7, 29, 18, 13, 53, 34, DateTimeKind.Local).AddTicks(8458),
+                            CreatedDate = new DateTime(2022, 8, 11, 14, 55, 11, 224, DateTimeKind.Local).AddTicks(2408),
                             Description = "The best game in the world",
                             Discount = 0,
                             GameName = "Grand Theft Auto V",
                             Gameplay = "Destroy the city",
                             Price = 250000m,
                             Status = 1,
-                            UpdatedDate = new DateTime(2022, 7, 29, 18, 13, 53, 35, DateTimeKind.Local).AddTicks(7349)
+                            UpdatedDate = new DateTime(2022, 8, 11, 14, 55, 11, 225, DateTimeKind.Local).AddTicks(5026)
                         },
                         new
                         {
                             GameID = 2,
                             BaseEntityID = 0,
-                            CreatedDate = new DateTime(2022, 7, 29, 18, 13, 53, 35, DateTimeKind.Local).AddTicks(8216),
+                            CreatedDate = new DateTime(2022, 8, 11, 14, 55, 11, 225, DateTimeKind.Local).AddTicks(5618),
                             Description = "Back to the cowboy town",
                             Discount = 20,
                             GameName = "Red Dead Redemption 2",
                             Gameplay = "Discover the cowboy world",
                             Price = 250000m,
                             Status = 1,
-                            UpdatedDate = new DateTime(2022, 7, 29, 18, 13, 53, 35, DateTimeKind.Local).AddTicks(8253)
+                            UpdatedDate = new DateTime(2022, 8, 11, 14, 55, 11, 225, DateTimeKind.Local).AddTicks(5640)
                         });
                 });
 
@@ -574,6 +613,13 @@ namespace GameShop.Data.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("AspNetUserRoles");
+
+                    b.HasData(
+                        new
+                        {
+                            UserId = new Guid("69bd714f-9576-45ba-b5b7-f00649be00de"),
+                            RoleId = new Guid("8d04dce2-969a-435d-bba4-df3f325983dc")
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>

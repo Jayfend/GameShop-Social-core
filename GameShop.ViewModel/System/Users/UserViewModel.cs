@@ -27,6 +27,7 @@ namespace GameShop.ViewModels.System.Users
         [Display(Name = "Ngày sinh")]
         public DateTime Dob { get; set; }
 
+        public RoleAssignRequest RoleAssign { get; set; }
         public IList<string> Roles { get; set; }
     }
 }

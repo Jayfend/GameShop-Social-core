@@ -55,7 +55,7 @@ namespace GameShop.Data.Migrations
                         new
                         {
                             Id = new Guid("8d04dce2-969a-435d-bba4-df3f325983dc"),
-                            ConcurrencyStamp = "44fdf704-bebf-4b1a-b7d1-11ef051c70ce",
+                            ConcurrencyStamp = "8c6e2935-1e6d-4c54-b407-86601cf985fe",
                             Description = "Administrator role",
                             Name = "admin",
                             NormalizedName = "ADMIN"
@@ -63,7 +63,7 @@ namespace GameShop.Data.Migrations
                         new
                         {
                             Id = new Guid("52503f03-bdea-4bf8-8a1a-d21ae2646483"),
-                            ConcurrencyStamp = "247d7ce0-292b-48b7-a705-73c4c4dda2ad",
+                            ConcurrencyStamp = "6fc9cf13-e18f-40d6-a145-c3a2e3130803",
                             Description = "User role",
                             Name = "User",
                             NormalizedName = "USER"
@@ -153,7 +153,7 @@ namespace GameShop.Data.Migrations
                         {
                             Id = new Guid("69bd714f-9576-45ba-b5b7-f00649be00de"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "ebd228a0-9b3d-4064-82ba-87530a5e6488",
+                            ConcurrencyStamp = "824188af-121e-4381-9b99-4f594ee76b3a",
                             Dob = new DateTime(2001, 7, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "leenguyen1721@gmail.com",
                             EmailConfirmed = true,
@@ -162,7 +162,7 @@ namespace GameShop.Data.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "LEENGUYEN1721@gmail.com",
                             NormalizedUserName = "JAYFEND",
-                            PasswordHash = "AQAAAAEAACcQAAAAEH+a0BCdwYygVrw8pFTT8ezOM6W7Tuxhw08yulZVQTB5+rSg+Crtn3YnUf0BdPa49w==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEDvoLb0Zmaegak6jaMWBWG5hRi0kTwO6f4iSB8aiga30u3Q4uP8zilOiT4+qmeOjDQ==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
                             TwoFactorEnabled = false,
@@ -247,27 +247,27 @@ namespace GameShop.Data.Migrations
                         {
                             GameID = 1,
                             BaseEntityID = 0,
-                            CreatedDate = new DateTime(2022, 8, 11, 14, 55, 11, 224, DateTimeKind.Local).AddTicks(2408),
+                            CreatedDate = new DateTime(2022, 8, 11, 17, 25, 25, 260, DateTimeKind.Local).AddTicks(803),
                             Description = "The best game in the world",
                             Discount = 0,
                             GameName = "Grand Theft Auto V",
                             Gameplay = "Destroy the city",
                             Price = 250000m,
                             Status = 1,
-                            UpdatedDate = new DateTime(2022, 8, 11, 14, 55, 11, 225, DateTimeKind.Local).AddTicks(5026)
+                            UpdatedDate = new DateTime(2022, 8, 11, 17, 25, 25, 260, DateTimeKind.Local).AddTicks(8095)
                         },
                         new
                         {
                             GameID = 2,
                             BaseEntityID = 0,
-                            CreatedDate = new DateTime(2022, 8, 11, 14, 55, 11, 225, DateTimeKind.Local).AddTicks(5618),
+                            CreatedDate = new DateTime(2022, 8, 11, 17, 25, 25, 260, DateTimeKind.Local).AddTicks(8590),
                             Description = "Back to the cowboy town",
                             Discount = 20,
                             GameName = "Red Dead Redemption 2",
                             Gameplay = "Discover the cowboy world",
                             Price = 250000m,
                             Status = 1,
-                            UpdatedDate = new DateTime(2022, 8, 11, 14, 55, 11, 225, DateTimeKind.Local).AddTicks(5640)
+                            UpdatedDate = new DateTime(2022, 8, 11, 17, 25, 25, 260, DateTimeKind.Local).AddTicks(8615)
                         });
                 });
 

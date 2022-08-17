@@ -29,12 +29,12 @@ namespace GameShop.Controllers
             return Ok(games);
         }
 
-        /* https:://localhost:port/game/public-paging */
+        /* https:://localhost:port/game/paging */
 
-        [HttpGet("public-paging")]
-        public async Task<IActionResult> GetAllPaging([FromQuery] GetPublicGamePagingRequest request)
+        [HttpGet("paging")]
+        public async Task<IActionResult> GetAllPaging([FromQuery] GetManageGamePagingRequest request)
         {
-            var games = await _gameService.GetAllbyGenreID(request);
+            var games = await _gameService.GetAllPaging(request);
             return Ok(games);
         }
 

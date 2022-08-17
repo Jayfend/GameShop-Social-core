@@ -4,8 +4,13 @@ using System.Text;
 
 namespace GameShop.Utilities.Constants
 {
-    public class SystemConstant
+    public class SystemConstants
     {
         public const string MainConnectionString = "GameShopDatabase";
+        public class AppSettings
+        {
+            public const string Token = "Token";
+            public const string BaseAddress = "BaseAddress";
+        }
     }
 }

@@ -125,9 +125,9 @@ namespace GameShop.Application.Catalog.Games
                 query = query.Where(x => x.p.GameName.Contains(request.Keyword));
             }
 
-            if (request.GenreIDs.Count > 0)
+            if (!string.IsNullOrEmpty(request.GenreID))
             {
-                query = query.Where(p => request.GenreIDs.Contains(p.gig.GenreID));
+                query = query.Where(p => request.GenreID.Contains(p.gig.GenreID.ToString()));
             }
             //paging
             int totalrow = await query.CountAsync();
@@ -142,7 +142,8 @@ namespace GameShop.Application.Catalog.Games
                     Discount = x.p.Discount,
                     Description = x.p.Description,
                     CreatedDate = x.p.CreatedDate,
-                    UpdatedDate = x.p.UpdatedDate
+                    UpdatedDate = x.p.UpdatedDate,
+                    GenreIDs = new List<int>()
                 }).ToListAsync();
             var genrelist = from g in _context.GameinGenres select g;
             foreach (var game in data)

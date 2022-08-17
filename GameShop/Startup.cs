@@ -34,7 +34,7 @@ namespace GameShop
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<GameShopDbContext>(options =>
-            options.UseSqlServer(Configuration.GetConnectionString(SystemConstant.MainConnectionString)));
+            options.UseSqlServer(Configuration.GetConnectionString(SystemConstants.MainConnectionString)));
             services.AddIdentity<AppUser, AppRole>()
                .AddEntityFrameworkStores<GameShopDbContext>()
                .AddDefaultTokenProviders();

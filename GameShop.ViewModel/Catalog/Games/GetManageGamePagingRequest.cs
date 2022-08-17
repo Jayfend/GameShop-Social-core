@@ -8,7 +8,7 @@ namespace GameShop.ViewModels.Catalog.Games
     public class GetManageGamePagingRequest : PagingRequestBase
     {
         public string Keyword { get; set; }
-        public List<int> GenreIDs { get; set; }
+        public string GenreID { get; set; }
 
     }
 }

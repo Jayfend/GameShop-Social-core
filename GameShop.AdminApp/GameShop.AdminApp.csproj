@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\GameShop.Utilities\GameShop.Utilities.csproj" />
     <ProjectReference Include="..\GameShop.ViewModel\GameShop.ViewModels.csproj" />
   </ItemGroup>
 

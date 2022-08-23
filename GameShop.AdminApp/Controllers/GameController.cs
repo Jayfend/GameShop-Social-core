@@ -15,14 +15,14 @@ namespace GameShop.AdminApp.Controllers
             _gameApiClient = gameApiClient;
         }
         [HttpGet]
-        public async Task<IActionResult> Index(string keyword, int? GenreId, int pageIndex = 1, int pageSize = 10)
+        public async Task<IActionResult> Index(string keyword ="Grand" , int? GenreId = 2, int pageIndex = 1, int pageSize = 10)
         {   
             var request = new GetManageGamePagingRequest()
             {
                 Keyword = keyword,
                 PageIndex = pageIndex,
                 PageSize = pageSize,
-                GenreID=GenreId.ToString(),
+                GenreID=GenreId,
             };
             
             var games = await _gameApiClient.GetGamePagings(request);

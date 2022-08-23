@@ -115,45 +115,36 @@ namespace GameShop.Application.Catalog.Games
 
         public async Task<PagedResult<GameViewModel>> GetAllPaging(GetManageGamePagingRequest request)
         {
-            var query = from p in _context.Games
-                        join gig in _context.GameinGenres on p.GameID equals gig.GameID
-                        join g in _context.Genres on gig.GenreID equals g.GenreID
-                        select new { p, gig };
+            var query = _context.Games.AsQueryable();
             // filter
-            if (!String.IsNullOrEmpty(request.Keyword))
+            if (!string.IsNullOrEmpty(request.Keyword))
             {
-                query = query.Where(x => x.p.GameName.Contains(request.Keyword));
+                query = query.Where(x => x.GameName.Contains(request.Keyword));
             }
 
-            if (!string.IsNullOrEmpty(request.GenreID))
+            if (request.GenreID != null)
             {
-                query = query.Where(p => request.GenreID.Contains(p.gig.GenreID.ToString()));
+                query = query.Where(x => x.GameInGenres.Any(x=>x.GenreID == request.GenreID));
             }
             //paging
             int totalrow = await query.CountAsync();
             var data = await query.Skip((request.PageIndex - 1) * request.PageSize)
-                .Take(request.PageSize)
-                .Select(x => new GameViewModel()
+                .Take(request.PageSize).Select(x => new GameViewModel()
                 {
-                    GameID = x.p.GameID,
-                    GameName = x.p.GameName,
-                    Gameplay = x.p.Gameplay,
-                    Price = x.p.Price,
-                    Discount = x.p.Discount,
-                    Description = x.p.Description,
-                    CreatedDate = x.p.CreatedDate,
-                    UpdatedDate = x.p.UpdatedDate,
-                    GenreIDs = new List<int>()
-                }).ToListAsync();
-            var genrelist = from g in _context.GameinGenres select g;
-            foreach (var game in data)
-            {
-                var genres = genrelist.Where(x => x.GameID == game.GameID).ToList();
-                foreach (var genre in genres)
-                {
-                    game.GenreIDs.Add(genre.GenreID);
-                }
-            }
+                    CreatedDate = DateTime.Now,
+                    GameID = x.GameID,
+                    GameName = x.GameName,
+                    Description = x.Description,
+                    UpdatedDate = x.UpdatedDate,
+                    Gameplay = x.Gameplay,
+                    Discount = x.Discount,
+                    GenreIDs = x.GameInGenres.Select(y => y.GenreID).ToList(),
+                    Status = x.Status.ToString(),
+                    Price = x.Price
+
+                })
+                .ToListAsync();
+           
             //select and projection
             var pagedResult = new PagedResult<GameViewModel>()
             {

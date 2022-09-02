@@ -108,6 +108,11 @@ namespace GameShop
                     IssuerSigningKey = new SymmetricSecurityKey(signingKeyBytes)
                 };
             });
+            services.AddCors(options => options.AddPolicy("ApiCorsPolicy", builder =>
+            {
+                builder.WithOrigins("http://localhost:3789").AllowAnyMethod().AllowAnyHeader();
+            }));
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -122,7 +127,7 @@ namespace GameShop
             app.UseStaticFiles();
             app.UseAuthentication();
             app.UseRouting();
-
+            app.UseCors("ApiCorsPolicy");
             app.UseAuthorization();
             app.UseSwagger();
             app.UseSwaggerUI(c =>

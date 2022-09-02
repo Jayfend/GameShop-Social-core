@@ -19,16 +19,16 @@ namespace GameShop.AdminApp.Controllers
             _categoryApiClient = categoryApiClient;
         }
         [HttpGet]
-        public async Task<IActionResult> Index(string keyword ="Grand" , int? GenreId = 2, int pageIndex = 1, int pageSize = 10)
-        {   
+        public async Task<IActionResult> Index(string keyword , int? GenreId, int pageIndex = 1, int pageSize = 10)
+        {
             var request = new GetManageGamePagingRequest()
             {
                 Keyword = keyword,
                 PageIndex = pageIndex,
                 PageSize = pageSize,
-                GenreID=GenreId,
+                GenreID = GenreId,
             };
-            
+
             var games = await _gameApiClient.GetGamePagings(request);
             ViewBag.Keyword = keyword;
 
@@ -39,11 +39,44 @@ namespace GameShop.AdminApp.Controllers
                 Value = x.Id.ToString(),
                 Selected = GenreId.HasValue && GenreId.Value == x.Id
             });
+           
             if (TempData["result"] != null)
             {
                 ViewBag.SuccessMsg = TempData["result"];
             }
             return View(games);
         }
+        [HttpGet]
+        public async Task<IActionResult> Create()
+        {
+            var categories = await _categoryApiClient.GetAll();
+
+            ViewBag.Categories = categories.Select(x => new SelectListItem()
+            {
+                Text = x.Name,
+                Value = x.Id.ToString(),
+              
+            });
+            return View();
+        }
+
+        [HttpPost]
+        [Consumes("multipart/form-data")]
+        public async Task<IActionResult> Create([FromForm] GameCreateRequest request,int? GenreId)
+        {
+            if (!ModelState.IsValid)
+                return View(request);
+            //request.Genrerequests.Add(GenreId);
+            var result = await _gameApiClient.CreateGame(request);
+            if (result)
+            {
+                TempData["result"] = "Thêm mới sản phẩm thành công";
+                return RedirectToAction("Index");
+            }
+
+            ModelState.AddModelError("", "Thêm sản phẩm thất bại");
+            return View(request);
+        }
     }
+    
 }

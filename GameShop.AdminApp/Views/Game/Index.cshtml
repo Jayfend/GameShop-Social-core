@@ -31,7 +31,7 @@
                                 <input type="text" value="@ViewBag.Keyword" name="keyword" class="form-control" />
                             </div>
                             <div class="col-md-4">
-                                <select name="categoryId" onchange="this.form.submit()" asp-items="@ViewBag.Categories" class="form-control">
+                                    <select name="GenreId" asp-items="@ViewBag.Categories" class="form-control">
                                     <option>--Chọn danh mục--</option>
                                 </select>
                             </div>
@@ -101,7 +101,7 @@
                                     @Html.DisplayFor(modelItem => item.GameID)
                                 </td>
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.GameName)
+                                    @Html.DisplayFor(modelItem => item.Name)
                                 </td>
                                 <td>
                                     @Html.DisplayFor(modelItem => item.Price)
@@ -117,7 +117,8 @@
                                 </td>
                                 <td>
                                     @foreach(var genre in item.GenreIDs){
-                                        @Html.DisplayFor(modelItem => genre)
+                                        @Html.DisplayFor(modelItem => genre) <text> ,</text>
+                                        
 
                                     }
                                    

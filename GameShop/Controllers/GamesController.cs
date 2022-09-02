@@ -11,7 +11,7 @@ namespace GameShop.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+
     public class GamesController : ControllerBase
     {
         private readonly IGameService _gameService;

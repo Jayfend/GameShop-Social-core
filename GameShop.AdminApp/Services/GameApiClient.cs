@@ -9,18 +9,65 @@ using System.Net.Http.Headers;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using GameShop.Utilities.Constants;
+using System.IO;
 
 namespace GameShop.AdminApp.Services
 {
     public class GameApiClient :BaseApiClient,IGameApiClient
     {
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IHttpClientFactory _httpClientFactory;
+        private readonly IConfiguration _configuration;
         public GameApiClient(IHttpClientFactory httpClientFactory,
                    IHttpContextAccessor httpContextAccessor,
                     IConfiguration configuration)
             : base(httpClientFactory, httpContextAccessor, configuration)
         {
-            
+            _httpContextAccessor = httpContextAccessor;
+            _configuration = configuration;
+            _httpClientFactory = httpClientFactory;
         }
+
+        public async Task<bool> CreateGame(GameCreateRequest request)
+        {
+            var sessions = _httpContextAccessor
+                .HttpContext
+                .Session
+                .GetString(SystemConstants.AppSettings.Token);
+            var client = _httpClientFactory.CreateClient();
+            client.BaseAddress = new Uri(_configuration[SystemConstants.AppSettings.BaseAddress]);
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", sessions);
+
+            var requestContent = new MultipartFormDataContent();
+
+            if (request.ThumbnailImage != null)
+            {
+                byte[] data;
+                using (var br = new BinaryReader(request.ThumbnailImage.OpenReadStream()))
+                {
+                    data = br.ReadBytes((int)request.ThumbnailImage.OpenReadStream().Length);
+                }
+                ByteArrayContent bytes = new ByteArrayContent(data);
+                requestContent.Add(bytes, "thumbnailImage", request.ThumbnailImage.FileName);
+            }
+
+            requestContent.Add(new StringContent(request.Price.ToString()), "price");
+            requestContent.Add(new StringContent(string.IsNullOrEmpty(request.GameName) ? "" : request.GameName.ToString()), "name");
+            requestContent.Add(new StringContent(string.IsNullOrEmpty(request.Description) ? "" : request.Description.ToString()), "description");
+
+            requestContent.Add(new StringContent(request.Discount.ToString()), "discount");
+            requestContent.Add(new StringContent(string.IsNullOrEmpty(request.Gameplay) ? "" : request.Gameplay.ToString()), "gameplay");
+            foreach(var item in request.Genrerequests) {
+                requestContent.Add(new StringContent(item.ToString()), "genre");
+            }
+
+            requestContent.Add(new StringContent(request.Status.ToString()), "status");
+
+            var response = await client.PostAsync($"/api/games/", requestContent);
+            return response.IsSuccessStatusCode;
+        }
+
         public async Task<PagedResult<GameViewModel>> GetGamePagings(GetManageGamePagingRequest request)
         {
             var data = await GetAsync<PagedResult<GameViewModel>>(

@@ -8,5 +8,7 @@ namespace GameShop.AdminApp.Services
     public interface IGameApiClient
     {
         Task<PagedResult<GameViewModel>> GetGamePagings(GetManageGamePagingRequest request);
+        Task<bool> CreateGame(GameCreateRequest request);
+
     }
 }

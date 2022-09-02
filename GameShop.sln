@@ -19,7 +19,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2.Domain", "2.Domain", "{3E
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3.Hosts", "3.Hosts", "{E66E1561-FF09-4924-9BF5-C74228797E29}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameShop.AdminApp", "GameShop.AdminApp\GameShop.AdminApp.csproj", "{43C4E2CA-78F9-4FAD-88D1-0EB620E8977D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GameShop.AdminApp", "GameShop.AdminApp\GameShop.AdminApp.csproj", "{43C4E2CA-78F9-4FAD-88D1-0EB620E8977D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

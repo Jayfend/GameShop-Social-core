@@ -116,6 +116,7 @@ namespace GameShop.Application.Catalog.Games
         public async Task<PagedResult<GameViewModel>> GetAllPaging(GetManageGamePagingRequest request)
         {
             var query = _context.Games.AsQueryable();
+            
             // filter
             if (!string.IsNullOrEmpty(request.Keyword))
             {
@@ -133,18 +134,17 @@ namespace GameShop.Application.Catalog.Games
                 {
                     CreatedDate = DateTime.Now,
                     GameID = x.GameID,
-                    GameName = x.GameName,
+                    Name = x.GameName,
                     Description = x.Description,
                     UpdatedDate = x.UpdatedDate,
                     Gameplay = x.Gameplay,
                     Discount = x.Discount,
-                    GenreIDs = x.GameInGenres.Select(y => y.GenreID).ToList(),
+                    GenreIDs = x.GameInGenres.Select(y=>y.GenreID).ToList(),
                     Status = x.Status.ToString(),
-                    Price = x.Price
-
+                    Price = x.Price,
                 })
                 .ToListAsync();
-           
+
             //select and projection
             var pagedResult = new PagedResult<GameViewModel>()
             {
@@ -207,7 +207,7 @@ namespace GameShop.Application.Catalog.Games
             var gameview = new GameViewModel()
             {
                 GameID = game.GameID,
-                GameName = game.GameName,
+                Name = game.GameName,
                 Gameplay = game.Gameplay,
                 CreatedDate = game.CreatedDate,
                 UpdatedDate = game.UpdatedDate,
@@ -324,7 +324,7 @@ namespace GameShop.Application.Catalog.Games
             var data = await _context.Games.Select(x => new GameViewModel()
             {
                 GameID = x.GameID,
-                GameName = x.GameName,
+                Name = x.GameName,
                 Gameplay = x.Gameplay,
                 Price = x.Price,
                 Discount = x.Discount,
@@ -364,7 +364,7 @@ namespace GameShop.Application.Catalog.Games
                 .Select(x => new GameViewModel()
                 {
                     GameID = x.p.GameID,
-                    GameName = x.p.GameName,
+                    Name = x.p.GameName,
                     Gameplay = x.p.Gameplay,
                     Price = x.p.Price,
                     Discount = x.p.Discount,

@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using GameShop.Utilities.Constants;
 using System.IO;
+using System.Reflection;
 
 namespace GameShop.AdminApp.Services
 {
@@ -53,14 +54,12 @@ namespace GameShop.AdminApp.Services
             }
 
             requestContent.Add(new StringContent(request.Price.ToString()), "price");
-            requestContent.Add(new StringContent(string.IsNullOrEmpty(request.GameName) ? "" : request.GameName.ToString()), "name");
+            requestContent.Add(new StringContent(string.IsNullOrEmpty(request.GameName) ? "" : request.GameName.ToString()), "gamename");
             requestContent.Add(new StringContent(string.IsNullOrEmpty(request.Description) ? "" : request.Description.ToString()), "description");
 
             requestContent.Add(new StringContent(request.Discount.ToString()), "discount");
             requestContent.Add(new StringContent(string.IsNullOrEmpty(request.Gameplay) ? "" : request.Gameplay.ToString()), "gameplay");
-            foreach(var item in request.Genrerequests) {
-                requestContent.Add(new StringContent(item.ToString()), "genre");
-            }
+            requestContent.Add(new StringContent(request.Genre.ToString()), "genre");
 
             requestContent.Add(new StringContent(request.Status.ToString()), "status");
 

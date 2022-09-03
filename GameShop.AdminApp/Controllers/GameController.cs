@@ -1,5 +1,8 @@
 ﻿using GameShop.AdminApp.Services;
+using GameShop.Utilities.Constants;
 using GameShop.ViewModels.Catalog.Games;
+using GameShop.ViewModels.Common;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
@@ -78,6 +81,49 @@ namespace GameShop.AdminApp.Controllers
             ModelState.AddModelError("", "Thêm sản phẩm thất bại");
             return View(request);
         }
+        [HttpGet]
+        public async Task<IActionResult> CategoryAssign(int id)
+        {
+            var roleAssignRequest = await GetCategoryAssignRequest(id);
+            return View(roleAssignRequest);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CategoryAssign(CategoryAssignRequest request)
+        {
+            if (!ModelState.IsValid)
+                return View();
+
+            var result = await _gameApiClient.CategoryAssign(request.Id, request);
+
+            if (result.IsSuccessed)
+            {
+                TempData["result"] = "Cập nhật danh mục thành công";
+                return RedirectToAction("Index");
+            }
+
+            ModelState.AddModelError("", result.Message);
+            var roleAssignRequest = await GetCategoryAssignRequest(request.Id);
+
+            return View(roleAssignRequest);
+        }
+        private async Task<CategoryAssignRequest> GetCategoryAssignRequest(int id)
+        {
+            
+            var productObj = await _gameApiClient.GetById(id);
+            var categories = await _categoryApiClient.GetAll();
+            var categoryAssignRequest = new CategoryAssignRequest();
+            foreach (var role in categories)
+            {
+                categoryAssignRequest.Categories.Add(new SelectItem()
+                {
+                    Id = role.Id.ToString(),
+                    Name = role.Name,
+                    Selected = productObj.GenreName.Contains(role.Name)
+                });
+            }
+            return categoryAssignRequest;
+        }
     }
-    
+
 }

@@ -38,5 +38,6 @@ namespace GameShop.Application.Catalog.Games
         Task<GameViewModel> GetById(int GameID);
 
         Task<GameImageViewModel> GetImageById(int ImageID);
+        Task<ApiResult<bool>> CategoryAssign(int id, CategoryAssignRequest request);
     }
 }

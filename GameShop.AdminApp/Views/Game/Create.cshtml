@@ -61,9 +61,14 @@
                         </div>
                         <div class="form-group">
                             <label asp-for="Gameplay" class="control-label"></label>
-                            <textarea id="txt_details" asp-for="Gameplay" rows="35" class="form-control"></textarea>
+                            <textarea asp-for="Gameplay" class="form-control" rows="15"></textarea>
                             <span asp-validation-for="Gameplay" class="text-danger"></span>
                         </div>
+                       @* <div class="form-group">
+                            <label asp-for="Gameplay" class="control-label"></label>
+                            <textarea id="txt_details" asp-for="Gameplay" rows="15" class="form-control"></textarea>
+                            <span asp-validation-for="Gameplay" class="text-danger"></span>
+                        </div>*@
                         <div class="form-group">
                             <select name="Status" class="form-control">
                                 <option>--Chọn danh mục--</option>

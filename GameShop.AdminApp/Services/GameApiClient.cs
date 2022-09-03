@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Http;
 using GameShop.Utilities.Constants;
 using System.IO;
 using System.Reflection;
+using System.Text;
 
 namespace GameShop.AdminApp.Services
 {
@@ -28,6 +29,25 @@ namespace GameShop.AdminApp.Services
             _httpContextAccessor = httpContextAccessor;
             _configuration = configuration;
             _httpClientFactory = httpClientFactory;
+        }
+
+        public async Task<ApiResult<bool>> CategoryAssign(int id, CategoryAssignRequest request)
+        {
+            var client = _httpClientFactory.CreateClient();
+            client.BaseAddress = new Uri(_configuration["BaseAddress"]);
+            var sessions = _httpContextAccessor.HttpContext.Session.GetString("Token");
+
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", sessions);
+
+            var json = JsonConvert.SerializeObject(request);
+            var httpContent = new StringContent(json, Encoding.UTF8, "application/json");
+
+            var response = await client.PutAsync($"/api/games/{id}/genres", httpContent);
+            var result = await response.Content.ReadAsStringAsync();
+            if (response.IsSuccessStatusCode)
+                return JsonConvert.DeserializeObject<ApiSuccessResult<bool>>(result);
+
+            return JsonConvert.DeserializeObject<ApiErrorResult<bool>>(result);
         }
 
         public async Task<bool> CreateGame(GameCreateRequest request)
@@ -66,7 +86,12 @@ namespace GameShop.AdminApp.Services
             var response = await client.PostAsync($"/api/games/", requestContent);
             return response.IsSuccessStatusCode;
         }
+        public async Task<GameViewModel> GetById(int id)
+        {
+            var data = await GetAsync<GameViewModel>($"/api/games/{id}");
 
+            return data;
+        }
         public async Task<PagedResult<GameViewModel>> GetGamePagings(GetManageGamePagingRequest request)
         {
             var data = await GetAsync<PagedResult<GameViewModel>>(

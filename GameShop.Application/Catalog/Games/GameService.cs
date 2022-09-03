@@ -129,6 +129,7 @@ namespace GameShop.Application.Catalog.Games
                 query = query.Where(x => x.GameInGenres.Any(x=>x.GenreID == request.GenreID));
             }
             //paging
+
             int totalrow = await query.CountAsync();
             var data = await query.Skip((request.PageIndex - 1) * request.PageSize)
                 .Take(request.PageSize).Select(x => new GameViewModel()
@@ -204,7 +205,9 @@ namespace GameShop.Application.Catalog.Games
         public async Task<GameViewModel> GetById(int GameID)
         {
             var game = await _context.Games.FindAsync(GameID);
-            var Genres = await _context.GameinGenres.Where(g => g.GameID == game.GameID).ToListAsync();
+            var categories = await (from c in _context.Genres
+                                    join pic in _context.GameinGenres on c.GenreID equals pic.GenreID
+                                    select c.GenreName).ToListAsync();
             var gameview = new GameViewModel()
             {
                 GameID = game.GameID,
@@ -213,12 +216,14 @@ namespace GameShop.Application.Catalog.Games
                 CreatedDate = game.CreatedDate,
                 UpdatedDate = game.UpdatedDate,
                 GenreIDs = new List<int>(),
+                GenreName = categories,
                 Description = game.Description,
                 Discount = game.Discount,
                 Price = game.Price
             };
 
             var genres = await _context.GameinGenres.Where(x => x.GameID == gameview.GameID).ToListAsync();
+
             foreach (var genre in genres)
             {
                 gameview.GenreIDs.Add(genre.GenreID);
@@ -400,6 +405,35 @@ namespace GameShop.Application.Catalog.Games
             var filename = $"{Guid.NewGuid()}{Path.GetExtension(originalFileName)}";
             await _storageService.SaveFileAsync(file.OpenReadStream(), filename);
             return filename;
+        }
+
+        public async Task<ApiResult<bool>> CategoryAssign(int id, CategoryAssignRequest request)
+        {
+            var game = await _context.Games.FindAsync(id);
+            if (game == null)
+            {
+                return new ApiErrorResult<bool>($"Sản phẩm với id {id} không tồn tại");
+            }
+            foreach (var genre in request.Categories)
+            {
+                var gameInGenre = await _context.GameinGenres
+                    .FirstOrDefaultAsync(x => x.GenreID == int.Parse(genre.Id)
+                    && x.GameID == id);
+                if (gameInGenre != null && genre.Selected == false)
+                {
+                    _context.GameinGenres.Remove(gameInGenre);
+                }
+                else if (gameInGenre == null && genre.Selected)
+                {
+                    await _context.GameinGenres.AddAsync(new GameinGenre()
+                    {
+                        GenreID = int.Parse(genre.Id),
+                        GameID = id
+                    });
+                }
+            }
+            await _context.SaveChangesAsync();
+            return new ApiSuccessResult<bool>();
         }
     }
 }

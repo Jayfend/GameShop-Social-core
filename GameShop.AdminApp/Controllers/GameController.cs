@@ -62,11 +62,12 @@ namespace GameShop.AdminApp.Controllers
 
         [HttpPost]
         [Consumes("multipart/form-data")]
-        public async Task<IActionResult> Create([FromForm] GameCreateRequest request,int? GenreId)
+        public async Task<IActionResult> Create([FromForm] GameCreateRequest request,int GenreId)
         {
             if (!ModelState.IsValid)
                 return View(request);
-            //request.Genrerequests.Add(GenreId);
+
+            request.Genre = GenreId;
             var result = await _gameApiClient.CreateGame(request);
             if (result)
             {

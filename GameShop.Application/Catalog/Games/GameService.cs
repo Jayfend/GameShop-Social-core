@@ -14,6 +14,7 @@ using System.IO;
 using GameShop.Application.Common;
 using GameShop.Utilities.Exceptions;
 using GameShop.ViewModels.Catalog.GameImages;
+using GameShop.Data.Enums;
 
 namespace GameShop.Application.Catalog.Games
 {
@@ -39,36 +40,36 @@ namespace GameShop.Application.Catalog.Games
                 Gameplay = request.Gameplay,
                 CreatedDate = DateTime.Now,
                 UpdatedDate = DateTime.Now,
+                Status = (Status)request.Status
             };
             var genrelist = from g in _context.Genres select g;
-            foreach (var genrequest in request.Genrerequests)
-            {
-                var genre = genrelist.FirstOrDefault(x => x.GenreID == genrequest.GenreID);
-                if (genre == null)
-                {
-                    var newgenre = new Genre()
-                    {
-                        GenreID = genrequest.GenreID,
-                        GenreName = genrequest.GenreName,
-                    };
-                    _context.Genres.Add(newgenre);
-                    var newgameingenre = new GameinGenre()
-                    {
-                        Game = game,
-                        Genre = newgenre
-                    };
-                    _context.GameinGenres.Add(newgameingenre);
-                }
-                else
-                {
+            
+                var genre = genrelist.FirstOrDefault(x => x.GenreID == request.Genre);
+                //if (genre == null)
+                //{
+                //    var newgenre = new Genre()
+                //    {
+                //        GenreID = request.Genre,
+                //        GenreName = request.GenreName,
+                //    };
+                //    _context.Genres.Add(newgenre);
+                //    var newgameingenre = new GameinGenre()
+                //    {
+                //        Game = game,
+                //        Genre = newgenre
+                //    };
+                //    _context.GameinGenres.Add(newgameingenre);
+                //}
+                //else
+                //{
                     var newgameingenre = new GameinGenre()
                     {
                         Game = game,
                         Genre = genre
                     };
                     _context.GameinGenres.Add(newgameingenre);
-                }
-            }
+                
+            
 
             if (request.ThumbnailImage != null)
             {

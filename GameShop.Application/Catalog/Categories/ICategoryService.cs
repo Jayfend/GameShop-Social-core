@@ -1,4 +1,5 @@
 ﻿using GameShop.ViewModels.Catalog.Categories;
+using GameShop.ViewModels.Catalog.Games;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -8,7 +9,7 @@ namespace GameShop.Application.Catalog.Categories
 {
     public interface ICategoryService
     {
-        Task<List<CategoryViewModel>> GetById(int id);
+        Task<GenreCreateRequest> GetById(int id);
         Task<List<CategoryViewModel>> GetAll();
     }
 }

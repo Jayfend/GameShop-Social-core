@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Linq;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+using GameShop.ViewModels.Catalog.Games;
 
 namespace GameShop.Application.Catalog.Categories
 {
@@ -30,14 +31,23 @@ namespace GameShop.Application.Catalog.Categories
             return query;
         }
 
-        public async Task<List<CategoryViewModel>> GetById(int id)
+        public async Task<GenreCreateRequest> GetById(int id)
         {
-            var query = _context.Genres.Where(x => x.GenreID == id);
-            return await query.Select(x => new CategoryViewModel()
+            var query = await _context.Genres.Where(x => x.GenreID == id).FirstOrDefaultAsync();
+            if(query != null)
             {
-                Id = x.GenreID,
-                Name = x.GenreName,
-            }).ToListAsync();
+                GenreCreateRequest genre = new GenreCreateRequest()
+                {
+                    GenreName = query.GenreName,
+                    GenreID = query.GenreID
+                };
+                return genre;
+            }
+            else
+            {
+                return null;
+            }
+          
         }
     }
 }

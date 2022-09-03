@@ -1,4 +1,5 @@
 ﻿using GameShop.ViewModels.Catalog.Categories;
+using GameShop.ViewModels.Catalog.Games;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
@@ -21,9 +22,9 @@ namespace GameShop.AdminApp.Services
             return await GetListAsync<CategoryViewModel>("/api/categories");
         }
 
-        public async Task<List<CategoryViewModel>> GetById(int id)
+        public async Task<GenreCreateRequest> GetById(int id)
         {
-            return await GetAsync<List<CategoryViewModel>>($"/api/categories/{id}");
+            return await GetAsync<GenreCreateRequest>($"/api/categories/{id}");
         }
     }
 }

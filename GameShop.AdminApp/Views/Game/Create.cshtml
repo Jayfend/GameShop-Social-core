@@ -51,23 +51,25 @@
                         </div>
                         <div class="form-group">
                             <label asp-for="Description" class="control-label"></label>
-                            <input asp-for="Description" type="number" class="form-control" />
+                            <input asp-for="Description" class="form-control" />
                             <span asp-validation-for="Description" class="text-danger"></span>
                         </div>
                         <div class="form-group">
-                            <select name="GenreId" asp-items="@ViewBag.Categories" class="form-control" multiple="multiple">
+                            <select name="GenreId" asp-items="@ViewBag.Categories" class="form-control">
                                 <option>--Chọn danh mục--</option>
                             </select>
                         </div>
                         <div class="form-group">
-                            <label asp-for=" Gameplay" class="control-label"></label>
-                            <textarea id="txt_details" asp-for=" Gameplay" rows="35" class="form-control"></textarea>
+                            <label asp-for="Gameplay" class="control-label"></label>
+                            <textarea id="txt_details" asp-for="Gameplay" rows="35" class="form-control"></textarea>
                             <span asp-validation-for="Gameplay" class="text-danger"></span>
                         </div>
                         <div class="form-group">
-                            <label asp-for="Status " class="control-label"></label>
-                            <input asp-for="Status " class="form-control" />
-                            <span asp-validation-for="Status"  class=" text-danger"></span>
+                            <select name="Status" class="form-control">
+                                <option>--Chọn danh mục--</option>
+                                <option value="1">Active</option>
+                                <option value="0">InActive</option>
+                            </select>
                         </div>
 
                         <div class="form-group">

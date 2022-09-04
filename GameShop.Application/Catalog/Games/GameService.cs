@@ -142,11 +142,20 @@ namespace GameShop.Application.Catalog.Games
                     Gameplay = x.Gameplay,
                     Discount = x.Discount,
                     GenreIDs = x.GameInGenres.Select(y=>y.GenreID).ToList(),
+                    GenreName = new List<string>(),
                     Status = x.Status.ToString(),
                     Price = x.Price,
                 })
                 .ToListAsync();
-
+            var genres = _context.Genres.AsQueryable();
+            foreach(var item in data)
+            {   
+                foreach(var id in item.GenreIDs)
+                {
+                   var genrename = genres.Where(x => x.GenreID == id).Select(y => y.GenreName).FirstOrDefault();
+                    item.GenreName.Add(genrename.ToString());
+                }
+            }
             //select and projection
             var pagedResult = new PagedResult<GameViewModel>()
             {

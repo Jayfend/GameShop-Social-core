@@ -124,6 +124,31 @@ namespace GameShop.AdminApp.Controllers
             }
             return categoryAssignRequest;
         }
+        [HttpGet]
+        public IActionResult Delete(int id)
+        {
+            return View(new GameDeleteRequest()
+            {
+                Id = id
+            });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Delete(GameDeleteRequest request)
+        {
+            if (!ModelState.IsValid)
+                return View();
+
+            var result = await _gameApiClient.DeleteGame(request.Id);
+            if (result)
+            {
+                TempData["result"] = "Xóa sản phẩm thành công";
+                return RedirectToAction("Index");
+            }
+
+            ModelState.AddModelError("", "Xóa không thành công");
+            return View(request);
+        }
     }
 
 }

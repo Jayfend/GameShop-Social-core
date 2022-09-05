@@ -9,6 +9,9 @@ namespace GameShop.AdminApp.Services
     {
         Task<PagedResult<GameViewModel>> GetGamePagings(GetManageGamePagingRequest request);
         Task<bool> CreateGame(GameCreateRequest request);
-
+        Task<ApiResult<bool>> CategoryAssign(int id, CategoryAssignRequest request);
+        Task<GameViewModel> GetById(int id);
+        Task<bool> DeleteGame(int id);
+        Task<bool> UpdateGame(GameEditRequest request);
     }
 }

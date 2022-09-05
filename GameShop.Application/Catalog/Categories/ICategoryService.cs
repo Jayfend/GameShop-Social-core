@@ -9,7 +9,7 @@ namespace GameShop.Application.Catalog.Categories
 {
     public interface ICategoryService
     {
-        Task<GenreCreateRequest> GetById(int id);
+        Task<CategoryViewModel> GetById(int id);
         Task<List<CategoryViewModel>> GetAll();
     }
 }

@@ -31,15 +31,15 @@ namespace GameShop.Application.Catalog.Categories
             return query;
         }
 
-        public async Task<GenreCreateRequest> GetById(int id)
+        public async Task<CategoryViewModel> GetById(int id)
         {
             var query = await _context.Genres.Where(x => x.GenreID == id).FirstOrDefaultAsync();
             if(query != null)
             {
-                GenreCreateRequest genre = new GenreCreateRequest()
+                CategoryViewModel genre = new CategoryViewModel()
                 {
-                    GenreName = query.GenreName,
-                    GenreID = query.GenreID
+                    Name = query.GenreName,
+                  Id = query.GenreID
                 };
                 return genre;
             }

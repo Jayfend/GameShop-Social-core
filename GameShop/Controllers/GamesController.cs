@@ -67,10 +67,12 @@ namespace GameShop.Controllers
             return Created(nameof(GetById), game);
         }
 
-        [HttpPut]
-        public async Task<IActionResult> Update([FromBody] GameEditRequest request)
+        [HttpPut("{GameID}")]
+        [Consumes("multipart/form-data")]
+        [Authorize]
+        public async Task<IActionResult> Update([FromRoute] int GameID,[FromForm] GameEditRequest request)
         {
-            var affedtedResult = await _gameService.Update(request);
+            var affedtedResult = await _gameService.Update(GameID,request);
             if (affedtedResult == 0)
             {
                 return BadRequest();
@@ -171,6 +173,20 @@ namespace GameShop.Controllers
                 return BadRequest();
             }
             return Ok();
+        }
+        [HttpPut("{id}/genres")]
+        [Authorize]
+        public async Task<IActionResult> CategoryAssign(int id, [FromBody] CategoryAssignRequest request)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var result = await _gameService.CategoryAssign(id, request);
+            if (!result.IsSuccessed)
+            {
+                return BadRequest(result);
+            }
+            return Ok(result);
         }
     }
 }

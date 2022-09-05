@@ -13,7 +13,7 @@ namespace GameShop.Application.Catalog.Games
     {
         Task<int> Create(GameCreateRequest request);
 
-        Task<int> Update(GameEditRequest request);
+        Task<int> Update(int GameID,GameEditRequest request);
 
         Task<int> Delete(int GameID);
 
@@ -38,5 +38,6 @@ namespace GameShop.Application.Catalog.Games
         Task<GameViewModel> GetById(int GameID);
 
         Task<GameImageViewModel> GetImageById(int ImageID);
+        Task<ApiResult<bool>> CategoryAssign(int id, CategoryAssignRequest request);
     }
 }

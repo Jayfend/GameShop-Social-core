@@ -1,5 +1,8 @@
 ﻿using GameShop.AdminApp.Services;
+using GameShop.Utilities.Constants;
 using GameShop.ViewModels.Catalog.Games;
+using GameShop.ViewModels.Common;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
@@ -78,6 +81,117 @@ namespace GameShop.AdminApp.Controllers
             ModelState.AddModelError("", "Thêm sản phẩm thất bại");
             return View(request);
         }
+        [HttpGet]
+        public async Task<IActionResult> CategoryAssign(int id)
+        {
+            var roleAssignRequest = await GetCategoryAssignRequest(id);
+            return View(roleAssignRequest);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CategoryAssign(CategoryAssignRequest request)
+        {
+            if (!ModelState.IsValid)
+                return View();
+
+            var result = await _gameApiClient.CategoryAssign(request.Id, request);
+
+            if (result.IsSuccessed)
+            {
+                TempData["result"] = "Cập nhật danh mục thành công";
+                return RedirectToAction("Index");
+            }
+
+            ModelState.AddModelError("", result.Message);
+            var roleAssignRequest = await GetCategoryAssignRequest(request.Id);
+
+            return View(roleAssignRequest);
+        }
+        private async Task<CategoryAssignRequest> GetCategoryAssignRequest(int id)
+        {
+            
+            var productObj = await _gameApiClient.GetById(id);
+            var categories = await _categoryApiClient.GetAll();
+            var categoryAssignRequest = new CategoryAssignRequest();
+            foreach (var role in categories)
+            {
+                categoryAssignRequest.Categories.Add(new SelectItem()
+                {
+                    Id = role.Id.ToString(),
+                    Name = role.Name,
+                    Selected = productObj.GenreName.Contains(role.Name)
+                });
+            }
+            return categoryAssignRequest;
+        }
+        [HttpGet]
+        public IActionResult Delete(int id)
+        {
+            return View(new GameDeleteRequest()
+            {
+                Id = id
+            });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Delete(GameDeleteRequest request)
+        {
+            if (!ModelState.IsValid)
+                return View();
+
+            var result = await _gameApiClient.DeleteGame(request.Id);
+            if (result)
+            {
+                TempData["result"] = "Xóa sản phẩm thành công";
+                return RedirectToAction("Index");
+            }
+
+            ModelState.AddModelError("", "Xóa không thành công");
+            return View(request);
+        }
+        [HttpGet]
+        public async Task<IActionResult> Edit(int id)
+        {
+
+            var game = await _gameApiClient.GetById(id);
+            var editVm = new GameEditRequest()
+            {
+                GameID = game.GameID,
+                Description = game.Description,
+                Name = game.Name,
+                Price = game.Price,
+                Discount = game.Discount,
+                Gameplay = game.Gameplay,
+
+               
+            };
+            return View(editVm);
+        }
+
+        [HttpPost]
+        [Consumes("multipart/form-data")]
+        public async Task<IActionResult> Edit([FromForm] GameEditRequest request)
+        {
+            if (!ModelState.IsValid)
+                return View(request);
+
+            var result = await _gameApiClient.UpdateGame(request);
+            if (result)
+            {
+                TempData["result"] = "Cập nhật sản phẩm thành công";
+                return RedirectToAction("Index");
+            }
+
+            ModelState.AddModelError("", "Cập nhật sản phẩm thất bại");
+            return View(request);
+        }
+        [HttpGet]
+        public async Task<IActionResult> Details(int id)
+        {
+            var result = await _gameApiClient.GetById(id);
+            return View(result);
+        }
+
     }
-    
+
 }

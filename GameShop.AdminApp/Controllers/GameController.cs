@@ -149,6 +149,49 @@ namespace GameShop.AdminApp.Controllers
             ModelState.AddModelError("", "Xóa không thành công");
             return View(request);
         }
+        [HttpGet]
+        public async Task<IActionResult> Edit(int id)
+        {
+
+            var game = await _gameApiClient.GetById(id);
+            var editVm = new GameEditRequest()
+            {
+                GameID = game.GameID,
+                Description = game.Description,
+                Name = game.Name,
+                Price = game.Price,
+                Discount = game.Discount,
+                Gameplay = game.Gameplay,
+
+               
+            };
+            return View(editVm);
+        }
+
+        [HttpPost]
+        [Consumes("multipart/form-data")]
+        public async Task<IActionResult> Edit([FromForm] GameEditRequest request)
+        {
+            if (!ModelState.IsValid)
+                return View(request);
+
+            var result = await _gameApiClient.UpdateGame(request);
+            if (result)
+            {
+                TempData["result"] = "Cập nhật sản phẩm thành công";
+                return RedirectToAction("Index");
+            }
+
+            ModelState.AddModelError("", "Cập nhật sản phẩm thất bại");
+            return View(request);
+        }
+        [HttpGet]
+        public async Task<IActionResult> Details(int id)
+        {
+            var result = await _gameApiClient.GetById(id);
+            return View(result);
+        }
+
     }
 
 }

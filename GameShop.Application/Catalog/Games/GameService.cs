@@ -167,21 +167,22 @@ namespace GameShop.Application.Catalog.Games
             return pagedResult;
         }
 
-        public async Task<int> Update(GameEditRequest request)
+        public async Task<int> Update(int GameID,GameEditRequest request)
         {
-            var game = await _context.Games.FindAsync(request.GameID);
+            var game = await _context.Games.FindAsync(GameID);
             if (game == null)
             {
                 throw new GameShopException($"Can not find a game");
             }
             else
             {
-                game.GameName = request.GameName;
+                game.GameName = request.Name;
 
                 game.Discount = request.Discount;
                 game.Description = request.Description;
                 game.Gameplay = request.Gameplay;
                 game.UpdatedDate = DateTime.Now;
+                game.Status = (Status)request.Status;
                 if (request.ThumbnailImage != null)
                 {
                     var thumbnailImage = await _context.GameImages.FirstOrDefaultAsync(i => i.isDefault == true && i.GameID == request.GameID);
@@ -216,6 +217,7 @@ namespace GameShop.Application.Catalog.Games
             var game = await _context.Games.FindAsync(GameID);
             var categories = await (from c in _context.Genres
                                     join pic in _context.GameinGenres on c.GenreID equals pic.GenreID
+                                    where pic.GameID == game.GameID
                                     select c.GenreName).ToListAsync();
             var gameview = new GameViewModel()
             {

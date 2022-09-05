@@ -12,5 +12,6 @@ namespace GameShop.AdminApp.Services
         Task<ApiResult<bool>> CategoryAssign(int id, CategoryAssignRequest request);
         Task<GameViewModel> GetById(int id);
         Task<bool> DeleteGame(int id);
+        Task<bool> UpdateGame(GameEditRequest request);
     }
 }

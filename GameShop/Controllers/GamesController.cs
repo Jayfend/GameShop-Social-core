@@ -67,10 +67,12 @@ namespace GameShop.Controllers
             return Created(nameof(GetById), game);
         }
 
-        [HttpPut]
-        public async Task<IActionResult> Update([FromBody] GameEditRequest request)
+        [HttpPut("{GameID}")]
+        [Consumes("multipart/form-data")]
+        [Authorize]
+        public async Task<IActionResult> Update([FromRoute] int GameID,[FromForm] GameEditRequest request)
         {
-            var affedtedResult = await _gameService.Update(request);
+            var affedtedResult = await _gameService.Update(GameID,request);
             if (affedtedResult == 0)
             {
                 return BadRequest();

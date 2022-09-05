@@ -143,7 +143,6 @@ namespace GameShop.Application.Catalog.Games
                     Discount = x.Discount,
                     GenreName = new List<string>(),
                     GenreIDs = x.GameInGenres.Select(y=>y.GenreID).ToList(),
-                    GenreName = new List<string>(),
                     Status = x.Status.ToString(),
                     Price = x.Price,
                 })

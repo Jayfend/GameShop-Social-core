@@ -17,6 +17,7 @@ namespace GameShop.ViewModels.Catalog.Games
         public string Status { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime UpdatedDate { get; set; }
-        
+        public SystemRequireMin SRM { get; set; } 
+        public SystemRequirementRecommend SRR { get; set; } 
     }
 }

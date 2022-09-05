@@ -145,9 +145,38 @@ namespace GameShop.Application.Catalog.Games
                     GenreIDs = x.GameInGenres.Select(y=>y.GenreID).ToList(),
                     Status = x.Status.ToString(),
                     Price = x.Price,
+                    SRM = new SystemRequireMin()
+                {
+                    OS = x.SystemRequirementMin.OS,
+                    Processor = x.SystemRequirementMin.Processor,
+                    Memory = x.SystemRequirementMin.Memory,
+                    Graphics = x.SystemRequirementMin.Graphics,
+                    Storage = x.SystemRequirementMin.Storage,
+                    AdditionalNotes = x.SystemRequirementMin.Storage,
+                    Soundcard = x.SystemRequirementMin.Soundcard
+                },
+
+                SRR = new SystemRequirementRecommend()
+                {
+                    OS = x.SystemRequirementRecommended.OS,
+                    Processor = x.SystemRequirementRecommended.Processor,
+                    Memory = x.SystemRequirementRecommended.Memory,
+                    Graphics = x.SystemRequirementRecommended.Graphics,
+                    Storage = x.SystemRequirementRecommended.Storage,
+                    AdditionalNotes = x.SystemRequirementRecommended.Storage,
+                    Soundcard = x.SystemRequirementRecommended.Soundcard
+                }
                 })
                 .ToListAsync();
-
+            var genres = _context.Genres.AsQueryable();
+            foreach (var item in data)
+            {
+                foreach (var genre in item.GenreIDs)
+                {
+                    var name = genres.Where(x => x.GenreID == genre).Select(y => y.GenreName).FirstOrDefault();
+                    item.GenreName.Add(name);
+                }
+            }
             //select and projection
             var pagedResult = new PagedResult<GameViewModel>()
             {
@@ -342,17 +371,29 @@ namespace GameShop.Application.Catalog.Games
                 GenreName = new List<string>(),
                 GenreIDs = x.GameInGenres.Select(y => y.GenreID).ToList(),
                 Status = x.Status.ToString(),
+                SRM = new SystemRequireMin()
+                {
+                    OS = x.SystemRequirementMin.OS,
+                    Processor = x.SystemRequirementMin.Processor,
+                    Memory = x.SystemRequirementMin.Memory,
+                    Graphics = x.SystemRequirementMin.Graphics,
+                    Storage = x.SystemRequirementMin.Storage,
+                    AdditionalNotes = x.SystemRequirementMin.Storage,
+                    Soundcard = x.SystemRequirementMin.Soundcard
+                },
                 Price = x.Price,
+                SRR = new SystemRequirementRecommend()
+                {
+                    OS = x.SystemRequirementRecommended.OS,
+                    Processor = x.SystemRequirementRecommended.Processor,
+                    Memory = x.SystemRequirementRecommended.Memory,
+                    Graphics = x.SystemRequirementRecommended.Graphics,
+                    Storage = x.SystemRequirementRecommended.Storage,
+                    AdditionalNotes = x.SystemRequirementRecommended.Storage,
+                    Soundcard = x.SystemRequirementRecommended.Soundcard
+                }
             }).ToListAsync();
-            //var genrelist = from g in _context.GameinGenres select g;
-            //foreach (var game in data)
-            //{
-            //    var genres = genrelist.Where(x => x.GameID == game.GameID).ToList();
-            //    foreach (var genre in genres)
-            //    {
-            //        game.GenreIDs.Add(genre.GenreID);
-            //    }
-            //}
+           
             var genres = _context.Genres.AsQueryable();
             foreach (var item in data)
             {

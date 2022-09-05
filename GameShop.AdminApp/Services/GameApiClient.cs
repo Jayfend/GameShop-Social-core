@@ -101,5 +101,9 @@ namespace GameShop.AdminApp.Services
 
             return data;
         }
+        public async Task<bool> DeleteGame(int id)
+        {
+            return await Delete($"/api/games/" + id);
+        }
     }
 }

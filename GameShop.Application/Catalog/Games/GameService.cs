@@ -140,12 +140,21 @@ namespace GameShop.Application.Catalog.Games
                     UpdatedDate = x.UpdatedDate,
                     Gameplay = x.Gameplay,
                     Discount = x.Discount,
+                    GenreName = new List<string>(),
                     GenreIDs = x.GameInGenres.Select(y=>y.GenreID).ToList(),
                     Status = x.Status.ToString(),
                     Price = x.Price,
                 })
                 .ToListAsync();
-
+            var genres = _context.Genres.AsQueryable();
+            foreach(var item in data)
+            {
+                foreach(var genre in item.GenreIDs)
+                {
+                    var name = genres.Where(x => x.GenreID == genre).Select(y => y.GenreName).FirstOrDefault();
+                    item.GenreName.Add(name);
+                }
+            }
             //select and projection
             var pagedResult = new PagedResult<GameViewModel>()
             {
@@ -324,23 +333,34 @@ namespace GameShop.Application.Catalog.Games
         {
             var data = await _context.Games.Select(x => new GameViewModel()
             {
+                CreatedDate = DateTime.Now,
                 GameID = x.GameID,
                 Name = x.GameName,
-                Gameplay = x.Gameplay,
-                Price = x.Price,
-                Discount = x.Discount,
-                GenreIDs = new List<int>(),
                 Description = x.Description,
-                CreatedDate = x.CreatedDate,
-                UpdatedDate = x.UpdatedDate
+                UpdatedDate = x.UpdatedDate,
+                Gameplay = x.Gameplay,
+                Discount = x.Discount,
+                GenreName = new List<string>(),
+                GenreIDs = x.GameInGenres.Select(y => y.GenreID).ToList(),
+                Status = x.Status.ToString(),
+                Price = x.Price,
             }).ToListAsync();
-            var genrelist = from g in _context.GameinGenres select g;
-            foreach (var game in data)
+            //var genrelist = from g in _context.GameinGenres select g;
+            //foreach (var game in data)
+            //{
+            //    var genres = genrelist.Where(x => x.GameID == game.GameID).ToList();
+            //    foreach (var genre in genres)
+            //    {
+            //        game.GenreIDs.Add(genre.GenreID);
+            //    }
+            //}
+            var genres = _context.Genres.AsQueryable();
+            foreach (var item in data)
             {
-                var genres = genrelist.Where(x => x.GameID == game.GameID).ToList();
-                foreach (var genre in genres)
+                foreach (var genre in item.GenreIDs)
                 {
-                    game.GenreIDs.Add(genre.GenreID);
+                    var name = genres.Where(x => x.GenreID == genre).Select(y => y.GenreName).FirstOrDefault();
+                    item.GenreName.Add(name);
                 }
             }
             return data;

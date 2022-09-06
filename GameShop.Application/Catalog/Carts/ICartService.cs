@@ -10,5 +10,6 @@ namespace GameShop.Application.Catalog.Carts
     public interface ICartService
     {
         Task<ApiResult<bool>> AddToCart(string UserID, CartCreateRequest cartCreateRequest); 
+        Task<ApiResult<OrderItemResponse>> GetCart(string UserID);
     }
 }

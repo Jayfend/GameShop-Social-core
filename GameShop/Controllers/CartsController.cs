@@ -32,5 +32,18 @@ namespace GameShop.Controllers
             }
             return Ok(result);
         }
+        [HttpGet("UserID")]
+        public async Task<IActionResult> GetCart(string UserID)
+        {
+            var result = await _cartService.GetCart(UserID);
+            if (!result.IsSuccessed)
+            {
+                return BadRequest(result);
+            }
+            else
+            {
+                return Ok(result);
+            }
+        }
     }
 }

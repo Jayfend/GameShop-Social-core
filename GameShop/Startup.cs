@@ -110,7 +110,7 @@ namespace GameShop
             });
             services.AddCors(options => options.AddPolicy("ApiCorsPolicy", builder =>
             {
-                builder.WithOrigins("http://localhost:3789").AllowAnyMethod().AllowAnyHeader();
+                builder.WithOrigins("http://localhost:5000").AllowAnyMethod().AllowAnyHeader();
             }));
 
         }

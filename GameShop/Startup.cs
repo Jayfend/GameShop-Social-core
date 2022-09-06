@@ -1,4 +1,5 @@
 using FluentValidation.AspNetCore;
+using GameShop.Application.Catalog.Carts;
 using GameShop.Application.Catalog.Categories;
 using GameShop.Application.Catalog.Games;
 using GameShop.Application.Common;
@@ -47,6 +48,7 @@ namespace GameShop
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<IRoleService, RoleService>();
             services.AddTransient<ICategoryService, CategoryService>();
+            services.AddTransient<ICartService, CartService>();
             //services.AddTransient<IValidator<LoginRequest>, LoginRequestValidator>();
             services.AddControllers()
              .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<LoginRequestValidator>());

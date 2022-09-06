@@ -43,7 +43,7 @@ namespace GameShop.Application.System.Users
             }
             var roles = await _userManager.GetRolesAsync(user);
             var claims = new[]
-            {
+            {   new Claim(ClaimTypes.NameIdentifier,user.Id.ToString()),
                 new Claim(ClaimTypes.Email,user.Email),
                 new Claim(ClaimTypes.Name,user.UserName),
                 new Claim(ClaimTypes.Role,String.Join(";",roles))
@@ -57,7 +57,7 @@ namespace GameShop.Application.System.Users
                 claims,
                 expires: DateTime.Now.AddHours(3),
                 signingCredentials: creds);
-            var _token = new JwtSecurityTokenHandler().WriteToken(token);
+           
             return new ApiSuccessResult<string>(new JwtSecurityTokenHandler().WriteToken(token));
         }
 

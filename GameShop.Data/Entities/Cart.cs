@@ -11,5 +11,6 @@ namespace GameShop.Data.Entities
         public List<OrderedGame> OrderedGames { get; set; }
         public AppUser AppUser { get; set; }
         public Guid UserID { get; set; }
+
     }
 }

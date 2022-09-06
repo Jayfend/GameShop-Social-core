@@ -206,7 +206,8 @@ namespace GameShop.Application.Catalog.Games
                 game.Status = (Status)request.Status;
                 if (request.ThumbnailImage != null)
                 {
-                    var thumbnailImage = await _context.GameImages.FirstOrDefaultAsync(i => i.isDefault == true && i.GameID == request.GameID);
+                    var thumbnailImage = await _context.GameImages
+                        .FirstOrDefaultAsync(i => i.isDefault == true && i.GameID == request.GameID);
                     if (thumbnailImage != null)
                     {
                         thumbnailImage.Filesize = request.ThumbnailImage.Length;

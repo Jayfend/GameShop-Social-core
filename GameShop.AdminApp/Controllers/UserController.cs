@@ -59,7 +59,7 @@ namespace GameShop.AdminApp.Controllers
                 return View();
             }
             var result = await _userApiClient.RegisterUser(request);
-            if (result.IsSuccessed)
+            if (result.IsSuccess)
             {
                 TempData["result"] = "Thêm người dùng thành công !";
                 return RedirectToAction("Index");
@@ -84,7 +84,7 @@ namespace GameShop.AdminApp.Controllers
                 return View();
 
             var result = await _userApiClient.Delete(request.Id);
-            if (result.IsSuccessed)
+            if (result.IsSuccess)
             {
                 TempData["result"] = "Xóa người dùng thành công";
                 return RedirectToAction("Index");
@@ -98,7 +98,7 @@ namespace GameShop.AdminApp.Controllers
         public async Task<IActionResult> Edit(Guid id)
         {
             var result = await _userApiClient.GetById(id);
-            if (result.IsSuccessed)
+            if (result.IsSuccess)
             {
                 var user = result.ResultObj;
                 var updateRequest = new UserUpdateRequest()
@@ -123,7 +123,7 @@ namespace GameShop.AdminApp.Controllers
                 return View();
             }
             var result = await _userApiClient.UpdateUser(request);
-            if (result.IsSuccessed)
+            if (result.IsSuccess)
             {
                 TempData["result"] = "Cập nhật người dùng thành công !";
                 return RedirectToAction("Index");
@@ -163,7 +163,7 @@ namespace GameShop.AdminApp.Controllers
                 return View();
             }
             var result = await _userApiClient.RoleAssign(request.Id, request);
-            if (result.IsSuccessed)
+            if (result.IsSuccess)
             {
                 TempData["result"] = "Gán quyền thành công !";
                 return RedirectToAction("Index");

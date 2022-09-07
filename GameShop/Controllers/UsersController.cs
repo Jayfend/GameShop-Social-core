@@ -28,7 +28,7 @@ namespace GameShop.Controllers
                 return BadRequest(ModelState);
             }
             var result = await _userService.Authenticate(request);
-            if (string.IsNullOrEmpty(result.ResultObj))
+            if (result.ResultObj == null)
             {
                 return BadRequest("User or Password is incorrect");
             }
@@ -45,7 +45,7 @@ namespace GameShop.Controllers
                 return BadRequest(ModelState);
             }
             var result = await _userService.Register(request);
-            if (!result.IsSuccessed)
+            if (!result.IsSuccess)
             {
                 return BadRequest(result);
             }
@@ -60,7 +60,7 @@ namespace GameShop.Controllers
                 return BadRequest(ModelState);
             }
             var result = await _userService.UpdateUser(request);
-            if (!result.IsSuccessed)
+            if (!result.IsSuccess)
             {
                 return BadRequest(result);
             }
@@ -75,7 +75,7 @@ namespace GameShop.Controllers
                 return BadRequest(ModelState);
             }
             var result = await _userService.RoleAssign(Id, request);
-            if (!result.IsSuccessed)
+            if (!result.IsSuccess)
             {
                 return BadRequest(result);
             }

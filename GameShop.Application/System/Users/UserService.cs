@@ -29,21 +29,21 @@ namespace GameShop.Application.System.Users
             _config = config;
         }
 
-        public async Task<ApiResult<string>> Authenticate(LoginRequest request)
+        public async Task<ApiResult<LoginResponse>> Authenticate(LoginRequest request)
         {
             var user = await _userManager.FindByNameAsync(request.UserName);
             if (user == null)
             {
-                return new ApiErrorResult<string>("Tài khoản không tồn tại");
+                return new ApiErrorResult<LoginResponse>("Tài khoản không tồn tại");
             }
             var result = await _signInManager.PasswordSignInAsync(user, request.Password, request.RememberMe, true);
             if (!result.Succeeded)
             {
-                return new ApiErrorResult<string>("Đăng nhập không đúng");
+                return new ApiErrorResult<LoginResponse>("Đăng nhập không đúng");
             }
             var roles = await _userManager.GetRolesAsync(user);
             var claims = new[]
-            {   new Claim(ClaimTypes.NameIdentifier,user.Id.ToString()),
+            {   new Claim("NameIdentifier",user.Id.ToString()),
                 new Claim(ClaimTypes.Email,user.Email),
                 new Claim(ClaimTypes.Name,user.UserName),
                 new Claim(ClaimTypes.Role,String.Join(";",roles))
@@ -57,8 +57,13 @@ namespace GameShop.Application.System.Users
                 claims,
                 expires: DateTime.Now.AddHours(3),
                 signingCredentials: creds);
-           
-            return new ApiSuccessResult<string>(new JwtSecurityTokenHandler().WriteToken(token));
+
+            LoginResponse response = new LoginResponse()
+            {
+                UserId = user.Id.ToString(),
+                Token = new JwtSecurityTokenHandler().WriteToken(token)
+            };
+            return new ApiSuccessResult<LoginResponse>(response);
         }
 
         public async Task<ApiResult<bool>> Delete(Guid id)
@@ -143,11 +148,11 @@ namespace GameShop.Application.System.Users
             user = new AppUser()
             {
                 UserName = request.UserName,
-                Dob = request.Dob,
+                //Dob = request.Dob,
                 Email = request.Email,
-                FirstName = request.FirstName,
-                LastName = request.LastName,
-                PhoneNumber = request.PhoneNumber,
+                //FirstName = request.FirstName,
+                //LastName = request.LastName,
+                //PhoneNumber = request.PhoneNumber,
             };
 
             var result = await _userManager.CreateAsync(user, request.Password);

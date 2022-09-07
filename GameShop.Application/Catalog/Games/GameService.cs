@@ -145,6 +145,7 @@ namespace GameShop.Application.Catalog.Games
                     GenreIDs = x.GameInGenres.Select(y=>y.GenreID).ToList(),
                     Status = x.Status.ToString(),
                     Price = x.Price,
+                    ListImage = new List<string>(),
                     SRM = new SystemRequireMin()
                 {
                     OS = x.SystemRequirementMin.OS,
@@ -176,6 +177,13 @@ namespace GameShop.Application.Catalog.Games
                     var name = genres.Where(x => x.GenreID == genre).Select(y => y.GenreName).FirstOrDefault();
                     item.GenreName.Add(name);
                 }
+            }
+            var thumbnailimage = _context.GameImages.AsQueryable();
+            foreach (var item in data)
+            {
+                var listgame = thumbnailimage.Where(x => x.GameID == item.GameID).Select(y => y.ImagePath).ToList();
+                item.ListImage = listgame;
+                
             }
             //select and projection
             var pagedResult = new PagedResult<GameViewModel>()

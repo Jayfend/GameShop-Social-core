@@ -182,7 +182,7 @@ namespace GameShop.Controllers
                 return BadRequest(ModelState);
 
             var result = await _gameService.CategoryAssign(id, request);
-            if (!result.IsSuccessed)
+            if (!result.IsSuccess)
             {
                 return BadRequest(result);
             }

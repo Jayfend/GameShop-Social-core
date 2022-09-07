@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace GameShop.Data.Migrations
 {
-    public partial class Initial : Migration
+    public partial class initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -214,6 +214,25 @@ namespace GameShop.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Wishlists",
+                columns: table => new
+                {
+                    ID = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserID = table.Column<Guid>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Wishlists", x => x.ID);
+                    table.ForeignKey(
+                        name: "FK_Wishlists_AspNetUsers_UserID",
+                        column: x => x.UserID,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "GameImages",
                 columns: table => new
                 {
@@ -340,29 +359,55 @@ namespace GameShop.Data.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "WishesGames",
+                columns: table => new
+                {
+                    ID = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    WishID = table.Column<int>(nullable: false),
+                    GameID = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_WishesGames", x => x.ID);
+                    table.ForeignKey(
+                        name: "FK_WishesGames_Games_GameID",
+                        column: x => x.GameID,
+                        principalTable: "Games",
+                        principalColumn: "GameID",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_WishesGames_Wishlists_WishID",
+                        column: x => x.WishID,
+                        principalTable: "Wishlists",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Description", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { new Guid("8d04dce2-969a-435d-bba4-df3f325983dc"), "f2046a05-d25a-4bf8-a108-f0b7efe7e85f", "Administrator role", "admin", "ADMIN" },
-                    { new Guid("52503f03-bdea-4bf8-8a1a-d21ae2646483"), "08e28c07-cb32-430c-87ef-927eb4e0286e", "User role", "User", "USER" }
+                    { new Guid("8d04dce2-969a-435d-bba4-df3f325983dc"), "64066888-bb8f-4a67-b9e2-d43a6fb795bb", "Administrator role", "admin", "ADMIN" },
+                    { new Guid("52503f03-bdea-4bf8-8a1a-d21ae2646483"), "1d9f09ae-6661-4587-837f-d2454651a15d", "User role", "User", "USER" }
                 });
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Dob", "Email", "EmailConfirmed", "FirstName", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { new Guid("69bd714f-9576-45ba-b5b7-f00649be00de"), 0, "e1759cc8-133e-4c2f-a836-b2d44efdab8c", new DateTime(2001, 7, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "leenguyen1721@gmail.com", true, "Luan", "Nguyen Phung Le", false, null, "LEENGUYEN1721@gmail.com", "JAYFEND", "AQAAAAEAACcQAAAAENXD9Wq/iKRlAih6VxxorBu4ovccPTOohgJnEQlmMBS7CrYnDikwYYfGz0QRHurB6w==", null, false, "", false, "Jayfend" });
+                values: new object[] { new Guid("69bd714f-9576-45ba-b5b7-f00649be00de"), 0, "994ee186-5de0-4d82-8f5f-d47e6570797e", new DateTime(2001, 7, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "leenguyen1721@gmail.com", true, "Luan", "Nguyen Phung Le", false, null, "LEENGUYEN1721@gmail.com", "JAYFEND", "AQAAAAEAACcQAAAAEIi0hVXehBvKFj2G+pM/2wiNOYGw7HkXUnarxFGK1szMlb1Pk+jlkjrhHCWYXamn9g==", null, false, "", false, "Jayfend" });
 
             migrationBuilder.InsertData(
                 table: "Games",
                 columns: new[] { "GameID", "BaseEntityID", "CreatedDate", "Description", "GameName", "Gameplay", "Price", "Status", "UpdatedDate" },
-                values: new object[] { 1, 0, new DateTime(2022, 9, 6, 10, 46, 25, 598, DateTimeKind.Local).AddTicks(8253), "The best game in the world", "Grand Theft Auto V", "Destroy the city", 250000m, 1, new DateTime(2022, 9, 6, 10, 46, 25, 599, DateTimeKind.Local).AddTicks(6121) });
+                values: new object[] { 1, 0, new DateTime(2022, 9, 7, 9, 21, 57, 260, DateTimeKind.Local).AddTicks(7686), "The best game in the world", "Grand Theft Auto V", "Destroy the city", 250000m, 1, new DateTime(2022, 9, 7, 9, 21, 57, 261, DateTimeKind.Local).AddTicks(4976) });
 
             migrationBuilder.InsertData(
                 table: "Games",
                 columns: new[] { "GameID", "BaseEntityID", "CreatedDate", "Description", "Discount", "GameName", "Gameplay", "Price", "Status", "UpdatedDate" },
-                values: new object[] { 2, 0, new DateTime(2022, 9, 6, 10, 46, 25, 599, DateTimeKind.Local).AddTicks(6614), "Back to the cowboy town", 20, "Red Dead Redemption 2", "Discover the cowboy world", 250000m, 1, new DateTime(2022, 9, 6, 10, 46, 25, 599, DateTimeKind.Local).AddTicks(6634) });
+                values: new object[] { 2, 0, new DateTime(2022, 9, 7, 9, 21, 57, 261, DateTimeKind.Local).AddTicks(5510), "Back to the cowboy town", 20, "Red Dead Redemption 2", "Discover the cowboy world", 250000m, 1, new DateTime(2022, 9, 7, 9, 21, 57, 261, DateTimeKind.Local).AddTicks(5531) });
 
             migrationBuilder.InsertData(
                 table: "Genres",
@@ -484,6 +529,23 @@ namespace GameShop.Data.Migrations
                 table: "SystemRequirementRecommended",
                 column: "GameID",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_WishesGames_GameID",
+                table: "WishesGames",
+                column: "GameID",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_WishesGames_WishID",
+                table: "WishesGames",
+                column: "WishID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Wishlists_UserID",
+                table: "Wishlists",
+                column: "UserID",
+                unique: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -519,6 +581,9 @@ namespace GameShop.Data.Migrations
                 name: "SystemRequirementRecommended");
 
             migrationBuilder.DropTable(
+                name: "WishesGames");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
@@ -529,6 +594,9 @@ namespace GameShop.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "Games");
+
+            migrationBuilder.DropTable(
+                name: "Wishlists");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

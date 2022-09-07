@@ -69,6 +69,21 @@ namespace GameShop.Application.Catalog.Carts
             
         }
 
+        public async Task<ApiResult<bool>> DeleteItem(string UserID, OrderItemDelete orderItemDelete)
+        {
+            var orderitem = await _context.OrderedGames.FirstOrDefaultAsync(x => x.Cart.UserID.ToString() == UserID && x.GameID == orderItemDelete.GameID);
+            if(orderitem == null)
+            {
+                return new ApiErrorResult<bool>("Không tìm thấy game");
+            }
+            else
+            {
+                _context.OrderedGames.Remove(orderitem);
+                await _context.SaveChangesAsync();
+                return new ApiSuccessResult<bool>();
+            }
+        }
+
         public async Task<ApiResult<OrderItemResponse>> GetCart(string UserID)
         {
             var getCart = await _context.OrderedGames.Where(x => x.Cart.UserID.ToString() == UserID &&  x.Cart.Status.Equals((Status)1))

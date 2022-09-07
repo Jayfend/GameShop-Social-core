@@ -96,7 +96,7 @@ namespace GameShop.AdminApp.Controllers
 
             var result = await _gameApiClient.CategoryAssign(request.Id, request);
 
-            if (result.IsSuccessed)
+            if (result.IsSuccess)
             {
                 TempData["result"] = "Cập nhật danh mục thành công";
                 return RedirectToAction("Index");

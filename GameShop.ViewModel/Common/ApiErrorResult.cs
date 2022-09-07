@@ -14,13 +14,13 @@ namespace GameShop.ViewModels.Common
 
         public ApiErrorResult(string message)
         {
-            IsSuccessed = false;
+            IsSuccess = false;
             Message = message;
         }
 
         public ApiErrorResult(string[] validationErrors)
         {
-            IsSuccessed = false;
+            IsSuccess = false;
             ValidationErrors = validationErrors;
         }
     }

@@ -242,24 +242,45 @@ namespace GameShop.Application.Catalog.Games
 
         public async Task<GameViewModel> GetById(int GameID)
         {
-            var game = await _context.Games.FindAsync(GameID);
             var categories = await (from c in _context.Genres
                                     join pic in _context.GameinGenres on c.GenreID equals pic.GenreID
-                                    where pic.GameID == game.GameID
+                                    where pic.GameID == GameID
                                     select c.GenreName).ToListAsync();
-            var gameview = new GameViewModel()
+            var gameview = await _context.Games.Where(x => x.GameID == GameID).Select(x => new GameViewModel()
             {
-                GameID = game.GameID,
-                Name = game.GameName,
-                Gameplay = game.Gameplay,
-                CreatedDate = game.CreatedDate,
-                UpdatedDate = game.UpdatedDate,
+                GameID = x.GameID,
+                Name = x.GameName,
+                Gameplay = x.Gameplay,
+                CreatedDate = x.CreatedDate,
+                UpdatedDate = x.UpdatedDate,
                 GenreIDs = new List<int>(),
                 GenreName = categories,
-                Description = game.Description,
-                Discount = game.Discount,
-                Price = game.Price
-            };
+                Description = x.Description,
+                Discount = x.Discount,
+                Price = x.Price,
+                ListImage = new List<string>(),
+                SRM = new SystemRequireMin()
+                {
+                    OS = x.SystemRequirementMin.OS,
+                    Processor = x.SystemRequirementMin.Processor,
+                    Memory = x.SystemRequirementMin.Memory,
+                    Graphics = x.SystemRequirementMin.Graphics,
+                    Storage = x.SystemRequirementMin.Storage,
+                    AdditionalNotes = x.SystemRequirementMin.Storage,
+                    Soundcard = x.SystemRequirementMin.Soundcard
+                },
+
+                SRR = new SystemRequirementRecommend()
+                {
+                    OS = x.SystemRequirementRecommended.OS,
+                    Processor = x.SystemRequirementRecommended.Processor,
+                    Memory = x.SystemRequirementRecommended.Memory,
+                    Graphics = x.SystemRequirementRecommended.Graphics,
+                    Storage = x.SystemRequirementRecommended.Storage,
+                    AdditionalNotes = x.SystemRequirementRecommended.Storage,
+                    Soundcard = x.SystemRequirementRecommended.Soundcard
+                }
+            }).FirstOrDefaultAsync();
 
             var genres = await _context.GameinGenres.Where(x => x.GameID == gameview.GameID).ToListAsync();
 
@@ -267,6 +288,10 @@ namespace GameShop.Application.Catalog.Games
             {
                 gameview.GenreIDs.Add(genre.GenreID);
             }
+            var thumbnailimage = _context.GameImages.AsQueryable();
+
+            var listgame = thumbnailimage.Where(x => x.GameID == gameview.GameID).Select(y => y.ImagePath).ToList();
+            gameview.ListImage = listgame;
 
             return gameview;
         }

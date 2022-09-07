@@ -2,21 +2,24 @@
 using GameShop.ViewModels.Catalog.GameImages;
 using GameShop.ViewModels.Catalog.Games;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace GameShop.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-
     public class GamesController : ControllerBase
     {
         private readonly IGameService _gameService;
 
-        public GamesController(IGameService gameService)
+        public GamesController(IGameService gameService, IWebHostEnvironment webHostEnvironment)
         {
             _gameService = gameService;
         }
@@ -35,6 +38,8 @@ namespace GameShop.Controllers
         public async Task<IActionResult> GetAllPaging([FromQuery] GetManageGamePagingRequest request)
         {
             var games = await _gameService.GetAllPaging(request);
+
+           
             return Ok(games);
         }
 
@@ -70,9 +75,9 @@ namespace GameShop.Controllers
         [HttpPut("{GameID}")]
         [Consumes("multipart/form-data")]
         [Authorize]
-        public async Task<IActionResult> Update([FromRoute] int GameID,[FromForm] GameEditRequest request)
+        public async Task<IActionResult> Update([FromRoute] int GameID, [FromForm] GameEditRequest request)
         {
-            var affedtedResult = await _gameService.Update(GameID,request);
+            var affedtedResult = await _gameService.Update(GameID, request);
             if (affedtedResult == 0)
             {
                 return BadRequest();
@@ -174,6 +179,7 @@ namespace GameShop.Controllers
             }
             return Ok();
         }
+
         [HttpPut("{id}/genres")]
         [Authorize]
         public async Task<IActionResult> CategoryAssign(int id, [FromBody] CategoryAssignRequest request)

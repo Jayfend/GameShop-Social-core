@@ -7,7 +7,7 @@ namespace GameShop.AdminApp.Services
 {
     public interface IUserApiClient
     {
-        Task<ApiResult<string>> Authenticate(LoginRequest request);
+        Task<ApiResult<LoginResponse>> Authenticate(LoginRequest request);
 
         Task<ApiResult<PagedResult<UserViewModel>>> GetUsersPaging(GetUserPagingRequest request);
 

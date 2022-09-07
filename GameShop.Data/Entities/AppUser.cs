@@ -14,5 +14,6 @@ namespace GameShop.Data.Entities
         public DateTime Dob { get; set; }
 
         public List<Cart> Carts { get; set; }
+        public Wishlist Wishlist { get; set; }
     }
 }

@@ -26,7 +26,7 @@ namespace GameShop.AdminApp.Services
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public async Task<ApiResult<string>> Authenticate(LoginRequest request)
+        public async Task<ApiResult<LoginResponse>> Authenticate(LoginRequest request)
         {
             var json = JsonConvert.SerializeObject(request);
             var httpContent = new StringContent(json, Encoding.UTF8, "application/json");
@@ -37,10 +37,10 @@ namespace GameShop.AdminApp.Services
             var result = await response.Content.ReadAsStringAsync();
             if (response.IsSuccessStatusCode)
             {
-                return JsonConvert.DeserializeObject<ApiSuccessResult<string>>(result);
+                return JsonConvert.DeserializeObject<ApiSuccessResult<LoginResponse>>(result);
             }
 
-            return JsonConvert.DeserializeObject<ApiErrorResult<string>>(result);
+            return JsonConvert.DeserializeObject<ApiErrorResult<LoginResponse>>(result);
         }
 
         public async Task<ApiResult<bool>> Delete(Guid id)

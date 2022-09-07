@@ -8,13 +8,14 @@ namespace GameShop.ViewModels.Common
     {
         public ApiSuccessResult(T resultObj)
         {
-            IsSuccessed = true;
+            IsSuccess = true;
             ResultObj = resultObj;
         }
 
         public ApiSuccessResult()
         {
-            IsSuccessed = true;
+            IsSuccess = true;
         }
+      
     }
 }

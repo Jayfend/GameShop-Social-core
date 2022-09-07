@@ -1,7 +1,7 @@
 ﻿using GameShop.Application.Catalog.Carts;
-using GameShop.Application.System.Users;
+using GameShop.Application.Catalog.Wishlists;
 using GameShop.ViewModels.Catalog.Carts;
-using Microsoft.AspNetCore.Authorization;
+using GameShop.ViewModels.Catalog.Wishlists;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -10,22 +10,17 @@ namespace GameShop.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
-    public class CartsController : ControllerBase
+    public class WishlistController : ControllerBase
     {
-        private readonly ICartService _cartService;
-        public CartsController(ICartService cartService)
+        private readonly IWishlistService _wishlistService;
+        public WishlistController(IWishlistService wishlistService)
         {
-            _cartService = cartService;
+            _wishlistService = wishlistService;
         }
         [HttpPost("UserID")]
-        public async Task<IActionResult> AddToCart(string UserID,[FromBody]CartCreateRequest cartCreateRequest)
+        public async Task<IActionResult> AddWishlist(string UserID, AddWishlistRequest addWishlistRequest)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-            var result = await _cartService.AddToCart(UserID, cartCreateRequest);
+            var result =await _wishlistService.AddWishlist(UserID, addWishlistRequest);
             if (!result.IsSuccess)
             {
                 return BadRequest(result);
@@ -33,9 +28,9 @@ namespace GameShop.Controllers
             return Ok(result);
         }
         [HttpGet("UserID")]
-        public async Task<IActionResult> GetCart(string UserID)
+        public async Task<IActionResult> GetWishlist(string UserID)
         {
-            var result = await _cartService.GetCart(UserID);
+            var result = await _wishlistService.GetWishlist(UserID);
             if (!result.IsSuccess)
             {
                 return BadRequest(result);
@@ -46,9 +41,9 @@ namespace GameShop.Controllers
             }
         }
         [HttpDelete("UserID")]
-        public async Task<IActionResult> DeleteItem(string UserID, [FromBody]OrderItemDelete orderItemDelete)
+        public async Task<IActionResult> DeleteItem(string UserID, [FromBody] DeleteItemRequest deleteItemRequest)
         {
-            var result = await _cartService.DeleteItem(UserID, orderItemDelete);
+            var result = await _wishlistService.DeleteItem(UserID, deleteItemRequest);
             if (!result.IsSuccess)
             {
                 return BadRequest(result);
@@ -59,4 +54,5 @@ namespace GameShop.Controllers
             }
         }
     }
+   
 }

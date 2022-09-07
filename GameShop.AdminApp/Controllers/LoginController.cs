@@ -39,13 +39,13 @@ namespace GameShop.AdminApp.Controllers
             if (!ModelState.IsValid)
                 return View(ModelState);
             var result = await _userApiClient.Authenticate(request);
-            var userPrincipal = this.ValidateToken(result.ResultObj);
+            var userPrincipal = this.ValidateToken(result.ResultObj.Token);
             var authProperties = new AuthenticationProperties
             {
                 ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(10),
                 IsPersistent = true
             };
-            HttpContext.Session.SetString("Token", result.ResultObj);
+            HttpContext.Session.SetString("Token", result.ResultObj.Token);
             await HttpContext.SignInAsync(
                        CookieAuthenticationDefaults.AuthenticationScheme,
                        userPrincipal,

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using GameShop.ViewModels.Catalog.GameImages;
+using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -17,7 +19,8 @@ namespace GameShop.ViewModels.Catalog.Games
         public string Status { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime UpdatedDate { get; set; }
-        public SystemRequireMin SRM { get; set; } 
-        public SystemRequirementRecommend SRR { get; set; } 
+        public SystemRequireMin SRM { get; set; }
+        public SystemRequirementRecommend SRR { get; set; }
+        public List<string> ListImage { get; set; }
     }
 }

@@ -24,19 +24,19 @@ namespace GameShop.Application.Catalog.Carts
             _userManager = useManager;
             _signInManager = signInManager;
         }
+
         public async Task<ApiResult<bool>> AddToCart(string UserID, CartCreateRequest cartCreateRequest)
         {
             var getCart = await _context.Carts.FirstOrDefaultAsync(x => x.UserID.ToString() == UserID && x.Status.Equals((Status)1));
-            if(getCart != null)
+            if (getCart != null)
             {
                 var check = await _context.OrderedGames.FirstOrDefaultAsync(x => x.CartID == getCart.CartID && x.GameID == cartCreateRequest.GameID);
-                if(check != null)
+                if (check != null)
                 {
                     return new ApiErrorResult<bool>("Bạn đã mua game này rồi");
                 }
                 else
-                {   
-
+                {
                     OrderedGame newgame = new OrderedGame()
                     {
                         GameID = cartCreateRequest.GameID,
@@ -55,24 +55,22 @@ namespace GameShop.Application.Catalog.Carts
                     Status = Data.Enums.Status.Active,
                     CreatedDate = DateTime.Now,
                     UpdatedDate = DateTime.Now,
-                    
                 };
                 OrderedGame newgame = new OrderedGame()
                 {
                     GameID = cartCreateRequest.GameID,
-                  Cart = newcart
+                    Cart = newcart
                 };
                 _context.OrderedGames.Add(newgame);
                 await _context.SaveChangesAsync();
                 return new ApiSuccessResult<bool>();
             }
-            
         }
 
         public async Task<ApiResult<bool>> DeleteItem(string UserID, OrderItemDelete orderItemDelete)
         {
             var orderitem = await _context.OrderedGames.FirstOrDefaultAsync(x => x.Cart.UserID.ToString() == UserID && x.GameID == orderItemDelete.GameID);
-            if(orderitem == null)
+            if (orderitem == null)
             {
                 return new ApiErrorResult<bool>("Không tìm thấy game");
             }
@@ -86,21 +84,27 @@ namespace GameShop.Application.Catalog.Carts
 
         public async Task<ApiResult<OrderItemResponse>> GetCart(string UserID)
         {
-            var getCart = await _context.OrderedGames.Where(x => x.Cart.UserID.ToString() == UserID &&  x.Cart.Status.Equals((Status)1))
+            var getCart = await _context.OrderedGames.Where(x => x.Cart.UserID.ToString() == UserID && x.Cart.Status.Equals((Status)1))
                 .Select(x => new OrderItemResponse()
                 {
+                    GameId = x.GameID,
                     Name = x.Game.GameName,
                     Price = x.Game.Price,
                     Discount = x.Game.Discount,
-                    
+                    ImageList = new List<string>()
                 }).FirstOrDefaultAsync();
-            if(getCart== null)
+
+            var thumbnailimage = _context.GameImages.AsQueryable();
+
+            var listgame = thumbnailimage.Where(x => x.GameID == getCart.GameId).Select(y => y.ImagePath).ToList();
+            getCart.ImageList = listgame;
+
+            if (getCart == null)
             {
                 return new ApiErrorResult<OrderItemResponse>("Không tìm thấy giỏ hàng");
             }
-            
-                return new ApiSuccessResult<OrderItemResponse>(getCart);
-            
+
+            return new ApiSuccessResult<OrderItemResponse>(getCart);
         }
     }
 }

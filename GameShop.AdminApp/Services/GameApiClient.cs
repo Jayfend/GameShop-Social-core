@@ -13,6 +13,7 @@ using GameShop.Utilities.Constants;
 using System.IO;
 using System.Reflection;
 using System.Text;
+using GameShop.ViewModels.Catalog.GameImages;
 
 namespace GameShop.AdminApp.Services
 {
@@ -107,6 +108,38 @@ namespace GameShop.AdminApp.Services
             requestContent.Add(new StringContent(request.Status.ToString()), "status");
 
             var response = await client.PostAsync($"/api/games/", requestContent);
+            return response.IsSuccessStatusCode;
+        }
+
+        public async Task<bool> AddImage(int GameID, GameImageCreateRequest request)
+        {
+            var sessions = _httpContextAccessor
+                .HttpContext
+                .Session
+                .GetString(SystemConstants.AppSettings.Token);
+            var client = _httpClientFactory.CreateClient();
+            client.BaseAddress = new Uri(_configuration[SystemConstants.AppSettings.BaseAddress]);
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", sessions);
+            var requestContent = new MultipartFormDataContent();
+
+            if (request.ImageFile != null)
+            {
+                byte[] data;
+                using (var br = new BinaryReader(request.ImageFile.OpenReadStream()))
+                {
+                    data = br.ReadBytes((int)request.ImageFile.OpenReadStream().Length);
+                }
+                ByteArrayContent bytes = new ByteArrayContent(data);
+                requestContent.Add(bytes, "imagefile", request.ImageFile.FileName);
+            }
+            var myContent = JsonConvert.SerializeObject(request.isDefault);
+            var stringContent = new StringContent(myContent, UnicodeEncoding.UTF8, "application/json");
+            requestContent.Add(stringContent, "isdefault");
+            requestContent.Add(new StringContent(string.IsNullOrEmpty(request.Caption) ? "" : request.Caption.ToString()), "caption");
+
+            requestContent.Add(new StringContent(request.SortOrder.ToString()), "sortorder");
+            requestContent.Add(new StringContent(request.GameID.ToString()), "gameid");
+            var response = await client.PostAsync($"/api/games/{GameID}/images", requestContent);
             return response.IsSuccessStatusCode;
         }
 

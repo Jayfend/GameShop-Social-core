@@ -132,7 +132,7 @@ namespace GameShop.Controllers
         }
 
         [HttpPatch("price/{GameID}/{newPrice}")]
-        public async Task<IActionResult> UpdatePrice(int GameID, decimal newPrice)
+        public async Task<IActionResult> UpdatePrice([FromRoute] int GameID, decimal newPrice)
         {
             var isSuccess = await _gameService.UpdatePrice(GameID, newPrice);
             if (isSuccess == false)
@@ -145,7 +145,8 @@ namespace GameShop.Controllers
 
         // Image
         [HttpPost("{GameID}/Images")]
-        public async Task<IActionResult> CreateImage(int GameID, [FromForm] GameImageCreateRequest request)
+        [Consumes("multipart/form-data")]
+        public async Task<IActionResult> CreateImage([FromRoute] int GameID, [FromForm] GameImageCreateRequest request)
         {
             if (!ModelState.IsValid)
             {
@@ -174,7 +175,7 @@ namespace GameShop.Controllers
             return Ok(image);
         }
 
-        [HttpGet("{GameID}/Images")]
+        [HttpGet("{GameID}/images")]
         public async Task<IActionResult> GetListImages(int GameID)
         {
             var ListImage = await _gameService.GetListImages(GameID);

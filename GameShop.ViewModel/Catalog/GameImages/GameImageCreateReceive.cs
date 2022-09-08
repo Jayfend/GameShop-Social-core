@@ -5,7 +5,7 @@ using System.Text;
 
 namespace GameShop.ViewModels.Catalog.GameImages
 {
-    public class GameImageCreateRequest
+    public class GameImageCreateReceive
     {
         public int GameID { get; set; }
         public string Caption { get; set; }

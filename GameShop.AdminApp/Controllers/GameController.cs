@@ -1,5 +1,6 @@
 ﻿using GameShop.AdminApp.Services;
 using GameShop.Utilities.Constants;
+using GameShop.ViewModels.Catalog.GameImages;
 using GameShop.ViewModels.Catalog.Games;
 using GameShop.ViewModels.Common;
 using Microsoft.AspNetCore.Http;
@@ -151,6 +152,30 @@ namespace GameShop.AdminApp.Controllers
             }
 
             ModelState.AddModelError("", "Xóa không thành công");
+            return View(request);
+        }
+
+        [HttpGet]
+        public IActionResult AddImage(int id)
+        {
+            return View(new GameImageCreateRequest()
+            {
+                GameID = id
+            });
+        }
+
+        [HttpPost]
+        [Consumes("multipart/form-data")]
+        public async Task<IActionResult> AddImage(int GameID, [FromForm] GameImageCreateRequest request)
+        {
+            var result = await _gameApiClient.AddImage(GameID, request);
+            if (result)
+            {
+                TempData["result"] = "Thêm hình ảnh thành công";
+                return RedirectToAction("Index");
+            }
+
+            ModelState.AddModelError("", "Thêm hình ảnh thất bại");
             return View(request);
         }
 

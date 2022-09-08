@@ -24,5 +24,7 @@ namespace GameShop.Application.System.Users
         Task<ApiResult<bool>> RoleAssign(Guid id, RoleAssignRequest request);
 
         Task<ApiResult<bool>> ChangePassword(PasswordUpdateRequest request);
+
+        Task<ApiResult<bool>> ForgotPassword(ForgotPasswordRequest request);
     }
 }

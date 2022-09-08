@@ -15,4 +15,8 @@
     <ProjectReference Include="..\GameShop.ViewModel\GameShop.ViewModels.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Catalog\Checkouts\" />
+  </ItemGroup>
+
 </Project>

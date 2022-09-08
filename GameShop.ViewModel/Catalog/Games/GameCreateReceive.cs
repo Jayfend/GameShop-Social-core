@@ -2,11 +2,10 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Text.Json.Serialization;
 
 namespace GameShop.ViewModels.Catalog.Games
 {
-    public class GameCreateRequest
+    public class GameCreateReceive
     {
         public string GameName { get; set; }
         public decimal Price { get; set; }
@@ -16,7 +15,7 @@ namespace GameShop.ViewModels.Catalog.Games
         public int Genre { get; set; }
         public int Status { get; set; }
         public IFormFile ThumbnailImage { get; set; }
-        public SystemRequireMin SRM { get; set; } = new SystemRequireMin();
-        public SystemRequirementRecommend SRR { get; set; } = new SystemRequirementRecommend();
+        public string SRM { get; set; }
+        public string SRR { get; set; }
     }
 }

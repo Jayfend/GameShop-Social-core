@@ -25,6 +25,7 @@ namespace GameShop.Application.Catalog.Wishlists
             _userManager = useManager;
             _signInManager = signInManager;
         }
+
         public async Task<ApiResult<bool>> AddWishlist(string UserID, AddWishlistRequest addWishlistRequest)
         {
             var getCart = await _context.Wishlists.FirstOrDefaultAsync(x => x.UserID.ToString() == UserID);
@@ -37,7 +38,6 @@ namespace GameShop.Application.Catalog.Wishlists
                 }
                 else
                 {
-
                     WishesGame newgame = new WishesGame()
                     {
                         GameID = addWishlistRequest.GameID,
@@ -53,8 +53,6 @@ namespace GameShop.Application.Catalog.Wishlists
                 Wishlist newcart = new Wishlist()
                 {
                     UserID = new Guid(UserID),
-
-
                 };
                 WishesGame newgame = new WishesGame()
                 {
@@ -66,6 +64,7 @@ namespace GameShop.Application.Catalog.Wishlists
                 return new ApiSuccessResult<bool>();
             }
         }
+
         public async Task<ApiResult<bool>> DeleteItem(string UserID, DeleteItemRequest orderItemDelete)
         {
             var orderitem = await _context.WishesGames
@@ -82,17 +81,21 @@ namespace GameShop.Application.Catalog.Wishlists
             }
         }
 
-
         public async Task<ApiResult<WishlistItemResponse>> GetWishlist(string UserID)
         {
             var getCart = await _context.WishesGames.Where(x => x.Wishlist.UserID.ToString() == UserID)
                  .Select(x => new WishlistItemResponse()
                  {
+                     GameID = x.GameID,
                      Name = x.Game.GameName,
                      Price = x.Game.Price,
                      Discount = x.Game.Discount,
-
+                     ImageList = new List<string>(),
                  }).FirstOrDefaultAsync();
+            var thumbnailimage = _context.GameImages.AsQueryable();
+            var listgame = thumbnailimage.Where(x => x.GameID == getCart.GameID).Select(y => y.ImagePath).ToList();
+            getCart.ImageList = listgame;
+
             if (getCart == null)
             {
                 return new ApiErrorResult<WishlistItemResponse>("Không tìm thấy danh sách ước");

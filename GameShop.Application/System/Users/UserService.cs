@@ -66,6 +66,29 @@ namespace GameShop.Application.System.Users
             return new ApiSuccessResult<LoginResponse>(response);
         }
 
+        public async Task<ApiResult<bool>> ChangePassword(PasswordUpdateRequest request)
+        {
+            var user = await _userManager.FindByNameAsync(request.UserName);
+            if (user == null)
+            {
+                return new ApiErrorResult<bool>("Tài khoản không tồn tại");
+            }
+            var hasher = new PasswordHasher<AppUser>();
+            //var haspassword = hasher.HashPassword(null, request.Password);
+            var check = hasher.VerifyHashedPassword(user, user.PasswordHash, request.Password);
+            if (check.Equals((PasswordVerificationResult)0))
+            {
+                return new ApiErrorResult<bool>("Mật khẩu không đúng");
+            }
+            else
+            {
+                var newpassword = hasher.HashPassword(null, request.NewPassword);
+                user.PasswordHash = newpassword;
+                await _userManager.UpdateAsync(user);
+                return new ApiSuccessResult<bool>();
+            }
+        }
+
         public async Task<ApiResult<bool>> Delete(Guid id)
         {
             var user = await _userManager.FindByIdAsync(id.ToString());
@@ -78,6 +101,27 @@ namespace GameShop.Application.System.Users
                 return new ApiSuccessResult<bool>();
 
             return new ApiErrorResult<bool>("Xóa không thành công");
+        }
+
+        public async Task<ApiResult<bool>> ForgotPassword(ForgotPasswordRequest request)
+        {
+            var user = await _userManager.FindByNameAsync(request.UserName);
+            if (user == null)
+            {
+                return new ApiErrorResult<bool>("Tài khoản không tồn tại");
+            }
+            if (!user.Email.Equals(request.Email))
+            {
+                return new ApiErrorResult<bool>("Email không tồn tại");
+            }
+            else
+            {
+                var hasher = new PasswordHasher<AppUser>();
+                var newpassword = hasher.HashPassword(null, request.NewPassword);
+                user.PasswordHash = newpassword;
+                await _userManager.UpdateAsync(user);
+                return new ApiSuccessResult<bool>();
+            }
         }
 
         public async Task<ApiResult<UserViewModel>> GetById(Guid id)

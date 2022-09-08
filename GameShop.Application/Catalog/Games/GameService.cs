@@ -206,7 +206,10 @@ namespace GameShop.Application.Catalog.Games
 
         public async Task<int> Update(int GameID, GameEditRequest request)
         {
-            var game = await _context.Games.FindAsync(GameID);
+            var game = await _context.Games.Where(x => x.GameID == GameID)
+                .Include(y => y.SystemRequirementMin)
+                .Include(g => g.SystemRequirementRecommended)
+                .FirstOrDefaultAsync();
             if (game == null)
             {
                 throw new GameShopException($"Can not find a game");
@@ -220,6 +223,26 @@ namespace GameShop.Application.Catalog.Games
                 game.Gameplay = request.Gameplay;
                 game.UpdatedDate = DateTime.Now;
                 game.Status = (Status)request.Status;
+                if (request.SRR != null)
+                {
+                    game.SystemRequirementRecommended.OS = request.SRR.OS;
+                    game.SystemRequirementRecommended.Memory = request.SRR.Memory;
+                    game.SystemRequirementRecommended.Processor = request.SRR.Processor;
+                    game.SystemRequirementRecommended.Graphics = request.SRR.Graphics;
+                    game.SystemRequirementRecommended.Storage = request.SRR.Storage;
+                    game.SystemRequirementRecommended.AdditionalNotes = request.SRR.AdditionalNotes;
+                    game.SystemRequirementRecommended.Soundcard = request.SRR.Soundcard;
+                }
+                if (request.SRM != null)
+                {
+                    game.SystemRequirementMin.OS = request.SRM.OS;
+                    game.SystemRequirementMin.Memory = request.SRM.Memory;
+                    game.SystemRequirementMin.Processor = request.SRM.Processor;
+                    game.SystemRequirementMin.Graphics = request.SRM.Graphics;
+                    game.SystemRequirementMin.Storage = request.SRM.Storage;
+                    game.SystemRequirementMin.AdditionalNotes = request.SRM.AdditionalNotes;
+                    game.SystemRequirementMin.Soundcard = request.SRM.Soundcard;
+                }
                 if (request.ThumbnailImage != null)
                 {
                     var thumbnailImage = await _context.GameImages
@@ -245,6 +268,7 @@ namespace GameShop.Application.Catalog.Games
                         };
                     }
                 }
+                _context.Games.Update(game);
                 return await _context.SaveChangesAsync();
             }
         }

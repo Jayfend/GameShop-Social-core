@@ -166,6 +166,8 @@ namespace GameShop.AdminApp.Controllers
                 Price = game.Price,
                 Discount = game.Discount,
                 Gameplay = game.Gameplay,
+                SRM = game.SRM,
+                SRR = game.SRR,
             };
             return View(editVm);
         }

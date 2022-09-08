@@ -91,9 +91,26 @@ namespace GameShop.Controllers
         [HttpPut("{GameID}")]
         [Consumes("multipart/form-data")]
         [Authorize]
-        public async Task<IActionResult> Update([FromRoute] int GameID, [FromForm] GameEditRequest request)
+        public async Task<IActionResult> Update([FromRoute] int GameID, [FromForm] GameEditReceive request)
         {
-            var affedtedResult = await _gameService.Update(GameID, request);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var editgame = new GameEditRequest()
+            {
+                GameID = GameID,
+                Name = request.Name,
+                Price = request.Price,
+                Discount = request.Discount,
+                Description = request.Description,
+                Gameplay = request.Gameplay,
+                Status = request.Status,
+                ThumbnailImage = request.ThumbnailImage,
+                SRM = JsonConvert.DeserializeObject<SystemRequireMin>(request.SRM),
+                SRR = JsonConvert.DeserializeObject<SystemRequirementRecommend>(request.SRR),
+            };
+            var affedtedResult = await _gameService.Update(GameID, editgame);
             if (affedtedResult == 0)
             {
                 return BadRequest();

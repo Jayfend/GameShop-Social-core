@@ -5,7 +5,7 @@ using System.Text;
 
 namespace GameShop.ViewModels.Catalog.Games
 {
-    public class GameEditRequest
+    public class GameEditReceive
     {
         public int GameID { get; set; }
         public string Name { get; set; }
@@ -15,7 +15,7 @@ namespace GameShop.ViewModels.Catalog.Games
         public string Gameplay { get; set; }
         public int Status { get; set; }
         public IFormFile ThumbnailImage { get; set; }
-        public SystemRequireMin SRM { get; set; } = new SystemRequireMin();
-        public SystemRequirementRecommend SRR { get; set; } = new SystemRequirementRecommend();
+        public string SRM { get; set; }
+        public string SRR { get; set; }
     }
 }

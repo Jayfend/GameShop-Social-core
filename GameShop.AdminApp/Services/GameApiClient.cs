@@ -161,7 +161,32 @@ namespace GameShop.AdminApp.Services
 
             requestContent.Add(new StringContent(request.Discount.ToString()), "discount");
             requestContent.Add(new StringContent(string.IsNullOrEmpty(request.Gameplay) ? "" : request.Gameplay.ToString()), "gameplay");
+
+            if (request.SRM != null)
+            {
+                var myContent = JsonConvert.SerializeObject(request.SRM);
+                var stringContent = new StringContent(myContent, UnicodeEncoding.UTF8, "application/json");
+                requestContent.Add(stringContent, "srm");
+            }
+            else
+            {
+                var srmContent = new StringContent("");
+                requestContent.Add(srmContent, "srm");
+            }
+
+            if (request.SRR != null)
+            {
+                var myContent = JsonConvert.SerializeObject(request.SRR);
+                var stringContent = new StringContent(myContent, UnicodeEncoding.UTF8, "application/json");
+                requestContent.Add(stringContent, "srr");
+            }
+            else
+            {
+                var srrContent = new StringContent("");
+                requestContent.Add(srrContent, "srr");
+            }
             requestContent.Add(new StringContent(request.Status.ToString()), "status");
+
             var response = await client.PutAsync($"/api/games/" + request.GameID, requestContent);
             return response.IsSuccessStatusCode;
         }

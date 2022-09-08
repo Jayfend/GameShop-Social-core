@@ -1,6 +1,7 @@
 using FluentValidation.AspNetCore;
 using GameShop.Application.Catalog.Carts;
 using GameShop.Application.Catalog.Categories;
+using GameShop.Application.Catalog.Checkouts;
 using GameShop.Application.Catalog.Games;
 using GameShop.Application.Catalog.Wishlists;
 using GameShop.Application.Common;
@@ -51,6 +52,7 @@ namespace GameShop
             services.AddTransient<ICategoryService, CategoryService>();
             services.AddTransient<ICartService, CartService>();
             services.AddTransient<IWishlistService, WishlistService>();
+            services.AddTransient<ICheckoutService, CheckoutService>();
             //services.AddTransient<IValidator<LoginRequest>, LoginRequestValidator>();
             services.AddControllers()
              .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<LoginRequestValidator>());
@@ -116,7 +118,6 @@ namespace GameShop
             {
                 builder.WithOrigins("http://localhost:5000").AllowAnyMethod().AllowAnyHeader();
             }));
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

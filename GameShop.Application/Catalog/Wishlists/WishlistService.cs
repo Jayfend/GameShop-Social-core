@@ -81,7 +81,7 @@ namespace GameShop.Application.Catalog.Wishlists
             }
         }
 
-        public async Task<ApiResult<WishlistItemResponse>> GetWishlist(string UserID)
+        public async Task<ApiResult<List<WishlistItemResponse>>> GetWishlist(string UserID)
         {
             var getCart = await _context.WishesGames.Where(x => x.Wishlist.UserID.ToString() == UserID)
                  .Select(x => new WishlistItemResponse()
@@ -91,17 +91,20 @@ namespace GameShop.Application.Catalog.Wishlists
                      Price = x.Game.Price,
                      Discount = x.Game.Discount,
                      ImageList = new List<string>(),
-                 }).FirstOrDefaultAsync();
+                 }).ToListAsync();
             var thumbnailimage = _context.GameImages.AsQueryable();
-            var listgame = thumbnailimage.Where(x => x.GameID == getCart.GameID).Select(y => y.ImagePath).ToList();
-            getCart.ImageList = listgame;
+            foreach (var item in getCart)
+            {
+                var listgame = thumbnailimage.Where(x => x.GameID == item.GameID).Select(y => y.ImagePath).ToList();
+                item.ImageList = listgame;
+            }
 
             if (getCart == null)
             {
-                return new ApiErrorResult<WishlistItemResponse>("Không tìm thấy danh sách ước");
+                return new ApiErrorResult<List<WishlistItemResponse>>("Không tìm thấy danh sách ước");
             }
 
-            return new ApiSuccessResult<WishlistItemResponse>(getCart);
+            return new ApiSuccessResult<List<WishlistItemResponse>>(getCart);
         }
     }
 }

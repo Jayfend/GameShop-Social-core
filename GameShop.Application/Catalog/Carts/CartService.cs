@@ -33,7 +33,7 @@ namespace GameShop.Application.Catalog.Carts
                 var check = await _context.OrderedGames.FirstOrDefaultAsync(x => x.CartID == getCart.CartID && x.GameID == cartCreateRequest.GameID);
                 if (check != null)
                 {
-                    return new ApiErrorResult<bool>("Bạn đã mua game này rồi");
+                    return new ApiErrorResult<bool>("Bạn đã thêm game này rồi");
                 }
                 else
                 {
@@ -82,7 +82,7 @@ namespace GameShop.Application.Catalog.Carts
             }
         }
 
-        public async Task<ApiResult<OrderItemResponse>> GetCart(string UserID)
+        public async Task<ApiResult<List<OrderItemResponse>>> GetCart(string UserID)
         {
             var getCart = await _context.OrderedGames.Where(x => x.Cart.UserID.ToString() == UserID && x.Cart.Status.Equals((Status)1))
                 .Select(x => new OrderItemResponse()
@@ -92,19 +92,21 @@ namespace GameShop.Application.Catalog.Carts
                     Price = x.Game.Price,
                     Discount = x.Game.Discount,
                     ImageList = new List<string>()
-                }).FirstOrDefaultAsync();
+                }).ToListAsync();
 
             var thumbnailimage = _context.GameImages.AsQueryable();
-
-            var listgame = thumbnailimage.Where(x => x.GameID == getCart.GameId).Select(y => y.ImagePath).ToList();
-            getCart.ImageList = listgame;
+            foreach (var item in getCart)
+            {
+                var listgame = thumbnailimage.Where(x => x.GameID == item.GameId).Select(y => y.ImagePath).ToList();
+                item.ImageList = listgame;
+            }
 
             if (getCart == null)
             {
-                return new ApiErrorResult<OrderItemResponse>("Không tìm thấy giỏ hàng");
+                return new ApiErrorResult<List<OrderItemResponse>>("Không tìm thấy giỏ hàng");
             }
 
-            return new ApiSuccessResult<OrderItemResponse>(getCart);
+            return new ApiSuccessResult<List<OrderItemResponse>>(getCart);
         }
     }
 }

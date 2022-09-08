@@ -61,14 +61,9 @@
                         </div>
                         <div class="form-group">
                             <label asp-for="Gameplay" class="control-label"></label>
-                            <textarea asp-for="Gameplay" class="form-control" rows="15"></textarea>
+                            <textarea asp-for="Gameplay" class="form-control" rows="10"></textarea>
                             <span asp-validation-for="Gameplay" class="text-danger"></span>
                         </div>
-                       @* <div class="form-group">
-                            <label asp-for="Gameplay" class="control-label"></label>
-                            <textarea id="txt_details" asp-for="Gameplay" rows="15" class="form-control"></textarea>
-                            <span asp-validation-for="Gameplay" class="text-danger"></span>
-                        </div>*@
                         <div class="form-group">
                             <select name="Status" class="form-control">
                                 <option>--Chọn danh mục--</option>
@@ -82,6 +77,88 @@
                             <input asp-for="ThumbnailImage" type="file" class="form-control" />
                             <span asp-validation-for="ThumbnailImage" class="text-danger"></span>
                         </div>
+                        <div> 
+                            <span style="color: blue">System Requirement Minimum </span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="SRM.OS" class="control-label"></label>
+                            <input asp-for="SRM.OS" class="form-control" />
+                            <span asp-validation-for="SRM.OS" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="SRM.Processor" class="control-label"></label>
+                            <input asp-for="SRM.Processor" class="form-control" />
+                            <span asp-validation-for="SRM.Processor" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="SRM.Memory" class="control-label"></label>
+                            <input asp-for="SRM.Memory" class="form-control" />
+                            <span asp-validation-for="SRM.Memory" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="SRM.Graphics" class="control-label"></label>
+                            <input asp-for="SRM.Graphics"  class="form-control" />
+                            <span asp-validation-for="SRM.Graphics" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="SRM.Storage" class="control-label"></label>
+                            <input asp-for="SRM.Storage" class="form-control" />
+                            <span asp-validation-for="SRM.Storage" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="SRM.AdditionalNotes" class="control-label"></label>
+                            <input asp-for="SRM.AdditionalNotes"  class="form-control" />
+                            <span asp-validation-for="SRM.AdditionalNotes" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="SRM.Soundcard" class="control-label"></label>
+                            <input asp-for="SRM.Soundcard"  class="form-control" />
+                            <span asp-validation-for="SRM.Soundcard" class="text-danger"></span>
+                        </div>
+                        <div>
+                            <span style="color: blue">System Requirement Recommended</span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="SRR.OS" class="control-label"></label>
+                            <input asp-for="SRR.OS"  class="form-control" />
+                            <span asp-validation-for="SRR.OS" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="SRR.Processor" class="control-label"></label>
+                            <input asp-for="SRR.Processor"  class="form-control" />
+                            <span asp-validation-for="SRR.Processor" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="SRR.Memory" class="control-label"></label>
+                            <input asp-for="SRR.Memory"  class="form-control" />
+                            <span asp-validation-for="SRR.Memory" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="SRR.Graphics" class="control-label"></label>
+                            <input asp-for="SRR.Graphics"  class="form-control" />
+                            <span asp-validation-for="SRR.Graphics" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="SRR.Storage" class="control-label"></label>
+                            <input asp-for="SRR.Storage"  class="form-control" />
+                            <span asp-validation-for="SRR.Storage" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="SRR.AdditionalNotes" class="control-label"></label>
+                            <input asp-for="SRR.AdditionalNotes"  class="form-control" />
+                            <span asp-validation-for="SRR.AdditionalNotes" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="SRR.Soundcard" class="control-label"></label>
+                            <input asp-for="SRR.Soundcard" class="form-control" />
+                            <span asp-validation-for="SRR.Soundcard" class="text-danger"></span>
+                        </div>
+                       @* <div class="form-group">
+                            <label asp-for="Gameplay" class="control-label"></label>
+                            <textarea id="txt_details" asp-for="Gameplay" rows="15" class="form-control"></textarea>
+                            <span asp-validation-for="Gameplay" class="text-danger"></span>
+                        </div>*@
+                        
                         <div class="form-group">
                             <input type="submit" value="Tạo mới" class="btn btn-primary" />
                         </div>

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -38,8 +39,10 @@ namespace GameShop.Controllers
         public async Task<IActionResult> GetAllPaging([FromQuery] GetManageGamePagingRequest request)
         {
             var games = await _gameService.GetAllPaging(request);
-
-           
+            if (games == null)
+            {
+                return NotFound();
+            }
             return Ok(games);
         }
 
@@ -57,13 +60,26 @@ namespace GameShop.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromForm] GameCreateRequest request)
+        public async Task<IActionResult> Create([FromForm] GameCreateReceive request)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            var gameID = await _gameService.Create(request);
+            var newgame = new GameCreateRequest()
+            {
+                GameName = request.GameName,
+                Price = request.Price,
+                Discount = request.Discount,
+                Description = request.Description,
+                Gameplay = request.Gameplay,
+                Genre = request.Genre,
+                Status = request.Status,
+                ThumbnailImage = request.ThumbnailImage,
+                SRM = JsonConvert.DeserializeObject<SystemRequireMin>(request.SRM),
+                SRR = JsonConvert.DeserializeObject<SystemRequirementRecommend>(request.SRR),
+            };
+            var gameID = await _gameService.Create(newgame);
             if (gameID == 0)
             {
                 return BadRequest();

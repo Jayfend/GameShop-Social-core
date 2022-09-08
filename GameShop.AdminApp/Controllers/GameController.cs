@@ -16,13 +16,15 @@ namespace GameShop.AdminApp.Controllers
     {
         private readonly IGameApiClient _gameApiClient;
         private readonly ICategoryApiClient _categoryApiClient;
+
         public GameController(IGameApiClient gameApiClient, ICategoryApiClient categoryApiClient)
         {
             _gameApiClient = gameApiClient;
             _categoryApiClient = categoryApiClient;
         }
+
         [HttpGet]
-        public async Task<IActionResult> Index(string keyword , int? GenreId, int pageIndex = 1, int pageSize = 10)
+        public async Task<IActionResult> Index(string keyword, int? GenreId, int pageIndex = 1, int pageSize = 10)
         {
             var request = new GetManageGamePagingRequest()
             {
@@ -42,13 +44,14 @@ namespace GameShop.AdminApp.Controllers
                 Value = x.Id.ToString(),
                 Selected = GenreId.HasValue && GenreId.Value == x.Id
             });
-           
+
             if (TempData["result"] != null)
             {
                 ViewBag.SuccessMsg = TempData["result"];
             }
             return View(games);
         }
+
         [HttpGet]
         public async Task<IActionResult> Create()
         {
@@ -58,14 +61,13 @@ namespace GameShop.AdminApp.Controllers
             {
                 Text = x.Name,
                 Value = x.Id.ToString(),
-              
             });
             return View();
         }
 
         [HttpPost]
         [Consumes("multipart/form-data")]
-        public async Task<IActionResult> Create([FromForm] GameCreateRequest request,int GenreId)
+        public async Task<IActionResult> Create([FromForm] GameCreateRequest request, int GenreId)
         {
             if (!ModelState.IsValid)
                 return View(request);
@@ -81,6 +83,7 @@ namespace GameShop.AdminApp.Controllers
             ModelState.AddModelError("", "Thêm sản phẩm thất bại");
             return View(request);
         }
+
         [HttpGet]
         public async Task<IActionResult> CategoryAssign(int id)
         {
@@ -107,9 +110,9 @@ namespace GameShop.AdminApp.Controllers
 
             return View(roleAssignRequest);
         }
+
         private async Task<CategoryAssignRequest> GetCategoryAssignRequest(int id)
         {
-            
             var productObj = await _gameApiClient.GetById(id);
             var categories = await _categoryApiClient.GetAll();
             var categoryAssignRequest = new CategoryAssignRequest();
@@ -124,6 +127,7 @@ namespace GameShop.AdminApp.Controllers
             }
             return categoryAssignRequest;
         }
+
         [HttpGet]
         public IActionResult Delete(int id)
         {
@@ -149,10 +153,10 @@ namespace GameShop.AdminApp.Controllers
             ModelState.AddModelError("", "Xóa không thành công");
             return View(request);
         }
+
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
-
             var game = await _gameApiClient.GetById(id);
             var editVm = new GameEditRequest()
             {
@@ -162,8 +166,6 @@ namespace GameShop.AdminApp.Controllers
                 Price = game.Price,
                 Discount = game.Discount,
                 Gameplay = game.Gameplay,
-
-               
             };
             return View(editVm);
         }
@@ -185,13 +187,12 @@ namespace GameShop.AdminApp.Controllers
             ModelState.AddModelError("", "Cập nhật sản phẩm thất bại");
             return View(request);
         }
+
         [HttpGet]
         public async Task<IActionResult> Details(int id)
         {
             var result = await _gameApiClient.GetById(id);
             return View(result);
         }
-
     }
-
 }

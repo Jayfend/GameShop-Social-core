@@ -143,7 +143,7 @@ namespace GameShop.Application.Catalog.Games
             var data = await query.Skip((request.PageIndex - 1) * request.PageSize)
                 .Take(request.PageSize).Select(x => new GameViewModel()
                 {
-                    CreatedDate = DateTime.Now,
+                    CreatedDate = x.CreatedDate,
                     GameID = x.GameID,
                     Name = x.GameName,
                     Description = x.Description,

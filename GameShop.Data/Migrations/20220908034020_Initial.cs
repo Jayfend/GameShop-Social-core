@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace GameShop.Data.Migrations
 {
-    public partial class initial : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -200,7 +200,8 @@ namespace GameShop.Data.Migrations
                     CreatedDate = table.Column<DateTime>(nullable: false),
                     UpdatedDate = table.Column<DateTime>(nullable: false),
                     Status = table.Column<int>(nullable: false),
-                    UserID = table.Column<Guid>(nullable: false)
+                    UserID = table.Column<Guid>(nullable: false),
+                    CheckoutID = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -334,6 +335,28 @@ namespace GameShop.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Checkouts",
+                columns: table => new
+                {
+                    ID = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CartID = table.Column<int>(nullable: false),
+                    TotalPrice = table.Column<decimal>(nullable: false),
+                    Purchasedate = table.Column<DateTime>(nullable: false),
+                    Username = table.Column<string>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Checkouts", x => x.ID);
+                    table.ForeignKey(
+                        name: "FK_Checkouts_Carts_CartID",
+                        column: x => x.CartID,
+                        principalTable: "Carts",
+                        principalColumn: "CartID",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "OrderedGames",
                 columns: table => new
                 {
@@ -390,24 +413,24 @@ namespace GameShop.Data.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Description", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { new Guid("8d04dce2-969a-435d-bba4-df3f325983dc"), "64066888-bb8f-4a67-b9e2-d43a6fb795bb", "Administrator role", "admin", "ADMIN" },
-                    { new Guid("52503f03-bdea-4bf8-8a1a-d21ae2646483"), "1d9f09ae-6661-4587-837f-d2454651a15d", "User role", "User", "USER" }
+                    { new Guid("8d04dce2-969a-435d-bba4-df3f325983dc"), "effbc43f-cbc7-4659-90d8-8e9db16ae3b9", "Administrator role", "admin", "ADMIN" },
+                    { new Guid("52503f03-bdea-4bf8-8a1a-d21ae2646483"), "2367e372-1099-4b9d-9442-aa23ee64c428", "User role", "User", "USER" }
                 });
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Dob", "Email", "EmailConfirmed", "FirstName", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { new Guid("69bd714f-9576-45ba-b5b7-f00649be00de"), 0, "994ee186-5de0-4d82-8f5f-d47e6570797e", new DateTime(2001, 7, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "leenguyen1721@gmail.com", true, "Luan", "Nguyen Phung Le", false, null, "LEENGUYEN1721@gmail.com", "JAYFEND", "AQAAAAEAACcQAAAAEIi0hVXehBvKFj2G+pM/2wiNOYGw7HkXUnarxFGK1szMlb1Pk+jlkjrhHCWYXamn9g==", null, false, "", false, "Jayfend" });
+                values: new object[] { new Guid("69bd714f-9576-45ba-b5b7-f00649be00de"), 0, "85e13c6c-48ec-4b3a-af53-8ee07a7add79", new DateTime(2001, 7, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "leenguyen1721@gmail.com", true, "Luan", "Nguyen Phung Le", false, null, "LEENGUYEN1721@gmail.com", "JAYFEND", "AQAAAAEAACcQAAAAEE9kKbIiZITcmWhzomBhI7rR7qhb+X4BaRPoPzkF+Ly4Jui3F5Wwi5T0BiSrKW5d3Q==", null, false, "", false, "Jayfend" });
 
             migrationBuilder.InsertData(
                 table: "Games",
                 columns: new[] { "GameID", "BaseEntityID", "CreatedDate", "Description", "GameName", "Gameplay", "Price", "Status", "UpdatedDate" },
-                values: new object[] { 1, 0, new DateTime(2022, 9, 7, 9, 21, 57, 260, DateTimeKind.Local).AddTicks(7686), "The best game in the world", "Grand Theft Auto V", "Destroy the city", 250000m, 1, new DateTime(2022, 9, 7, 9, 21, 57, 261, DateTimeKind.Local).AddTicks(4976) });
+                values: new object[] { 1, 0, new DateTime(2022, 9, 8, 10, 40, 19, 673, DateTimeKind.Local).AddTicks(2274), "The best game in the world", "Grand Theft Auto V", "Destroy the city", 250000m, 1, new DateTime(2022, 9, 8, 10, 40, 19, 673, DateTimeKind.Local).AddTicks(9301) });
 
             migrationBuilder.InsertData(
                 table: "Games",
                 columns: new[] { "GameID", "BaseEntityID", "CreatedDate", "Description", "Discount", "GameName", "Gameplay", "Price", "Status", "UpdatedDate" },
-                values: new object[] { 2, 0, new DateTime(2022, 9, 7, 9, 21, 57, 261, DateTimeKind.Local).AddTicks(5510), "Back to the cowboy town", 20, "Red Dead Redemption 2", "Discover the cowboy world", 250000m, 1, new DateTime(2022, 9, 7, 9, 21, 57, 261, DateTimeKind.Local).AddTicks(5531) });
+                values: new object[] { 2, 0, new DateTime(2022, 9, 8, 10, 40, 19, 673, DateTimeKind.Local).AddTicks(9824), "Back to the cowboy town", 20, "Red Dead Redemption 2", "Discover the cowboy world", 250000m, 1, new DateTime(2022, 9, 8, 10, 40, 19, 673, DateTimeKind.Local).AddTicks(9845) });
 
             migrationBuilder.InsertData(
                 table: "Genres",
@@ -498,6 +521,12 @@ namespace GameShop.Data.Migrations
                 column: "UserID");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Checkouts_CartID",
+                table: "Checkouts",
+                column: "CartID",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_GameImages_GameID",
                 table: "GameImages",
                 column: "GameID");
@@ -564,6 +593,9 @@ namespace GameShop.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUserTokens");
+
+            migrationBuilder.DropTable(
+                name: "Checkouts");
 
             migrationBuilder.DropTable(
                 name: "GameImages");

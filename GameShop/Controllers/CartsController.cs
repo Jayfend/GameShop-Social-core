@@ -14,12 +14,14 @@ namespace GameShop.Controllers
     public class CartsController : ControllerBase
     {
         private readonly ICartService _cartService;
+
         public CartsController(ICartService cartService)
         {
             _cartService = cartService;
         }
+
         [HttpPost("UserID")]
-        public async Task<IActionResult> AddToCart(string UserID,[FromBody]CartCreateRequest cartCreateRequest)
+        public async Task<IActionResult> AddToCart(string UserID, [FromBody] CartCreateRequest cartCreateRequest)
         {
             if (!ModelState.IsValid)
             {
@@ -32,6 +34,7 @@ namespace GameShop.Controllers
             }
             return Ok(result);
         }
+
         [HttpGet("UserID")]
         public async Task<IActionResult> GetCart(string UserID)
         {
@@ -45,9 +48,14 @@ namespace GameShop.Controllers
                 return Ok(result);
             }
         }
+
         [HttpDelete("UserID")]
-        public async Task<IActionResult> DeleteItem(string UserID, [FromBody]OrderItemDelete orderItemDelete)
+        public async Task<IActionResult> DeleteItem(string UserID, [FromBody] OrderItemDelete orderItemDelete)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
             var result = await _cartService.DeleteItem(UserID, orderItemDelete);
             if (!result.IsSuccess)
             {

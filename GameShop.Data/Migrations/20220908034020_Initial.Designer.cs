@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GameShop.Data.Migrations
 {
     [DbContext(typeof(GameShopDbContext))]
-    [Migration("20220907022157_initial")]
-    partial class initial
+    [Migration("20220908034020_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -57,7 +57,7 @@ namespace GameShop.Data.Migrations
                         new
                         {
                             Id = new Guid("8d04dce2-969a-435d-bba4-df3f325983dc"),
-                            ConcurrencyStamp = "64066888-bb8f-4a67-b9e2-d43a6fb795bb",
+                            ConcurrencyStamp = "effbc43f-cbc7-4659-90d8-8e9db16ae3b9",
                             Description = "Administrator role",
                             Name = "admin",
                             NormalizedName = "ADMIN"
@@ -65,7 +65,7 @@ namespace GameShop.Data.Migrations
                         new
                         {
                             Id = new Guid("52503f03-bdea-4bf8-8a1a-d21ae2646483"),
-                            ConcurrencyStamp = "1d9f09ae-6661-4587-837f-d2454651a15d",
+                            ConcurrencyStamp = "2367e372-1099-4b9d-9442-aa23ee64c428",
                             Description = "User role",
                             Name = "User",
                             NormalizedName = "USER"
@@ -155,7 +155,7 @@ namespace GameShop.Data.Migrations
                         {
                             Id = new Guid("69bd714f-9576-45ba-b5b7-f00649be00de"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "994ee186-5de0-4d82-8f5f-d47e6570797e",
+                            ConcurrencyStamp = "85e13c6c-48ec-4b3a-af53-8ee07a7add79",
                             Dob = new DateTime(2001, 7, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "leenguyen1721@gmail.com",
                             EmailConfirmed = true,
@@ -164,7 +164,7 @@ namespace GameShop.Data.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "LEENGUYEN1721@gmail.com",
                             NormalizedUserName = "JAYFEND",
-                            PasswordHash = "AQAAAAEAACcQAAAAEIi0hVXehBvKFj2G+pM/2wiNOYGw7HkXUnarxFGK1szMlb1Pk+jlkjrhHCWYXamn9g==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEE9kKbIiZITcmWhzomBhI7rR7qhb+X4BaRPoPzkF+Ly4Jui3F5Wwi5T0BiSrKW5d3Q==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
                             TwoFactorEnabled = false,
@@ -180,6 +180,9 @@ namespace GameShop.Data.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<int>("BaseEntityID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CheckoutID")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedDate")
@@ -199,6 +202,34 @@ namespace GameShop.Data.Migrations
                     b.HasIndex("UserID");
 
                     b.ToTable("Carts");
+                });
+
+            modelBuilder.Entity("GameShop.Data.Entities.Checkout", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("CartID")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Purchasedate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<decimal>("TotalPrice")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("CartID")
+                        .IsUnique();
+
+                    b.ToTable("Checkouts");
                 });
 
             modelBuilder.Entity("GameShop.Data.Entities.Game", b =>
@@ -249,27 +280,27 @@ namespace GameShop.Data.Migrations
                         {
                             GameID = 1,
                             BaseEntityID = 0,
-                            CreatedDate = new DateTime(2022, 9, 7, 9, 21, 57, 260, DateTimeKind.Local).AddTicks(7686),
+                            CreatedDate = new DateTime(2022, 9, 8, 10, 40, 19, 673, DateTimeKind.Local).AddTicks(2274),
                             Description = "The best game in the world",
                             Discount = 0,
                             GameName = "Grand Theft Auto V",
                             Gameplay = "Destroy the city",
                             Price = 250000m,
                             Status = 1,
-                            UpdatedDate = new DateTime(2022, 9, 7, 9, 21, 57, 261, DateTimeKind.Local).AddTicks(4976)
+                            UpdatedDate = new DateTime(2022, 9, 8, 10, 40, 19, 673, DateTimeKind.Local).AddTicks(9301)
                         },
                         new
                         {
                             GameID = 2,
                             BaseEntityID = 0,
-                            CreatedDate = new DateTime(2022, 9, 7, 9, 21, 57, 261, DateTimeKind.Local).AddTicks(5510),
+                            CreatedDate = new DateTime(2022, 9, 8, 10, 40, 19, 673, DateTimeKind.Local).AddTicks(9824),
                             Description = "Back to the cowboy town",
                             Discount = 20,
                             GameName = "Red Dead Redemption 2",
                             Gameplay = "Discover the cowboy world",
                             Price = 250000m,
                             Status = 1,
-                            UpdatedDate = new DateTime(2022, 9, 7, 9, 21, 57, 261, DateTimeKind.Local).AddTicks(5531)
+                            UpdatedDate = new DateTime(2022, 9, 8, 10, 40, 19, 673, DateTimeKind.Local).AddTicks(9845)
                         });
                 });
 
@@ -689,6 +720,15 @@ namespace GameShop.Data.Migrations
                     b.HasOne("GameShop.Data.Entities.AppUser", "AppUser")
                         .WithMany("Carts")
                         .HasForeignKey("UserID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("GameShop.Data.Entities.Checkout", b =>
+                {
+                    b.HasOne("GameShop.Data.Entities.Cart", "Cart")
+                        .WithOne("Checkout")
+                        .HasForeignKey("GameShop.Data.Entities.Checkout", "CartID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

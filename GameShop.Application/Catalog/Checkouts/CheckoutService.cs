@@ -51,8 +51,13 @@ namespace GameShop.Application.Catalog.Checkouts
                     TotalPrice = total,
                     Username = user.UserName
                 };
+
+                getCart.Status = (Status)0;
+                _context.Carts.Update(getCart);
                 _context.Checkouts.Add(newCheckout);
+
                 await _context.SaveChangesAsync();
+
                 return new ApiSuccessResult<int>(newCheckout.ID);
             }
         }

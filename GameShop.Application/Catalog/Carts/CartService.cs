@@ -49,10 +49,15 @@ namespace GameShop.Application.Catalog.Carts
             }
             else
             {
+                var check = await _context.OrderedGames.Where(x => x.GameID == cartCreateRequest.GameID).FirstOrDefaultAsync();
+                if (check != null)
+                {
+                    return new ApiErrorResult<bool>("Bạn đã thêm game này rồi");
+                }
                 Cart newcart = new Cart()
                 {
                     UserID = new Guid(UserID),
-                    Status = Data.Enums.Status.Active,
+                    Status = (Status)1,
                     CreatedDate = DateTime.Now,
                     UpdatedDate = DateTime.Now,
                 };

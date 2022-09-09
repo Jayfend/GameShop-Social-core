@@ -12,5 +12,7 @@ namespace GameShop.ViewModels.Catalog.Carts
         public int Discount { get; set; }
         public DateTime AddedDate { get; set; }
         public List<string> ImageList { get; set; }
+        public List<string> GenreName { get; set; }
+        public List<int> GenreIds { get; set; }
     }
 }

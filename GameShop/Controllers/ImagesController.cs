@@ -32,7 +32,7 @@ namespace GameShop.Controllers
             else
             {
                 var newpath = Path.Combine(webRootPath + @"\user-content\", "imgnotfound.jpg");
-                var content = System.IO.File.ReadAllBytes(path);
+                var content = System.IO.File.ReadAllBytes(newpath);
                 return new FileContentResult(content, "image/jpeg");
             }
         }

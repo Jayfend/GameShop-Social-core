@@ -119,8 +119,20 @@ namespace GameShop.Application.Catalog.Wishlists
                      Price = x.Game.Price,
                      Discount = x.Game.Discount,
                      ImageList = new List<string>(),
-                     AddedDate = x.AddedDate
+                     AddedDate = x.AddedDate,
+                     GenreName = new List<string>(),
+                     GenreIds = x.Game.GameInGenres.Select(y => y.GenreID).ToList(),
                  }).ToListAsync();
+            var genres = _context.Genres.AsQueryable();
+
+            foreach (var item in getCart)
+            {
+                foreach (var genre in item.GenreIds)
+                {
+                    var name = genres.Where(x => x.GenreID == genre).Select(y => y.GenreName).FirstOrDefault();
+                    item.GenreName.Add(name);
+                }
+            }
             var thumbnailimage = _context.GameImages.AsQueryable();
             foreach (var item in getCart)
             {

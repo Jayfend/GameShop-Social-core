@@ -30,6 +30,42 @@ namespace GameShop.Data.Extensions
                    GenreID = 3,
                    GenreName = "Multiplayer"
                });
+            modelBuilder.Entity<Genre>().HasData(
+               new Genre()
+               {
+                   GenreID = 4,
+                   GenreName = "Action RPG"
+               });
+            modelBuilder.Entity<Genre>().HasData(
+               new Genre()
+               {
+                   GenreID = 5,
+                   GenreName = "Simulation"
+               });
+            modelBuilder.Entity<Genre>().HasData(
+               new Genre()
+               {
+                   GenreID = 6,
+                   GenreName = "Horror"
+               });
+            modelBuilder.Entity<Genre>().HasData(
+               new Genre()
+               {
+                   GenreID = 7,
+                   GenreName = "Sports & Racing"
+               });
+            modelBuilder.Entity<Genre>().HasData(
+               new Genre()
+               {
+                   GenreID = 8,
+                   GenreName = "Role-Playing"
+               });
+            modelBuilder.Entity<Genre>().HasData(
+               new Genre()
+               {
+                   GenreID = 9,
+                   GenreName = "Visual Novel"
+               });
 
             modelBuilder.Entity<Game>().HasData(
                 new Game()

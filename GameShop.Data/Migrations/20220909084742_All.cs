@@ -415,24 +415,24 @@ namespace GameShop.Data.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Description", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { new Guid("8d04dce2-969a-435d-bba4-df3f325983dc"), "9426ace7-e484-4f9e-b56f-81b16e6210b7", "Administrator role", "admin", "ADMIN" },
-                    { new Guid("52503f03-bdea-4bf8-8a1a-d21ae2646483"), "16594950-d09b-4103-a857-75daeb2c232f", "User role", "User", "USER" }
+                    { new Guid("8d04dce2-969a-435d-bba4-df3f325983dc"), "7a977f36-4578-468c-ab6e-2a0102449de4", "Administrator role", "admin", "ADMIN" },
+                    { new Guid("52503f03-bdea-4bf8-8a1a-d21ae2646483"), "c3876901-b7b0-46ee-93bf-ebef30a4860c", "User role", "User", "USER" }
                 });
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Dob", "Email", "EmailConfirmed", "FirstName", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { new Guid("69bd714f-9576-45ba-b5b7-f00649be00de"), 0, "26321958-75e6-4763-82b8-1bbc896a8bfb", new DateTime(2001, 7, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "leenguyen1721@gmail.com", true, "Luan", "Nguyen Phung Le", false, null, "LEENGUYEN1721@gmail.com", "JAYFEND", "AQAAAAEAACcQAAAAEF1M7ncw4oPjUArvXAhdqoR3b/r4zugKtyA6xVKkhwpK2dN/UO690pCGN3k+LULSVQ==", null, false, "", false, "Jayfend" });
+                values: new object[] { new Guid("69bd714f-9576-45ba-b5b7-f00649be00de"), 0, "1fa89999-9b68-4c1b-8d8e-91998dbe38e9", new DateTime(2001, 7, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "leenguyen1721@gmail.com", true, "Luan", "Nguyen Phung Le", false, null, "LEENGUYEN1721@gmail.com", "JAYFEND", "AQAAAAEAACcQAAAAEM4QNqslvPr7QEDPYn4J3xcfRajA3YExW7vjPVr7wvraPDsmZ+GccF1lMkM/q7KY7Q==", null, false, "", false, "Jayfend" });
 
             migrationBuilder.InsertData(
                 table: "Games",
                 columns: new[] { "GameID", "BaseEntityID", "CreatedDate", "Description", "GameName", "Gameplay", "Price", "Status", "UpdatedDate" },
-                values: new object[] { 1, 0, new DateTime(2022, 9, 9, 14, 9, 41, 934, DateTimeKind.Local).AddTicks(9208), "The best game in the world", "Grand Theft Auto V", "Destroy the city", 250000m, 1, new DateTime(2022, 9, 9, 14, 9, 41, 935, DateTimeKind.Local).AddTicks(6747) });
+                values: new object[] { 1, 0, new DateTime(2022, 9, 9, 15, 47, 41, 639, DateTimeKind.Local).AddTicks(4080), "The best game in the world", "Grand Theft Auto V", "Destroy the city", 250000m, 1, new DateTime(2022, 9, 9, 15, 47, 41, 640, DateTimeKind.Local).AddTicks(1204) });
 
             migrationBuilder.InsertData(
                 table: "Games",
                 columns: new[] { "GameID", "BaseEntityID", "CreatedDate", "Description", "Discount", "GameName", "Gameplay", "Price", "Status", "UpdatedDate" },
-                values: new object[] { 2, 0, new DateTime(2022, 9, 9, 14, 9, 41, 935, DateTimeKind.Local).AddTicks(7334), "Back to the cowboy town", 20, "Red Dead Redemption 2", "Discover the cowboy world", 250000m, 1, new DateTime(2022, 9, 9, 14, 9, 41, 935, DateTimeKind.Local).AddTicks(7358) });
+                values: new object[] { 2, 0, new DateTime(2022, 9, 9, 15, 47, 41, 640, DateTimeKind.Local).AddTicks(1683), "Back to the cowboy town", 20, "Red Dead Redemption 2", "Discover the cowboy world", 250000m, 1, new DateTime(2022, 9, 9, 15, 47, 41, 640, DateTimeKind.Local).AddTicks(1719) });
 
             migrationBuilder.InsertData(
                 table: "Genres",
@@ -441,7 +441,13 @@ namespace GameShop.Data.Migrations
                 {
                     { 1, "Action" },
                     { 2, "Open-World" },
-                    { 3, "Multiplayer" }
+                    { 3, "Multiplayer" },
+                    { 4, "Action RPG" },
+                    { 5, "Simulation" },
+                    { 6, "Horror" },
+                    { 7, "Sports & Racing" },
+                    { 8, "Role-Playing" },
+                    { 9, "Visual Novel" }
                 });
 
             migrationBuilder.InsertData(

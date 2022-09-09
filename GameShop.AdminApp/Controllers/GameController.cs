@@ -3,6 +3,7 @@ using GameShop.Utilities.Constants;
 using GameShop.ViewModels.Catalog.GameImages;
 using GameShop.ViewModels.Catalog.Games;
 using GameShop.ViewModels.Common;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -13,6 +14,7 @@ using System.Threading.Tasks;
 
 namespace GameShop.AdminApp.Controllers
 {
+    [Authorize(Roles = "admin")]
     public class GameController : Controller
     {
         private readonly IGameApiClient _gameApiClient;

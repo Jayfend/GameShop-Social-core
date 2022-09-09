@@ -42,7 +42,7 @@ namespace GameShop.Application.Catalog.Checkouts
                 var gamelist = await _context.OrderedGames.Where(x => x.CartID == getCart.CartID).Select(y => y.Game).ToListAsync();
                 foreach (var item in gamelist)
                 {
-                    total = total + item.Price;
+                    total = total + (item.Price - item.Price * item.Discount / 10);
                 }
                 Checkout newCheckout = new Checkout()
                 {
@@ -51,7 +51,15 @@ namespace GameShop.Application.Catalog.Checkouts
                     TotalPrice = total,
                     Username = user.UserName
                 };
-
+                var listgame = await _context.OrderedGames.Where(x => x.CartID == getCart.CartID).ToListAsync();
+                foreach (var game in listgame)
+                {
+                    var wishedgames = await _context.WishesGames.FirstOrDefaultAsync(x => x.GameID == game.GameID && x.Wishlist.UserID.ToString() == UserID);
+                    if (wishedgames != null)
+                    {
+                        _context.WishesGames.Remove(wishedgames);
+                    }
+                }
                 getCart.Status = (Status)0;
                 _context.Carts.Update(getCart);
                 _context.Checkouts.Add(newCheckout);
@@ -64,32 +72,32 @@ namespace GameShop.Application.Catalog.Checkouts
 
         public async Task<ApiResult<CheckoutViewModel>> GetBill(int checkoutID)
         {
-            var bill = await _context.Checkouts.Where(x => x.ID == checkoutID).Select(x => new CheckoutViewModel()
+            var bill = await _context.Checkouts.FirstOrDefaultAsync(x => x.ID == checkoutID);
+            if (bill != null)
             {
-                CartID = x.CartID,
-                TotalPrice = x.TotalPrice,
-                Purchasedate = x.Purchasedate,
-                Username = x.Username,
-                Listgame = new List<GameViewModel>()
-            }).FirstOrDefaultAsync();
-            var game = await _context.OrderedGames.Where(x => x.CartID == bill.CartID).Select(x => new GameViewModel()
-            {
-                CreatedDate = x.Game.CreatedDate,
-                Name = x.Game.GameName,
-                Description = x.Game.Description,
-                Gameplay = x.Game.Gameplay,
-                Discount = x.Game.Discount,
-                Price = x.Game.Price,
-            }).ToListAsync();
-            bill.Listgame = game;
-
-            if (bill == null)
-            {
-                return new ApiErrorResult<CheckoutViewModel>("Không tìm thấy bill");
+                var newbill = new CheckoutViewModel()
+                {
+                    CartID = bill.CartID,
+                    TotalPrice = bill.TotalPrice,
+                    Purchasedate = bill.Purchasedate,
+                    Username = bill.Username,
+                    Listgame = new List<GameViewModel>()
+                };
+                var game = await _context.OrderedGames.Where(x => x.CartID == bill.CartID).Select(x => new GameViewModel()
+                {
+                    CreatedDate = x.Game.CreatedDate,
+                    Name = x.Game.GameName,
+                    Description = x.Game.Description,
+                    Gameplay = x.Game.Gameplay,
+                    Discount = x.Game.Discount,
+                    Price = x.Game.Price,
+                }).ToListAsync();
+                newbill.Listgame = game;
+                return new ApiSuccessResult<CheckoutViewModel>(newbill);
             }
             else
             {
-                return new ApiSuccessResult<CheckoutViewModel>(bill);
+                return new ApiErrorResult<CheckoutViewModel>("Không tìm thấy bill");
             }
         }
     }

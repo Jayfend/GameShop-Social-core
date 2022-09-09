@@ -17,7 +17,7 @@ namespace GameShop.Data.Entities
         public SystemRequirementMin SystemRequirementMin { get; set; }
         public SystemRequirementRecommended SystemRequirementRecommended { get; set; }
         public List<GameImage> GameImages { get; set; }
-        public OrderedGame OrderedGame { get; set; }
-        public WishesGame WishesGame { get; set; }
+        public List<OrderedGame> OrderedGames { get; set; }
+        public List<WishesGame> WishesGames { get; set; }
     }
 }

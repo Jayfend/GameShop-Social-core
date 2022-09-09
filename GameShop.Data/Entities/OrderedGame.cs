@@ -11,5 +11,6 @@ namespace GameShop.Data.Entities
         public Cart Cart { get; set; }
         public int CartID { get; set; }
         public int GameID { get; set; }
+        public DateTime AddedDate { get; set; }
     }
 }

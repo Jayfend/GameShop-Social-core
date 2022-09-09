@@ -14,7 +14,7 @@ namespace GameShop.Data.Configurations
             builder.ToTable("OrderedGames");
             builder.HasKey(x => x.OrderID);
             builder.HasOne(x => x.Cart).WithMany(x => x.OrderedGames).HasForeignKey(x => x.CartID);
-            builder.HasOne(x => x.Game).WithOne(x => x.OrderedGame).HasForeignKey<OrderedGame>(x => x.GameID);
+            builder.HasOne(x => x.Game).WithMany(x => x.OrderedGames).HasForeignKey(x => x.GameID);
         }
     }
 }

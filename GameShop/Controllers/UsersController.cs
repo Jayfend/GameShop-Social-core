@@ -30,7 +30,7 @@ namespace GameShop.Controllers
             var result = await _userService.Authenticate(request);
             if (result.ResultObj == null)
             {
-                return BadRequest("User or Password is incorrect");
+                return BadRequest(result);
             }
 
             return Ok(result);

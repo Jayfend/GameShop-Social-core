@@ -31,6 +31,19 @@ namespace GameShop.Application.Catalog.Wishlists
             var getCart = await _context.Wishlists.FirstOrDefaultAsync(x => x.UserID.ToString() == UserID);
             if (getCart != null)
             {
+                var orderedgames = await _context.OrderedGames.ToListAsync();
+                var bills = await _context.Checkouts.Where(x => x.Cart.UserID.ToString() == UserID).Select(y => y.CartID).ToListAsync();
+                if (bills.Count > 0)
+                {
+                    foreach (var item in bills)
+                    {
+                        var checkbuy = orderedgames.FirstOrDefault(x => x.CartID == item && x.GameID == addWishlistRequest.GameID);
+                        if (checkbuy != null)
+                        {
+                            return new ApiErrorResult<bool>("Bạn đã mua game này rồi");
+                        }
+                    }
+                }
                 var check = await _context.WishesGames.FirstOrDefaultAsync(x => x.ID == getCart.ID && x.GameID == addWishlistRequest.GameID);
                 if (check != null)
                 {
@@ -42,6 +55,7 @@ namespace GameShop.Application.Catalog.Wishlists
                     {
                         GameID = addWishlistRequest.GameID,
                         WishID = getCart.ID,
+                        AddedDate = DateTime.Now
                     };
                     _context.WishesGames.Add(newgame);
                     await _context.SaveChangesAsync();
@@ -50,6 +64,19 @@ namespace GameShop.Application.Catalog.Wishlists
             }
             else
             {
+                var orderedgames = await _context.OrderedGames.ToListAsync();
+                var bills = await _context.Checkouts.Where(x => x.Cart.UserID.ToString() == UserID).Select(y => y.CartID).ToListAsync();
+                if (bills.Count > 0)
+                {
+                    foreach (var item in bills)
+                    {
+                        var checkbuy = orderedgames.FirstOrDefault(x => x.CartID == item && x.GameID == addWishlistRequest.GameID);
+                        if (checkbuy != null)
+                        {
+                            return new ApiErrorResult<bool>("Bạn đã mua game này rồi");
+                        }
+                    }
+                }
                 Wishlist newcart = new Wishlist()
                 {
                     UserID = new Guid(UserID),
@@ -57,7 +84,8 @@ namespace GameShop.Application.Catalog.Wishlists
                 WishesGame newgame = new WishesGame()
                 {
                     GameID = addWishlistRequest.GameID,
-                    Wishlist = newcart
+                    Wishlist = newcart,
+                    AddedDate = DateTime.Now
                 };
                 _context.WishesGames.Add(newgame);
                 await _context.SaveChangesAsync();
@@ -91,6 +119,7 @@ namespace GameShop.Application.Catalog.Wishlists
                      Price = x.Game.Price,
                      Discount = x.Game.Discount,
                      ImageList = new List<string>(),
+                     AddedDate = x.AddedDate
                  }).ToListAsync();
             var thumbnailimage = _context.GameImages.AsQueryable();
             foreach (var item in getCart)

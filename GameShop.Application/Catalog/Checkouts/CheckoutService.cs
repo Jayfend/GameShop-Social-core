@@ -105,6 +105,15 @@ namespace GameShop.Application.Catalog.Checkouts
         {
             var query = _context.OrderedGames.AsQueryable();
             query = query.Where(x => x.Cart.UserID.ToString() == UserID && x.Cart.Status.Equals((Status)0));
+            if (!string.IsNullOrEmpty(request.Keyword))
+            {
+                query = query.Where(x => x.Game.GameName.Contains(request.Keyword));
+            }
+
+            if (request.GenreID != null)
+            {
+                query = query.Where(x => x.Game.GameInGenres.Any(x => x.GenreID == request.GenreID));
+            }
             int totalrow = await query.CountAsync();
             var data = await query
                 .Skip((request.PageIndex - 1) * request.PageSize)

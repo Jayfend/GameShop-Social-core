@@ -1,5 +1,6 @@
 ﻿using GameShop.Application.Catalog.Checkouts;
 using GameShop.ViewModels.Catalog.Carts;
+using GameShop.ViewModels.Catalog.Games;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -42,6 +43,17 @@ namespace GameShop.Controllers
             {
                 return Ok(result);
             }
+        }
+
+        [HttpGet("paging/{UserID}")]
+        public async Task<IActionResult> GetAllPaging(string UserID, [FromQuery] GetManageGamePagingRequest request)
+        {
+            var games = await _checkoutService.GetPurchasedGames(UserID, request);
+            if (games == null)
+            {
+                return NotFound();
+            }
+            return Ok(games);
         }
     }
 }

@@ -100,5 +100,74 @@ namespace GameShop.Application.Catalog.Checkouts
                 return new ApiErrorResult<CheckoutViewModel>("Không tìm thấy bill");
             }
         }
+
+        public async Task<PagedResult<GameViewModel>> GetPurchasedGames(string UserID, GetManageGamePagingRequest request)
+        {
+            var query = _context.OrderedGames.AsQueryable();
+            query = query.Where(x => x.Cart.UserID.ToString() == UserID && x.Cart.Status.Equals((Status)0));
+            int totalrow = await query.CountAsync();
+            var data = await query
+                .Skip((request.PageIndex - 1) * request.PageSize)
+                .Take(request.PageSize)
+                .Select(x => new GameViewModel()
+                {
+                    CreatedDate = x.Game.CreatedDate,
+                    GameID = x.Game.GameID,
+                    Name = x.Game.GameName,
+                    Description = x.Game.Description,
+                    UpdatedDate = x.Game.UpdatedDate,
+                    Gameplay = x.Game.Gameplay,
+                    Discount = x.Game.Discount,
+                    GenreName = new List<string>(),
+                    GenreIDs = x.Game.GameInGenres.Select(y => y.GenreID).ToList(),
+                    Status = x.Game.Status.ToString(),
+                    Price = x.Game.Price,
+                    ListImage = new List<string>(),
+                    SRM = new SystemRequireMin()
+                    {
+                        OS = x.Game.SystemRequirementMin.OS,
+                        Processor = x.Game.SystemRequirementMin.Processor,
+                        Memory = x.Game.SystemRequirementMin.Memory,
+                        Graphics = x.Game.SystemRequirementMin.Graphics,
+                        Storage = x.Game.SystemRequirementMin.Storage,
+                        AdditionalNotes = x.Game.SystemRequirementMin.Storage,
+                        Soundcard = x.Game.SystemRequirementMin.Soundcard
+                    },
+
+                    SRR = new SystemRequirementRecommend()
+                    {
+                        OS = x.Game.SystemRequirementRecommended.OS,
+                        Processor = x.Game.SystemRequirementRecommended.Processor,
+                        Memory = x.Game.SystemRequirementRecommended.Memory,
+                        Graphics = x.Game.SystemRequirementRecommended.Graphics,
+                        Storage = x.Game.SystemRequirementRecommended.Storage,
+                        AdditionalNotes = x.Game.SystemRequirementRecommended.Storage,
+                        Soundcard = x.Game.SystemRequirementRecommended.Soundcard
+                    }
+                }).ToListAsync();
+            var genres = _context.Genres.AsQueryable();
+            foreach (var item in data)
+            {
+                foreach (var genre in item.GenreIDs)
+                {
+                    var name = genres.Where(x => x.GenreID == genre).Select(y => y.GenreName).FirstOrDefault();
+                    item.GenreName.Add(name);
+                }
+            }
+            var thumbnailimage = _context.GameImages.AsQueryable();
+            foreach (var item in data)
+            {
+                var listgame = thumbnailimage.Where(x => x.GameID == item.GameID).Select(y => y.ImagePath).ToList();
+                item.ListImage = listgame;
+            }
+            var pagedResult = new PagedResult<GameViewModel>()
+            {
+                TotalRecords = totalrow,
+                PageIndex = request.PageIndex,
+                PageSize = request.PageSize,
+                Items = data
+            };
+            return pagedResult;
+        }
     }
 }

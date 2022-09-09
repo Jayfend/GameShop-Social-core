@@ -13,9 +13,12 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using System.Data;
 
 namespace GameShop.AdminApp.Controllers
 {
+    [Authorize(Roles = "admin")]
     public class UserController : BaseController
     {
         private readonly IUserApiClient _userApiClient;

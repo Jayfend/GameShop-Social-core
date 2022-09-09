@@ -14,7 +14,7 @@ namespace GameShop.Data.Configurations
             builder.ToTable("WishesGames");
             builder.HasKey(x => x.ID);
             builder.HasOne(x => x.Wishlist).WithMany(x => x.WishesGame).HasForeignKey(x => x.WishID);
-            builder.HasOne(x => x.Game).WithOne(x => x.WishesGame).HasForeignKey<WishesGame>(x => x.GameID);
+            builder.HasOne(x => x.Game).WithMany(x => x.WishesGames).HasForeignKey(x => x.GameID);
         }
     }
 }

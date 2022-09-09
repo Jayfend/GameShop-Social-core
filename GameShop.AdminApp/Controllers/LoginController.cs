@@ -39,6 +39,10 @@ namespace GameShop.AdminApp.Controllers
             if (!ModelState.IsValid)
                 return View(ModelState);
             var result = await _userApiClient.Authenticate(request);
+            if (!result.IsSuccess)
+            {
+                return View("Index");
+            }
             var userPrincipal = this.ValidateToken(result.ResultObj.Token);
             var authProperties = new AuthenticationProperties
             {

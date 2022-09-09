@@ -11,5 +11,6 @@ namespace GameShop.Data.Entities
         public Wishlist Wishlist { get; set; }
         public int WishID { get; set; }
         public int GameID { get; set; }
+        public DateTime AddedDate { get; set; }
     }
 }

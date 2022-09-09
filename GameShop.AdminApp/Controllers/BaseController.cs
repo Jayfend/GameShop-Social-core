@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace GameShop.AdminApp.Controllers
 {
-    [Authorize]
     public class BaseController : Controller
     {
         public override void OnActionExecuting(ActionExecutingContext context)

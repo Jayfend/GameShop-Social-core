@@ -26,18 +26,19 @@
                     <input asp-for="Caption" class="form-control" />
                     <span asp-validation-for="Caption" class="text-danger"></span>
                 </div>
-                <div class="form-group">
-                    <select name="isDefault" class="form-control">
-                        <option>--Chọn danh mục--</option>
-                        <option value="true">True</option>
-                        <option value="false">False</option>
-                    </select>
-                </div>
+                
                 <div class="form-group">
                     <label asp-for="SortOrder" class="control-label"></label>
                     <input asp-for="SortOrder" type="number" class="form-control" />
                     <span asp-validation-for="SortOrder" class="text-danger"></span>
                 </div>
+                    <div class="form-group">
+                        <select name="isDefault" class="form-control">
+                            <option>--Chọn danh mục--</option>
+                            <option value="true">True</option>
+                            <option value="false">False</option>
+                        </select>
+                    </div>
                 <div class="form-group">
                     <label asp-for="ImageFile" class="control-label"></label>
                     <input asp-for="ImageFile" type="file" class="form-control" />

@@ -41,6 +41,7 @@ namespace GameShop.Application.Catalog.Carts
                     {
                         GameID = cartCreateRequest.GameID,
                         CartID = getCart.CartID,
+                        AddedDate = DateTime.Now,
                     };
                     _context.OrderedGames.Add(newgame);
                     await _context.SaveChangesAsync();
@@ -49,11 +50,36 @@ namespace GameShop.Application.Catalog.Carts
             }
             else
             {
-                var check = await _context.OrderedGames.Where(x => x.GameID == cartCreateRequest.GameID).FirstOrDefaultAsync();
-                if (check != null)
+                var orderedgames = await _context.OrderedGames.ToListAsync();
+                var bills = await _context.Checkouts.Where(x => x.Cart.UserID.ToString() == UserID).Select(y => y.CartID).ToListAsync();
+                if (bills.Count > 0)
                 {
-                    return new ApiErrorResult<bool>("Bạn đã thêm game này rồi");
+                    foreach (var item in bills)
+                    {
+                        var check = orderedgames.FirstOrDefault(x => x.CartID == item && x.GameID == cartCreateRequest.GameID);
+                        if (check != null)
+                        {
+                            return new ApiErrorResult<bool>("Bạn đã mua game này rồi");
+                        }
+                    }
+                    Cart cart = new Cart()
+                    {
+                        UserID = new Guid(UserID),
+                        Status = (Status)1,
+                        CreatedDate = DateTime.Now,
+                        UpdatedDate = DateTime.Now,
+                    };
+                    OrderedGame game = new OrderedGame()
+                    {
+                        GameID = cartCreateRequest.GameID,
+                        Cart = cart,
+                        AddedDate = DateTime.Now
+                    };
+                    _context.OrderedGames.Add(game);
+                    await _context.SaveChangesAsync();
+                    return new ApiSuccessResult<bool>();
                 }
+
                 Cart newcart = new Cart()
                 {
                     UserID = new Guid(UserID),
@@ -64,7 +90,8 @@ namespace GameShop.Application.Catalog.Carts
                 OrderedGame newgame = new OrderedGame()
                 {
                     GameID = cartCreateRequest.GameID,
-                    Cart = newcart
+                    Cart = newcart,
+                    AddedDate = DateTime.Now
                 };
                 _context.OrderedGames.Add(newgame);
                 await _context.SaveChangesAsync();
@@ -96,7 +123,8 @@ namespace GameShop.Application.Catalog.Carts
                     Name = x.Game.GameName,
                     Price = x.Game.Price,
                     Discount = x.Game.Discount,
-                    ImageList = new List<string>()
+                    ImageList = new List<string>(),
+                    AddedDate = x.AddedDate
                 }).ToListAsync();
 
             var thumbnailimage = _context.GameImages.AsQueryable();

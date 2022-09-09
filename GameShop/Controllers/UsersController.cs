@@ -37,7 +37,7 @@ namespace GameShop.Controllers
         }
 
         [HttpPost("changepassword")]
-        [AllowAnonymous]
+        [Authorize]
         public async Task<IActionResult> ChangePassword([FromBody] PasswordUpdateRequest request)
         {
             if (ModelState.IsValid == false)

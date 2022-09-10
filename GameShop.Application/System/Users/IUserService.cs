@@ -1,4 +1,6 @@
-﻿using GameShop.ViewModels.Common;
+﻿using GameShop.Data.Entities;
+using GameShop.ViewModels.Catalog.UserImages;
+using GameShop.ViewModels.Common;
 using GameShop.ViewModels.System.Users;
 using System;
 using System.Collections.Generic;

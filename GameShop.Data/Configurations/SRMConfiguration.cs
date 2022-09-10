@@ -7,7 +7,7 @@ using System.Text;
 
 namespace GameShop.Data.Configurations
 {
-    internal class SRMConfiguration : IEntityTypeConfiguration<SystemRequirementMin>
+    public class SRMConfiguration : IEntityTypeConfiguration<SystemRequirementMin>
     {
         public void Configure(EntityTypeBuilder<SystemRequirementMin> builder)
         {

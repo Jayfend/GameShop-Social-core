@@ -51,6 +51,22 @@ namespace GameShop.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Contacts",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Email = table.Column<string>(nullable: true),
+                    Titile = table.Column<string>(nullable: true),
+                    Content = table.Column<string>(nullable: true),
+                    ReceiveDate = table.Column<DateTime>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Contacts", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Games",
                 columns: table => new
                 {
@@ -208,6 +224,48 @@ namespace GameShop.Data.Migrations
                     table.PrimaryKey("PK_Carts", x => x.CartID);
                     table.ForeignKey(
                         name: "FK_Carts_AspNetUsers_UserID",
+                        column: x => x.UserID,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserAvatar",
+                columns: table => new
+                {
+                    ImageID = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserID = table.Column<Guid>(nullable: false),
+                    UpdateDate = table.Column<DateTime>(nullable: false),
+                    ImagePath = table.Column<string>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserAvatar", x => x.ImageID);
+                    table.ForeignKey(
+                        name: "FK_UserAvatar_AspNetUsers_UserID",
+                        column: x => x.UserID,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserThumbnail",
+                columns: table => new
+                {
+                    ImageID = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserID = table.Column<Guid>(nullable: false),
+                    UpdateDate = table.Column<DateTime>(nullable: false),
+                    ImagePath = table.Column<string>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserThumbnail", x => x.ImageID);
+                    table.ForeignKey(
+                        name: "FK_UserThumbnail_AspNetUsers_UserID",
                         column: x => x.UserID,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
@@ -415,24 +473,24 @@ namespace GameShop.Data.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Description", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { new Guid("8d04dce2-969a-435d-bba4-df3f325983dc"), "7a977f36-4578-468c-ab6e-2a0102449de4", "Administrator role", "admin", "ADMIN" },
-                    { new Guid("52503f03-bdea-4bf8-8a1a-d21ae2646483"), "c3876901-b7b0-46ee-93bf-ebef30a4860c", "User role", "User", "USER" }
+                    { new Guid("8d04dce2-969a-435d-bba4-df3f325983dc"), "2159d1e0-2688-431c-afd4-2528abaa1dd1", "Administrator role", "admin", "ADMIN" },
+                    { new Guid("52503f03-bdea-4bf8-8a1a-d21ae2646483"), "a9d93d8c-56e3-4326-99ce-d8eac56fc768", "User role", "User", "USER" }
                 });
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Dob", "Email", "EmailConfirmed", "FirstName", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { new Guid("69bd714f-9576-45ba-b5b7-f00649be00de"), 0, "1fa89999-9b68-4c1b-8d8e-91998dbe38e9", new DateTime(2001, 7, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "leenguyen1721@gmail.com", true, "Luan", "Nguyen Phung Le", false, null, "LEENGUYEN1721@gmail.com", "JAYFEND", "AQAAAAEAACcQAAAAEM4QNqslvPr7QEDPYn4J3xcfRajA3YExW7vjPVr7wvraPDsmZ+GccF1lMkM/q7KY7Q==", null, false, "", false, "Jayfend" });
+                values: new object[] { new Guid("69bd714f-9576-45ba-b5b7-f00649be00de"), 0, "932be1f0-4517-47bf-9e38-3581ed9269c7", new DateTime(2001, 7, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "leenguyen1721@gmail.com", true, "Luan", "Nguyen Phung Le", false, null, "LEENGUYEN1721@gmail.com", "JAYFEND", "AQAAAAEAACcQAAAAECYho35LRR6o+JrUjbK67cTYz5JYvt0cZkdMI3bFv3P0HBT2BTHBQGnQdqNgqdS39w==", null, false, "", false, "Jayfend" });
 
             migrationBuilder.InsertData(
                 table: "Games",
                 columns: new[] { "GameID", "BaseEntityID", "CreatedDate", "Description", "GameName", "Gameplay", "Price", "Status", "UpdatedDate" },
-                values: new object[] { 1, 0, new DateTime(2022, 9, 9, 15, 47, 41, 639, DateTimeKind.Local).AddTicks(4080), "The best game in the world", "Grand Theft Auto V", "Destroy the city", 250000m, 1, new DateTime(2022, 9, 9, 15, 47, 41, 640, DateTimeKind.Local).AddTicks(1204) });
+                values: new object[] { 1, 0, new DateTime(2022, 9, 10, 10, 57, 8, 710, DateTimeKind.Local).AddTicks(8616), "The best game in the world", "Grand Theft Auto V", "Destroy the city", 250000m, 1, new DateTime(2022, 9, 10, 10, 57, 8, 711, DateTimeKind.Local).AddTicks(5957) });
 
             migrationBuilder.InsertData(
                 table: "Games",
                 columns: new[] { "GameID", "BaseEntityID", "CreatedDate", "Description", "Discount", "GameName", "Gameplay", "Price", "Status", "UpdatedDate" },
-                values: new object[] { 2, 0, new DateTime(2022, 9, 9, 15, 47, 41, 640, DateTimeKind.Local).AddTicks(1683), "Back to the cowboy town", 20, "Red Dead Redemption 2", "Discover the cowboy world", 250000m, 1, new DateTime(2022, 9, 9, 15, 47, 41, 640, DateTimeKind.Local).AddTicks(1719) });
+                values: new object[] { 2, 0, new DateTime(2022, 9, 10, 10, 57, 8, 711, DateTimeKind.Local).AddTicks(6492), "Back to the cowboy town", 20, "Red Dead Redemption 2", "Discover the cowboy world", 250000m, 1, new DateTime(2022, 9, 10, 10, 57, 8, 711, DateTimeKind.Local).AddTicks(6516) });
 
             migrationBuilder.InsertData(
                 table: "Genres",
@@ -567,6 +625,18 @@ namespace GameShop.Data.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_UserAvatar_UserID",
+                table: "UserAvatar",
+                column: "UserID",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserThumbnail_UserID",
+                table: "UserThumbnail",
+                column: "UserID",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_WishesGames_GameID",
                 table: "WishesGames",
                 column: "GameID");
@@ -601,6 +671,9 @@ namespace GameShop.Data.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "Contacts");
+
+            migrationBuilder.DropTable(
                 name: "Checkouts");
 
             migrationBuilder.DropTable(
@@ -617,6 +690,12 @@ namespace GameShop.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "SystemRequirementRecommended");
+
+            migrationBuilder.DropTable(
+                name: "UserAvatar");
+
+            migrationBuilder.DropTable(
+                name: "UserThumbnail");
 
             migrationBuilder.DropTable(
                 name: "WishesGames");

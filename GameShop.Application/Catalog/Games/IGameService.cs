@@ -1,5 +1,6 @@
 ﻿using GameShop.ViewModels.Catalog.GameImages;
 using GameShop.ViewModels.Catalog.Games;
+using GameShop.ViewModels.Catalog.UserImages;
 using GameShop.ViewModels.Common;
 using Microsoft.AspNetCore.Http;
 using System;
@@ -40,5 +41,9 @@ namespace GameShop.Application.Catalog.Games
         Task<GameImageViewModel> GetImageById(int ImageID);
 
         Task<ApiResult<bool>> CategoryAssign(int id, CategoryAssignRequest request);
+
+        Task<ApiResult<string>> AddAvatar(string UserID, UserImageCreateRequest request);
+
+        Task<ApiResult<string>> AddThumbnail(string UserID, UserImageCreateRequest request);
     }
 }

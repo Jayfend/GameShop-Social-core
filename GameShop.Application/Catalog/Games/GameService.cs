@@ -16,6 +16,7 @@ using GameShop.Utilities.Exceptions;
 using GameShop.ViewModels.Catalog.GameImages;
 using GameShop.Data.Enums;
 using Microsoft.AspNetCore.Mvc;
+using GameShop.ViewModels.Catalog.UserImages;
 
 namespace GameShop.Application.Catalog.Games
 {
@@ -599,6 +600,70 @@ namespace GameShop.Application.Catalog.Games
             }
             await _context.SaveChangesAsync();
             return new ApiSuccessResult<bool>();
+        }
+
+        public async Task<ApiResult<string>> AddAvatar(string UserID, UserImageCreateRequest request)
+        {
+            if (request.ImageFile != null)
+            {
+                var getAvatar = await _context.UserAvatar.Where(x => x.UserID.ToString() == UserID).FirstOrDefaultAsync();
+                if (getAvatar == null)
+                {
+                    var newAvatar = new UserAvatar()
+                    {
+                        UserID = new Guid(UserID),
+                        UpdateDate = DateTime.Now,
+                        ImagePath = await this.Savefile(request.ImageFile)
+                    };
+                    _context.UserAvatar.Add(newAvatar);
+                    await _context.SaveChangesAsync();
+                    return new ApiSuccessResult<string>(newAvatar.ImagePath);
+                }
+                else
+                {
+                    getAvatar.UpdateDate = DateTime.Now;
+                    getAvatar.ImagePath = await this.Savefile(request.ImageFile);
+                    _context.UserAvatar.Update(getAvatar);
+                    await _context.SaveChangesAsync();
+                    return new ApiSuccessResult<string>(getAvatar.ImagePath);
+                }
+            }
+            else
+            {
+                return new ApiErrorResult<string>("Không tìm thấy hình ảnh");
+            }
+        }
+
+        public async Task<ApiResult<string>> AddThumbnail(string UserID, UserImageCreateRequest request)
+        {
+            if (request.ImageFile != null)
+            {
+                var getThumbnail = await _context.UserThumbnail.Where(x => x.UserID.ToString() == UserID).FirstOrDefaultAsync();
+                if (getThumbnail == null)
+                {
+                    var newThumbnail = new UserThumbnail()
+                    {
+                        UserID = new Guid(UserID),
+                        UpdateDate = DateTime.Now,
+                        ImagePath = await this.Savefile(request.ImageFile)
+                    };
+                    _context.UserThumbnail.Add(newThumbnail);
+                    await _context.SaveChangesAsync();
+                    return new ApiSuccessResult<string>(newThumbnail.ImagePath);
+                }
+                else
+                {
+                    getThumbnail.UpdateDate = DateTime.Now;
+                    getThumbnail.ImagePath = await this.Savefile(request.ImageFile);
+                    _context.UserThumbnail.Update(getThumbnail);
+                    await _context.SaveChangesAsync();
+                    return new ApiSuccessResult<string>(getThumbnail.ImagePath);
+                }
+            }
+            else
+            {
+                return new ApiErrorResult<string>("Không tìm thấy hình ảnh");
+            }
         }
     }
 }

@@ -28,6 +28,9 @@ namespace GameShop.Data.EF
             modelBuilder.ApplyConfiguration(new WishlistConfiguration());
             modelBuilder.ApplyConfiguration(new WishesGameConfiguration());
             modelBuilder.ApplyConfiguration(new CheckoutConfiguration());
+            modelBuilder.ApplyConfiguration(new ContactConfiguration());
+            modelBuilder.ApplyConfiguration(new UserAvatarConfiguration());
+            modelBuilder.ApplyConfiguration(new UserThumbnailConfiguration());
             modelBuilder.Entity<IdentityUserClaim<Guid>>().ToTable("AppUserClaims");
             modelBuilder.Entity<IdentityUserRole<Guid>>().ToTable("AppUserRoles").HasKey(x => new { x.UserId, x.RoleId });
             modelBuilder.Entity<IdentityUserLogin<Guid>>().ToTable("AppUserLogins").HasKey(x => x.UserId);
@@ -51,5 +54,8 @@ namespace GameShop.Data.EF
         public DbSet<Wishlist> Wishlists { get; set; }
         public DbSet<WishesGame> WishesGames { get; set; }
         public DbSet<Checkout> Checkouts { get; set; }
+        public DbSet<Contact> Contacts { get; set; }
+        public DbSet<UserAvatar> UserAvatar { get; set; }
+        public DbSet<UserThumbnail> UserThumbnail { get; set; }
     }
 }

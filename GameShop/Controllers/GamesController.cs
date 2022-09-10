@@ -1,6 +1,7 @@
 ﻿using GameShop.Application.Catalog.Games;
 using GameShop.ViewModels.Catalog.GameImages;
 using GameShop.ViewModels.Catalog.Games;
+using GameShop.ViewModels.Catalog.UserImages;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Hosting.Server;
@@ -58,6 +59,7 @@ namespace GameShop.Controllers
             }
             return Ok(games);
         }
+
         [HttpGet("lastest")]
         public async Task<IActionResult> GetAll()
         {
@@ -232,6 +234,40 @@ namespace GameShop.Controllers
                 return BadRequest(ModelState);
 
             var result = await _gameService.CategoryAssign(id, request);
+            if (!result.IsSuccess)
+            {
+                return BadRequest(result);
+            }
+            return Ok(result);
+        }
+
+        [Authorize]
+        [HttpPost("Avatar/{UserID}")]
+        [Consumes("multipart/form-data")]
+        public async Task<IActionResult> AddAvatar(string UserID, [FromForm] UserImageCreateRequest request)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var result = await _gameService.AddAvatar(UserID, request);
+            if (!result.IsSuccess)
+            {
+                return BadRequest(result);
+            }
+            return Ok(result);
+        }
+
+        [Authorize]
+        [HttpPost("Thumbnail/{UserID}")]
+        [Consumes("multipart/form-data")]
+        public async Task<IActionResult> AddThumbnail(string UserID, [FromForm] UserImageCreateRequest request)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var result = await _gameService.AddThumbnail(UserID, request);
             if (!result.IsSuccess)
             {
                 return BadRequest(result);

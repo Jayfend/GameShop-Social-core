@@ -490,7 +490,7 @@ namespace GameShop.Application.Catalog.Games
                 var listgame = thumbnailimage.Where(x => x.GameID == item.GameID).Select(y => y.ImagePath).ToList();
                 item.ListImage = listgame;
             }
-            var newdata = data.OrderByDescending(x => x.UpdatedDate).ToList();
+            var newdata = data.OrderBy(x => x.UpdatedDate).Take(5).ToList();
             return newdata;
         }
 

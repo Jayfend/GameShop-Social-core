@@ -489,7 +489,8 @@ namespace GameShop.Application.Catalog.Games
                 var listgame = thumbnailimage.Where(x => x.GameID == item.GameID).Select(y => y.ImagePath).ToList();
                 item.ListImage = listgame;
             }
-            return data;
+            var newdata = data.OrderByDescending(x => x.UpdatedDate).ToList();
+            return newdata;
         }
 
         //public async Task<PagedResult<GameViewModel>> GetAllbyGenreID(GetPublicGamePagingRequest request)

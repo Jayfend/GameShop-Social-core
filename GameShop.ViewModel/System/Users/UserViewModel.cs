@@ -29,5 +29,7 @@ namespace GameShop.ViewModels.System.Users
 
         public RoleAssignRequest RoleAssign { get; set; }
         public IList<string> Roles { get; set; }
+        public string AvatarPath { get; set; }
+        public string ThumbnailPath { get; set; }
     }
 }

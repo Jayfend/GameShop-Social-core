@@ -28,5 +28,9 @@ namespace GameShop.Application.System.Users
         Task<ApiResult<bool>> ChangePassword(PasswordUpdateRequest request);
 
         Task<ApiResult<bool>> ForgotPassword(ForgotPasswordRequest request);
+
+        Task<ApiResult<string>> AddAvatar(string UserID, UserImageCreateRequest request);
+
+        Task<ApiResult<string>> AddThumbnail(string UserID, UserImageCreateRequest request);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using GameShop.Application.System.Users;
+using GameShop.ViewModels.Catalog.UserImages;
 using GameShop.ViewModels.System.Users;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -134,6 +135,40 @@ namespace GameShop.Controllers
         public async Task<IActionResult> Delete(Guid id)
         {
             var result = await _userService.Delete(id);
+            return Ok(result);
+        }
+
+        [Authorize]
+        [HttpPost("Avatar/{UserID}")]
+        [Consumes("multipart/form-data")]
+        public async Task<IActionResult> AddAvatar(string UserID, [FromForm] UserImageCreateRequest request)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var result = await _userService.AddAvatar(UserID, request);
+            if (!result.IsSuccess)
+            {
+                return BadRequest(result);
+            }
+            return Ok(result);
+        }
+
+        [Authorize]
+        [HttpPost("Thumbnail/{UserID}")]
+        [Consumes("multipart/form-data")]
+        public async Task<IActionResult> AddThumbnail(string UserID, [FromForm] UserImageCreateRequest request)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var result = await _userService.AddThumbnail(UserID, request);
+            if (!result.IsSuccess)
+            {
+                return BadRequest(result);
+            }
             return Ok(result);
         }
     }

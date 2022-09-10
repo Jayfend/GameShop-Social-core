@@ -55,7 +55,7 @@ namespace GameShop.Data.Migrations
                         new
                         {
                             Id = new Guid("8d04dce2-969a-435d-bba4-df3f325983dc"),
-                            ConcurrencyStamp = "7a977f36-4578-468c-ab6e-2a0102449de4",
+                            ConcurrencyStamp = "2159d1e0-2688-431c-afd4-2528abaa1dd1",
                             Description = "Administrator role",
                             Name = "admin",
                             NormalizedName = "ADMIN"
@@ -63,7 +63,7 @@ namespace GameShop.Data.Migrations
                         new
                         {
                             Id = new Guid("52503f03-bdea-4bf8-8a1a-d21ae2646483"),
-                            ConcurrencyStamp = "c3876901-b7b0-46ee-93bf-ebef30a4860c",
+                            ConcurrencyStamp = "a9d93d8c-56e3-4326-99ce-d8eac56fc768",
                             Description = "User role",
                             Name = "User",
                             NormalizedName = "USER"
@@ -151,7 +151,7 @@ namespace GameShop.Data.Migrations
                         {
                             Id = new Guid("69bd714f-9576-45ba-b5b7-f00649be00de"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "1fa89999-9b68-4c1b-8d8e-91998dbe38e9",
+                            ConcurrencyStamp = "932be1f0-4517-47bf-9e38-3581ed9269c7",
                             Dob = new DateTime(2001, 7, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "leenguyen1721@gmail.com",
                             EmailConfirmed = true,
@@ -160,7 +160,7 @@ namespace GameShop.Data.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "LEENGUYEN1721@gmail.com",
                             NormalizedUserName = "JAYFEND",
-                            PasswordHash = "AQAAAAEAACcQAAAAEM4QNqslvPr7QEDPYn4J3xcfRajA3YExW7vjPVr7wvraPDsmZ+GccF1lMkM/q7KY7Q==",
+                            PasswordHash = "AQAAAAEAACcQAAAAECYho35LRR6o+JrUjbK67cTYz5JYvt0cZkdMI3bFv3P0HBT2BTHBQGnQdqNgqdS39w==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
                             TwoFactorEnabled = false,
@@ -228,6 +228,30 @@ namespace GameShop.Data.Migrations
                     b.ToTable("Checkouts");
                 });
 
+            modelBuilder.Entity("GameShop.Data.Entities.Contact", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Content")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("ReceiveDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Titile")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Contacts");
+                });
+
             modelBuilder.Entity("GameShop.Data.Entities.Game", b =>
                 {
                     b.Property<int>("GameID")
@@ -276,27 +300,27 @@ namespace GameShop.Data.Migrations
                         {
                             GameID = 1,
                             BaseEntityID = 0,
-                            CreatedDate = new DateTime(2022, 9, 9, 15, 47, 41, 639, DateTimeKind.Local).AddTicks(4080),
+                            CreatedDate = new DateTime(2022, 9, 10, 10, 57, 8, 710, DateTimeKind.Local).AddTicks(8616),
                             Description = "The best game in the world",
                             Discount = 0,
                             GameName = "Grand Theft Auto V",
                             Gameplay = "Destroy the city",
                             Price = 250000m,
                             Status = 1,
-                            UpdatedDate = new DateTime(2022, 9, 9, 15, 47, 41, 640, DateTimeKind.Local).AddTicks(1204)
+                            UpdatedDate = new DateTime(2022, 9, 10, 10, 57, 8, 711, DateTimeKind.Local).AddTicks(5957)
                         },
                         new
                         {
                             GameID = 2,
                             BaseEntityID = 0,
-                            CreatedDate = new DateTime(2022, 9, 9, 15, 47, 41, 640, DateTimeKind.Local).AddTicks(1683),
+                            CreatedDate = new DateTime(2022, 9, 10, 10, 57, 8, 711, DateTimeKind.Local).AddTicks(6492),
                             Description = "Back to the cowboy town",
                             Discount = 20,
                             GameName = "Red Dead Redemption 2",
                             Gameplay = "Discover the cowboy world",
                             Price = 250000m,
                             Status = 1,
-                            UpdatedDate = new DateTime(2022, 9, 9, 15, 47, 41, 640, DateTimeKind.Local).AddTicks(1719)
+                            UpdatedDate = new DateTime(2022, 9, 10, 10, 57, 8, 711, DateTimeKind.Local).AddTicks(6516)
                         });
                 });
 
@@ -594,6 +618,56 @@ namespace GameShop.Data.Migrations
                         });
                 });
 
+            modelBuilder.Entity("GameShop.Data.Entities.UserAvatar", b =>
+                {
+                    b.Property<int>("ImageID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("ImagePath")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("UpdateDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("UserID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("ImageID");
+
+                    b.HasIndex("UserID")
+                        .IsUnique();
+
+                    b.ToTable("UserAvatar");
+                });
+
+            modelBuilder.Entity("GameShop.Data.Entities.UserThumbnail", b =>
+                {
+                    b.Property<int>("ImageID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("ImagePath")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("UpdateDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("UserID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("ImageID");
+
+                    b.HasIndex("UserID")
+                        .IsUnique();
+
+                    b.ToTable("UserThumbnail");
+                });
+
             modelBuilder.Entity("GameShop.Data.Entities.WishesGame", b =>
                 {
                     b.Property<int>("ID")
@@ -816,6 +890,24 @@ namespace GameShop.Data.Migrations
                     b.HasOne("GameShop.Data.Entities.Game", "Game")
                         .WithOne("SystemRequirementRecommended")
                         .HasForeignKey("GameShop.Data.Entities.SystemRequirementRecommended", "GameID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("GameShop.Data.Entities.UserAvatar", b =>
+                {
+                    b.HasOne("GameShop.Data.Entities.AppUser", "AppUser")
+                        .WithOne("UserAvatar")
+                        .HasForeignKey("GameShop.Data.Entities.UserAvatar", "UserID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("GameShop.Data.Entities.UserThumbnail", b =>
+                {
+                    b.HasOne("GameShop.Data.Entities.AppUser", "AppUser")
+                        .WithOne("UserThumbnail")
+                        .HasForeignKey("GameShop.Data.Entities.UserThumbnail", "UserID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

@@ -15,5 +15,7 @@ namespace GameShop.Data.Entities
 
         public List<Cart> Carts { get; set; }
         public Wishlist Wishlist { get; set; }
+        public UserAvatar UserAvatar { get; set; }
+        public UserThumbnail UserThumbnail { get; set; }
     }
 }

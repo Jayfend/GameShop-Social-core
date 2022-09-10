@@ -143,6 +143,8 @@ namespace GameShop.Application.System.Users
                 return new ApiErrorResult<UserViewModel>("User không tồn tại");
             }
             var roles = await _userManager.GetRolesAsync(user);
+            var useravatar = await _context.UserAvatar.FirstOrDefaultAsync(x => x.UserID == id);
+            var userthumbnail = await _context.UserThumbnail.FirstOrDefaultAsync(x => x.UserID == id);
             var userVm = new UserViewModel()
             {
                 Email = user.Email,
@@ -153,23 +155,10 @@ namespace GameShop.Application.System.Users
                 LastName = user.LastName,
                 UserName = user.UserName,
                 Roles = roles,
+                AvatarPath = useravatar.ImagePath,
+                ThumbnailPath = userthumbnail.ImagePath
             };
-            if (user.UserAvatar.ImagePath == null)
-            {
-                userVm.AvatarPath = "imgnotfound.jpg";
-            }
-            else
-            {
-                userVm.AvatarPath = user.UserAvatar.ImagePath;
-            }
-            if (user.UserThumbnail.ImagePath == null)
-            {
-                userVm.ThumbnailPath = "imgnotfound.jpg";
-            }
-            else
-            {
-                userVm.ThumbnailPath = user.UserThumbnail.ImagePath;
-            }
+
             return new ApiSuccessResult<UserViewModel>(userVm);
         }
 
@@ -215,12 +204,21 @@ namespace GameShop.Application.System.Users
             {
                 return new ApiErrorResult<bool>("Emai đã tồn tại");
             }
-
+            var useravatar = new UserAvatar()
+            {
+                ImagePath = "imgnotfound.jpg"
+            };
+            var userthumbnail = new UserThumbnail()
+            {
+                ImagePath = "imgnotfound.jpg"
+            };
             user = new AppUser()
             {
                 UserName = request.UserName,
                 //Dob = request.Dob,
                 Email = request.Email,
+                UserAvatar = useravatar,
+                UserThumbnail = userthumbnail
                 //FirstName = request.FirstName,
                 //LastName = request.LastName,
                 //PhoneNumber = request.PhoneNumber,

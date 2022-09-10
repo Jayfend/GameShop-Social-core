@@ -58,6 +58,16 @@ namespace GameShop.Controllers
             }
             return Ok(games);
         }
+        [HttpGet("lastest")]
+        public async Task<IActionResult> GetAll()
+        {
+            var games = await _gameService.GetAll();
+            if (games == null)
+            {
+                return NotFound();
+            }
+            return Ok(games);
+        }
 
         [HttpPost]
         public async Task<IActionResult> Create([FromForm] GameCreateReceive request)

@@ -1,13 +1,19 @@
-﻿using GameShop.Data.Entities;
+﻿using GameShop.Application.Common;
+using GameShop.Data.EF;
+using GameShop.Data.Entities;
+using GameShop.ViewModels.Catalog.UserImages;
 using GameShop.ViewModels.Common;
 using GameShop.ViewModels.System.Users;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.IdentityModel.Tokens.Jwt;
+using System.IO;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,13 +26,18 @@ namespace GameShop.Application.System.Users
         private readonly SignInManager<AppUser> _signInManager;
         private readonly RoleManager<AppRole> _roleManager;
         private readonly IConfiguration _config;
+        private readonly GameShopDbContext _context;
+        private readonly IStorageService _storageService;
 
-        public UserService(UserManager<AppUser> useManager, SignInManager<AppUser> signInManager, RoleManager<AppRole> roleManager, IConfiguration config)
+        public UserService(UserManager<AppUser> useManager,
+            SignInManager<AppUser> signInManager, RoleManager<AppRole> roleManager, IConfiguration config, GameShopDbContext context, IStorageService storageService)
         {
             _userManager = useManager;
             _signInManager = signInManager;
             _roleManager = roleManager;
             _config = config;
+            _context = context;
+            _storageService = storageService;
         }
 
         public async Task<ApiResult<LoginResponse>> Authenticate(LoginRequest request)
@@ -141,7 +152,9 @@ namespace GameShop.Application.System.Users
                 Id = user.Id,
                 LastName = user.LastName,
                 UserName = user.UserName,
-                Roles = roles
+                Roles = roles,
+                AvatarPath = user.UserAvatar.ToString(),
+                ThumbnailPath = user.UserThumbnail.ToString(),
             };
             return new ApiSuccessResult<UserViewModel>(userVm);
         }
@@ -262,6 +275,78 @@ namespace GameShop.Application.System.Users
             {
                 return new ApiErrorResult<bool>("Cập nhật không thành công");
             }
+        }
+
+        public async Task<ApiResult<string>> AddAvatar(string UserID, UserImageCreateRequest request)
+        {
+            if (request.ImageFile != null)
+            {
+                var getAvatar = await _context.UserAvatar.Where(x => x.UserID.ToString() == UserID).FirstOrDefaultAsync();
+                if (getAvatar == null)
+                {
+                    var newAvatar = new UserAvatar()
+                    {
+                        UserID = new Guid(UserID),
+                        UpdateDate = DateTime.Now,
+                        ImagePath = await this.Savefile(request.ImageFile)
+                    };
+                    _context.UserAvatar.Add(newAvatar);
+                    await _context.SaveChangesAsync();
+                    return new ApiSuccessResult<string>(newAvatar.ImagePath);
+                }
+                else
+                {
+                    getAvatar.UpdateDate = DateTime.Now;
+                    getAvatar.ImagePath = await this.Savefile(request.ImageFile);
+                    _context.UserAvatar.Update(getAvatar);
+                    await _context.SaveChangesAsync();
+                    return new ApiSuccessResult<string>(getAvatar.ImagePath);
+                }
+            }
+            else
+            {
+                return new ApiErrorResult<string>("Không tìm thấy hình ảnh");
+            }
+        }
+
+        public async Task<ApiResult<string>> AddThumbnail(string UserID, UserImageCreateRequest request)
+        {
+            if (request.ImageFile != null)
+            {
+                var getThumbnail = await _context.UserThumbnail.Where(x => x.UserID.ToString() == UserID).FirstOrDefaultAsync();
+                if (getThumbnail == null)
+                {
+                    var newThumbnail = new UserThumbnail()
+                    {
+                        UserID = new Guid(UserID),
+                        UpdateDate = DateTime.Now,
+                        ImagePath = await this.Savefile(request.ImageFile)
+                    };
+                    _context.UserThumbnail.Add(newThumbnail);
+                    await _context.SaveChangesAsync();
+                    return new ApiSuccessResult<string>(newThumbnail.ImagePath);
+                }
+                else
+                {
+                    getThumbnail.UpdateDate = DateTime.Now;
+                    getThumbnail.ImagePath = await this.Savefile(request.ImageFile);
+                    _context.UserThumbnail.Update(getThumbnail);
+                    await _context.SaveChangesAsync();
+                    return new ApiSuccessResult<string>(getThumbnail.ImagePath);
+                }
+            }
+            else
+            {
+                return new ApiErrorResult<string>("Không tìm thấy hình ảnh");
+            }
+        }
+
+        public async Task<string> Savefile(IFormFile file)
+        {
+            var originalFileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
+            var filename = $"{Guid.NewGuid()}{Path.GetExtension(originalFileName)}";
+            await _storageService.SaveFileAsync(file.OpenReadStream(), filename);
+            return filename;
         }
     }
 }

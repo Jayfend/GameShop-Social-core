@@ -153,9 +153,23 @@ namespace GameShop.Application.System.Users
                 LastName = user.LastName,
                 UserName = user.UserName,
                 Roles = roles,
-                AvatarPath = user.UserAvatar.ToString(),
-                ThumbnailPath = user.UserThumbnail.ToString(),
             };
+            if (user.UserAvatar.ImagePath == null)
+            {
+                userVm.AvatarPath = "imgnotfound.jpg";
+            }
+            else
+            {
+                userVm.AvatarPath = user.UserAvatar.ImagePath;
+            }
+            if (user.UserThumbnail.ImagePath == null)
+            {
+                userVm.ThumbnailPath = "imgnotfound.jpg";
+            }
+            else
+            {
+                userVm.ThumbnailPath = user.UserThumbnail.ImagePath;
+            }
             return new ApiSuccessResult<UserViewModel>(userVm);
         }
 

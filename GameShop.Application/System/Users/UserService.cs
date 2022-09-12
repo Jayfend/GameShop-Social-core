@@ -206,7 +206,7 @@ namespace GameShop.Application.System.Users
             }
             var useravatar = new UserAvatar()
             {
-                ImagePath = "imgnotfound.jpg"
+                ImagePath = "imgnotfound.jpg",
             };
             var userthumbnail = new UserThumbnail()
             {

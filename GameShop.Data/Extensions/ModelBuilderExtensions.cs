@@ -171,6 +171,19 @@ namespace GameShop.Data.Extensions
                 Description = "User role"
             });
             var hasher = new PasswordHasher<AppUser>();
+
+            modelBuilder.Entity<UserAvatar>().HasData(new UserAvatar()
+            {
+                ImageID = 1,
+                ImagePath = "imgnotfound.jpg",
+                UserID = adminId
+            });
+            modelBuilder.Entity<UserThumbnail>().HasData(new UserThumbnail()
+            {
+                ImageID = 1,
+                ImagePath = "imgnotfound.jpg",
+                UserID=adminId
+            });
             modelBuilder.Entity<AppUser>().HasData(new AppUser
             {
                 Id = adminId,

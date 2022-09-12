@@ -224,6 +224,7 @@ namespace GameShop.Application.Catalog.Games
                 game.Gameplay = request.Gameplay;
                 game.UpdatedDate = DateTime.Now;
                 game.Status = (Status)request.Status;
+                game.Price = request.Price;
                 if (request.SRR != null)
                 {
                     game.SystemRequirementRecommended.OS = request.SRR.OS;

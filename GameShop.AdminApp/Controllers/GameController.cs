@@ -27,7 +27,7 @@ namespace GameShop.AdminApp.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index(string keyword, int? GenreId, int pageIndex = 1, int pageSize = 10)
+        public async Task<IActionResult> Index(string keyword, int? GenreId, int pageIndex = 1, int pageSize = 5)
         {
             var request = new GetManageGamePagingRequest()
             {

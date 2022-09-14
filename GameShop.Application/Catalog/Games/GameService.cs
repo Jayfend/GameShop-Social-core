@@ -629,9 +629,9 @@ namespace GameShop.Application.Catalog.Games
             return new ApiSuccessResult<bool>();
         }
 
-        //public async Task<PagedResult<GameViewModel>> GameBestSeller()
-        //{
-        //    var
-        //}
+        public Task<PagedResult<GameViewModel>> GetBestSeller(GetManageGamePagingRequest request)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

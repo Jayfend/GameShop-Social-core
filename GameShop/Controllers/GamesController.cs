@@ -60,7 +60,7 @@ namespace GameShop.Controllers
             return Ok(games);
         }
 
-        [HttpGet("lastest")]
+        [HttpGet("latest")]
         public async Task<IActionResult> GetAll([FromQuery] GetManageGamePagingRequest request)
         {
             var games = await _gameService.GetAll(request);

@@ -17,6 +17,7 @@ using GameShop.ViewModels.Catalog.GameImages;
 using GameShop.Data.Enums;
 using Microsoft.AspNetCore.Mvc;
 using GameShop.ViewModels.Catalog.UserImages;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace GameShop.Application.Catalog.Games
 {
@@ -439,43 +440,61 @@ namespace GameShop.Application.Catalog.Games
             return imageview;
         }
 
-        public async Task<List<GameViewModel>> GetAll()
+        public async Task<PagedResult<GameViewModel>> GetAll(GetManageGamePagingRequest request)
         {
-            var data = await _context.Games.Select(x => new GameViewModel()
-            {
-                CreatedDate = DateTime.Now,
-                GameID = x.GameID,
-                Name = x.GameName,
-                Description = x.Description,
-                UpdatedDate = x.UpdatedDate,
-                Gameplay = x.Gameplay,
-                Discount = x.Discount,
-                GenreName = new List<string>(),
-                GenreIDs = x.GameInGenres.Select(y => y.GenreID).ToList(),
-                Status = x.Status.ToString(),
-                SRM = new SystemRequireMin()
-                {
-                    OS = x.SystemRequirementMin.OS,
-                    Processor = x.SystemRequirementMin.Processor,
-                    Memory = x.SystemRequirementMin.Memory,
-                    Graphics = x.SystemRequirementMin.Graphics,
-                    Storage = x.SystemRequirementMin.Storage,
-                    AdditionalNotes = x.SystemRequirementMin.Storage,
-                    Soundcard = x.SystemRequirementMin.Soundcard
-                },
-                Price = x.Price,
-                SRR = new SystemRequirementRecommend()
-                {
-                    OS = x.SystemRequirementRecommended.OS,
-                    Processor = x.SystemRequirementRecommended.Processor,
-                    Memory = x.SystemRequirementRecommended.Memory,
-                    Graphics = x.SystemRequirementRecommended.Graphics,
-                    Storage = x.SystemRequirementRecommended.Storage,
-                    AdditionalNotes = x.SystemRequirementRecommended.Storage,
-                    Soundcard = x.SystemRequirementRecommended.Soundcard
-                }
-            }).ToListAsync();
+            var query = _context.Games.AsQueryable();
 
+            // filter
+            if (!string.IsNullOrEmpty(request.Keyword))
+            {
+                query = query.Where(x => x.GameName.Contains(request.Keyword));
+            }
+
+            if (request.GenreID != null)
+            {
+                query = query.Where(x => x.GameInGenres.Any(x => x.GenreID == request.GenreID));
+            }
+            //paging
+
+            int totalrow = await query.CountAsync();
+            var data = await query.Skip((request.PageIndex - 1) * request.PageSize)
+                .Take(request.PageSize).Select(x => new GameViewModel()
+                {
+                    CreatedDate = x.CreatedDate,
+                    GameID = x.GameID,
+                    Name = x.GameName,
+                    Description = x.Description,
+                    UpdatedDate = x.UpdatedDate,
+                    Gameplay = x.Gameplay,
+                    Discount = x.Discount,
+                    GenreName = new List<string>(),
+                    GenreIDs = x.GameInGenres.Select(y => y.GenreID).ToList(),
+                    Status = x.Status.ToString(),
+                    Price = x.Price,
+                    ListImage = new List<string>(),
+                    SRM = new SystemRequireMin()
+                    {
+                        OS = x.SystemRequirementMin.OS,
+                        Processor = x.SystemRequirementMin.Processor,
+                        Memory = x.SystemRequirementMin.Memory,
+                        Graphics = x.SystemRequirementMin.Graphics,
+                        Storage = x.SystemRequirementMin.Storage,
+                        AdditionalNotes = x.SystemRequirementMin.Storage,
+                        Soundcard = x.SystemRequirementMin.Soundcard
+                    },
+
+                    SRR = new SystemRequirementRecommend()
+                    {
+                        OS = x.SystemRequirementRecommended.OS,
+                        Processor = x.SystemRequirementRecommended.Processor,
+                        Memory = x.SystemRequirementRecommended.Memory,
+                        Graphics = x.SystemRequirementRecommended.Graphics,
+                        Storage = x.SystemRequirementRecommended.Storage,
+                        AdditionalNotes = x.SystemRequirementRecommended.Storage,
+                        Soundcard = x.SystemRequirementRecommended.Soundcard
+                    }
+                })
+                .OrderByDescending(x => x.UpdatedDate).ToListAsync();
             var genres = _context.Genres.AsQueryable();
             foreach (var item in data)
             {
@@ -491,8 +510,15 @@ namespace GameShop.Application.Catalog.Games
                 var listgame = thumbnailimage.Where(x => x.GameID == item.GameID).Select(y => y.ImagePath).ToList();
                 item.ListImage = listgame;
             }
-            var newdata = data.OrderBy(x => x.UpdatedDate).Take(5).ToList();
-            return newdata;
+            //select and projection
+            var pagedResult = new PagedResult<GameViewModel>()
+            {
+                TotalRecords = totalrow,
+                PageIndex = request.PageIndex,
+                PageSize = request.PageSize,
+                Items = data
+            };
+            return pagedResult;
         }
 
         //public async Task<PagedResult<GameViewModel>> GetAllbyGenreID(GetPublicGamePagingRequest request)
@@ -602,5 +628,10 @@ namespace GameShop.Application.Catalog.Games
             await _context.SaveChangesAsync();
             return new ApiSuccessResult<bool>();
         }
+
+        //public async Task<PagedResult<GameViewModel>> GameBestSeller()
+        //{
+        //    var
+        //}
     }
 }

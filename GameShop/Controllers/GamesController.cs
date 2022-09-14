@@ -28,9 +28,9 @@ namespace GameShop.Controllers
 
         //https:://localhost:port/game
         [HttpGet]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> Get([FromQuery] GetManageGamePagingRequest request)
         {
-            var games = await _gameService.GetAll();
+            var games = await _gameService.GetAll(request);
             return Ok(games);
         }
 
@@ -61,9 +61,9 @@ namespace GameShop.Controllers
         }
 
         [HttpGet("lastest")]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromQuery] GetManageGamePagingRequest request)
         {
-            var games = await _gameService.GetAll();
+            var games = await _gameService.GetAll(request);
             if (games == null)
             {
                 return NotFound();

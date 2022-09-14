@@ -24,7 +24,7 @@ namespace GameShop.Application.Catalog.Games
 
         //Task<PagedResult<GameViewModel>> GetAllbyGenreID(GetPublicGamePagingRequest request);
 
-        Task<List<GameViewModel>> GetAll();
+        Task<PagedResult<GameViewModel>> GetAll(GetManageGamePagingRequest request);
 
         Task<PagedResult<GameViewModel>> GetAllPaging(GetManageGamePagingRequest request);
 
@@ -41,5 +41,7 @@ namespace GameShop.Application.Catalog.Games
         Task<GameImageViewModel> GetImageById(int ImageID);
 
         Task<ApiResult<bool>> CategoryAssign(int id, CategoryAssignRequest request);
+
+        //Task<PagedResult<GameViewModel>> GameBestSeller();
     }
 }

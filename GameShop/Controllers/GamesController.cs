@@ -47,6 +47,17 @@ namespace GameShop.Controllers
             return Ok(games);
         }
 
+        [HttpGet("bestseller")]
+        public async Task<IActionResult> GetBestSeller([FromQuery] GetManageGamePagingRequest request)
+        {
+            var games = await _gameService.GetBestSeller(request);
+            if (games == null)
+            {
+                return NotFound();
+            }
+            return Ok(games);
+        }
+
         /* https:://localhost:port/game/1 */
 
         [HttpGet("{GameID}")]

@@ -1,4 +1,5 @@
 ﻿using GameShop.AdminApp.Models;
+using GameShop.AdminApp.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -14,15 +15,19 @@ namespace GameShop.AdminApp.Controllers
     public class HomeController : BaseController
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly IContactApiClient _contactApiClient;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, IContactApiClient contactApiClient)
         {
             _logger = logger;
+            _contactApiClient = contactApiClient;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var result = await _contactApiClient.GetContacts();
+
+            return View(result.ResultObj);
         }
 
         public IActionResult Privacy()

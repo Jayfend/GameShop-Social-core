@@ -39,6 +39,7 @@ namespace GameShop.AdminApp
             services.AddTransient<IRoleApiClient, RoleApiClient>();
             services.AddTransient<IGameApiClient, GameApiClient>();
             services.AddTransient<ICategoryApiClient, CategoryApiClient>();
+            services.AddTransient<IContactApiClient, ContactApiClient>();
             services.AddHttpClient();
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>
             {

@@ -25,7 +25,7 @@ namespace GameShop.Application.Catalog.Contacts
             var contacts = await _context.Contacts.Select(x => new ContactViewModel()
             {
                 Email = x.Email,
-                Titile = x.Titile,
+                Title = x.Titile,
                 Content = x.Content,
                 Receiveddate = x.ReceiveDate
             }).ToListAsync();
@@ -45,7 +45,7 @@ namespace GameShop.Application.Catalog.Contacts
             var newContact = new Contact()
             {
                 Email = request.Email,
-                Titile = request.Titile,
+                Titile = request.Title,
                 Content = request.Content,
                 ReceiveDate = DateTime.Now,
             };

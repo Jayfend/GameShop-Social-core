@@ -26,6 +26,8 @@ namespace GameShop.Application.Catalog.Games
 
         Task<PagedResult<GameViewModel>> GetAll(GetManageGamePagingRequest request);
 
+        Task<PagedResult<GameViewModel>> GetSaleGames(GetManageGamePagingRequest request);
+
         Task<PagedResult<GameViewModel>> GetAllPaging(GetManageGamePagingRequest request);
 
         Task<int> AddImage(int GameID, GameImageCreateRequest newimage);

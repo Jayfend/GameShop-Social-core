@@ -10,5 +10,7 @@ namespace GameShop.Application.Catalog.Contacts
     public interface IContactService
     {
         public Task<ApiResult<bool>> SendContact(SendContactRequest request);
+
+        public Task<ApiResult<List<ContactViewModel>>> GetContact();
     }
 }

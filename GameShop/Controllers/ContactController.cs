@@ -31,5 +31,16 @@ namespace GameShop.Controllers
             }
             return Ok(result);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetContact()
+        {
+            var result = await _contactService.GetContact();
+            if (!result.IsSuccess)
+            {
+                return BadRequest(result);
+            }
+            return Ok(result);
+        }
     }
 }

@@ -2,8 +2,10 @@
 using GameShop.Data.Entities;
 using GameShop.ViewModels.Catalog.Contacts;
 using GameShop.ViewModels.Common;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -16,6 +18,22 @@ namespace GameShop.Application.Catalog.Contacts
         public ContactService(GameShopDbContext context)
         {
             _context = context;
+        }
+
+        public async Task<ApiResult<List<ContactViewModel>>> GetContact()
+        {
+            var contacts = await _context.Contacts.Select(x => new ContactViewModel()
+            {
+                Email = x.Email,
+                Titile = x.Titile,
+                Content = x.Content,
+                Receiveddate = x.ReceiveDate
+            }).ToListAsync();
+            if (contacts == null)
+            {
+                return new ApiErrorResult<List<ContactViewModel>>("Không tìm thấy phản hồi!");
+            }
+            else return new ApiSuccessResult<List<ContactViewModel>>(contacts);
         }
 
         public async Task<ApiResult<bool>> SendContact(SendContactRequest request)

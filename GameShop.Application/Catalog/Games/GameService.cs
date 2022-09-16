@@ -523,76 +523,80 @@ namespace GameShop.Application.Catalog.Games
             return pagedResult;
         }
 
-        //public async Task<PagedResult<GameViewModel>> GetAllbyGenreID(GetPublicGamePagingRequest request)
-        //{
-        //    var query = _context.Games.AsQueryable();
-        //    // filter
-        //    if (request.GenreID.HasValue && request.GenreID.Value > 0)
-        //    {
-        //        query = query.Where(x => x.GameInGenres.Any(x => x.GenreID == request.GenreID));
-        //    }
+        public async Task<PagedResult<GameViewModel>> GetSaleGames(GetManageGamePagingRequest request)
+        {
+            var query = _context.Games.Where(x => x.Discount > 0);
 
-        //    //paging
-        //    int totalrow = await query.CountAsync();
-        //    var data = await query.Skip((request.PageIndex - 1) * request.PageSize)
-        //        .Take(request.PageSize)
-        //        .Select(x => new GameViewModel()
-        //        {
-        //            GameID = x.GameID,
-        //            Name = x.GameName,
-        //            Gameplay = x.Gameplay,
-        //            Price = x.Price,
-        //            Discount = x.Discount,
-        //            GenreIDs = x.GameInGenres.Select(y => y.GenreID).ToList(),
-        //            Description = x.Description,
-        //            CreatedDate = x.CreatedDate,
-        //            UpdatedDate = x.UpdatedDate,
-        //            SRM = new SystemRequireMin()
-        //            {
-        //                OS = x.SystemRequirementMin.OS,
-        //                Processor = x.SystemRequirementMin.Processor,
-        //                Memory = x.SystemRequirementMin.Memory,
-        //                Graphics = x.SystemRequirementMin.Graphics,
-        //                Storage = x.SystemRequirementMin.Storage,
-        //                AdditionalNotes = x.SystemRequirementMin.Storage,
-        //                Soundcard = x.SystemRequirementMin.Soundcard
-        //            },
-        //            SRR = new SystemRequirementRecommend()
-        //            {
-        //                OS = x.SystemRequirementRecommended.OS,
-        //                Processor = x.SystemRequirementRecommended.Processor,
-        //                Memory = x.SystemRequirementRecommended.Memory,
-        //                Graphics = x.SystemRequirementRecommended.Graphics,
-        //                Storage = x.SystemRequirementRecommended.Storage,
-        //                AdditionalNotes = x.SystemRequirementRecommended.Storage,
-        //                Soundcard = x.SystemRequirementRecommended.Soundcard
-        //            }
-        //        }).ToListAsync();
-        //    var genres = _context.Genres.AsQueryable();
-        //    foreach (var item in data)
-        //    {
-        //        foreach (var genre in item.GenreIDs)
-        //        {
-        //            var name = genres.Where(x => x.GenreID == genre).Select(y => y.GenreName).FirstOrDefault();
-        //            item.GenreName.Add(name);
-        //        }
-        //    };
-        //    var thumbnailimage = _context.GameImages.AsQueryable();
-        //    foreach (var item in data)
-        //    {
-        //        var listgame = thumbnailimage.Where(x => x.GameID == item.GameID).Select(y => y.ImagePath).ToList();
-        //        item.ListImage = listgame;
-        //    }
-        //    //select and projection
-        //    var pagedResult = new PagedResult<GameViewModel>()
-        //    {
-        //        TotalRecords = totalrow,
-        //        PageSize = request.PageSize,
-        //        PageIndex = request.PageIndex,
-        //        Items = data
-        //    };
-        //    return pagedResult;
-        //}
+            // filter
+
+            //paging
+
+            int totalrow = await query.CountAsync();
+            var data = await query.Select(x => new GameViewModel()
+            {
+                CreatedDate = x.CreatedDate,
+                GameID = x.GameID,
+                Name = x.GameName,
+                Description = x.Description,
+                UpdatedDate = x.UpdatedDate,
+                Gameplay = x.Gameplay,
+                Discount = x.Discount,
+                GenreName = new List<string>(),
+                GenreIDs = x.GameInGenres.Select(y => y.GenreID).ToList(),
+                Status = x.Status.ToString(),
+                Price = x.Price,
+                ListImage = new List<string>(),
+                SRM = new SystemRequireMin()
+                {
+                    OS = x.SystemRequirementMin.OS,
+                    Processor = x.SystemRequirementMin.Processor,
+                    Memory = x.SystemRequirementMin.Memory,
+                    Graphics = x.SystemRequirementMin.Graphics,
+                    Storage = x.SystemRequirementMin.Storage,
+                    AdditionalNotes = x.SystemRequirementMin.Storage,
+                    Soundcard = x.SystemRequirementMin.Soundcard
+                },
+
+                SRR = new SystemRequirementRecommend()
+                {
+                    OS = x.SystemRequirementRecommended.OS,
+                    Processor = x.SystemRequirementRecommended.Processor,
+                    Memory = x.SystemRequirementRecommended.Memory,
+                    Graphics = x.SystemRequirementRecommended.Graphics,
+                    Storage = x.SystemRequirementRecommended.Storage,
+                    AdditionalNotes = x.SystemRequirementRecommended.Storage,
+                    Soundcard = x.SystemRequirementRecommended.Soundcard
+                }
+            })
+                .ToListAsync();
+            var genres = _context.Genres.AsQueryable();
+            foreach (var item in data)
+            {
+                foreach (var genre in item.GenreIDs)
+                {
+                    var name = genres.Where(x => x.GenreID == genre).Select(y => y.GenreName).FirstOrDefault();
+                    item.GenreName.Add(name);
+                }
+            }
+            var thumbnailimage = _context.GameImages.AsQueryable();
+            foreach (var item in data)
+            {
+                var listgame = thumbnailimage.Where(x => x.GameID == item.GameID).Select(y => y.ImagePath).ToList();
+                item.ListImage = listgame;
+            }
+            var newdata = data.OrderByDescending(x => x.Discount).ToList();
+            newdata = newdata.Skip((request.PageIndex - 1) * request.PageSize)
+                .Take(request.PageSize).ToList();
+            //select and projection
+            var pagedResult = new PagedResult<GameViewModel>()
+            {
+                TotalRecords = totalrow,
+                PageIndex = request.PageIndex,
+                PageSize = request.PageSize,
+                Items = newdata
+            };
+            return pagedResult;
+        }
 
         public async Task<string> Savefile(IFormFile file)
         {

@@ -58,6 +58,17 @@ namespace GameShop.Controllers
             return Ok(games);
         }
 
+        [HttpGet("getgamesale")]
+        public async Task<IActionResult> GetGameSell([FromQuery] GetManageGamePagingRequest request)
+        {
+            var games = await _gameService.GetSaleGames(request);
+            if (games == null)
+            {
+                return NotFound();
+            }
+            return Ok(games);
+        }
+
         /* https:://localhost:port/game/1 */
 
         [HttpGet("{GameID}")]

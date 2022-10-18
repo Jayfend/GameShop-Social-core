@@ -154,6 +154,7 @@ namespace GameShop.Controllers
         }
 
         [HttpDelete("{GameID}")]
+        [Authorize]
         public async Task<IActionResult> Delete(int GameID)
         {
             var affedtedResult = await _gameService.Delete(GameID);

@@ -31,7 +31,7 @@ namespace GameShop.Controllers
             var result = await _userService.Authenticate(request);
             if (result.ResultObj == null)
             {
-                return BadRequest(result);
+                return Unauthorized(result);
             }
 
             return Ok(result);

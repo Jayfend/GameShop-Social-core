@@ -130,7 +130,7 @@ namespace GameShop.Application.Catalog.Checkouts
                     GenreName = new List<string>(),
                     GenreIDs = x.Game.GameInGenres.Select(y => y.GenreID).ToList(),
                     Status = x.Game.Status.ToString(),
-                    Price = x.Game.Price,
+                    Price = x.Cart.Checkout.TotalPrice,
                     ListImage = new List<string>(),
                     SRM = new SystemRequireMin()
                     {

@@ -31,6 +31,7 @@ namespace GameShop.Data.EF
             modelBuilder.ApplyConfiguration(new ContactConfiguration());
             modelBuilder.ApplyConfiguration(new UserAvatarConfiguration());
             modelBuilder.ApplyConfiguration(new UserThumbnailConfiguration());
+            modelBuilder.ApplyConfiguration(new SoldGameConfiguration());
             modelBuilder.Entity<IdentityUserClaim<Guid>>().ToTable("AppUserClaims");
             modelBuilder.Entity<IdentityUserRole<Guid>>().ToTable("AppUserRoles").HasKey(x => new { x.UserId, x.RoleId });
             modelBuilder.Entity<IdentityUserLogin<Guid>>().ToTable("AppUserLogins").HasKey(x => x.UserId);
@@ -57,5 +58,6 @@ namespace GameShop.Data.EF
         public DbSet<Contact> Contacts { get; set; }
         public DbSet<UserAvatar> UserAvatar { get; set; }
         public DbSet<UserThumbnail> UserThumbnail { get; set; }
+        public DbSet<SoldGame> SoldGames { get; set; }
     }
 }

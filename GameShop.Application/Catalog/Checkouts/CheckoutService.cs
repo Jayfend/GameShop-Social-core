@@ -42,15 +42,30 @@ namespace GameShop.Application.Catalog.Checkouts
                 var gamelist = await _context.OrderedGames.Where(x => x.CartID == getCart.CartID).Select(y => y.Game).ToListAsync();
                 foreach (var item in gamelist)
                 {
-                    total = total + (item.Price - item.Price * item.Discount / 10);
+                    total = total + (item.Price - (item.Price * (item.Discount / 100)));
                 }
                 Checkout newCheckout = new Checkout()
                 {
                     Cart = getCart,
                     Purchasedate = DateTime.Now,
                     TotalPrice = total,
-                    Username = user.UserName
+                    Username = user.UserName,
                 };
+                //_context.Checkouts.Add(newCheckout);
+                foreach (var item in gamelist)
+                {
+                    var soldgame = new SoldGame()
+                    {
+                        GameID = item.GameID,
+                        GameName = item.GameName,
+                        Discount = item.Discount,
+                        Price = item.Price,
+                        GameImages = item.GameImages,
+                        Checkout = newCheckout
+                    };
+                    await _context.SoldGames.AddAsync(soldgame);
+                }
+
                 var listgame = await _context.OrderedGames.Where(x => x.CartID == getCart.CartID).ToListAsync();
                 foreach (var game in listgame)
                 {
@@ -62,7 +77,6 @@ namespace GameShop.Application.Catalog.Checkouts
                 }
                 getCart.Status = (Status)0;
                 _context.Carts.Update(getCart);
-                _context.Checkouts.Add(newCheckout);
 
                 await _context.SaveChangesAsync();
 
@@ -72,7 +86,7 @@ namespace GameShop.Application.Catalog.Checkouts
 
         public async Task<ApiResult<CheckoutViewModel>> GetBill(int checkoutID)
         {
-            var bill = await _context.Checkouts.FirstOrDefaultAsync(x => x.ID == checkoutID);
+            var bill = await _context.Checkouts.Include(x => x.SoldGames).FirstOrDefaultAsync(x => x.ID == checkoutID);
             if (bill != null)
             {
                 var newbill = new CheckoutViewModel()
@@ -83,16 +97,27 @@ namespace GameShop.Application.Catalog.Checkouts
                     Username = bill.Username,
                     Listgame = new List<GameViewModel>()
                 };
-                var game = await _context.OrderedGames.Where(x => x.CartID == bill.CartID).Select(x => new GameViewModel()
+                //var game = await _context.OrderedGames.Where(x => x.CartID == bill.CartID).Select(x => new GameViewModel()
+                //{
+                //    CreatedDate = x.Game.CreatedDate,
+                //    Name = x.Game.GameName,
+                //    Description = x.Game.Description,
+                //    Gameplay = x.Game.Gameplay,
+                //    Discount = x.Game.Discount,
+                //    Price = x.Game.Price,
+                //}).ToListAsync();
+                foreach (var game in bill.SoldGames)
                 {
-                    CreatedDate = x.Game.CreatedDate,
-                    Name = x.Game.GameName,
-                    Description = x.Game.Description,
-                    Gameplay = x.Game.Gameplay,
-                    Discount = x.Game.Discount,
-                    Price = x.Game.Price,
-                }).ToListAsync();
-                newbill.Listgame = game;
+                    var soldgame = new GameViewModel()
+                    {
+                        GameID = game.GameID,
+                        Name = game.GameName,
+                        Price = game.Price,
+                        Discount = game.Discount,
+                    };
+                    newbill.Listgame.Add(soldgame);
+                }
+                //newbill.Listgame = game;
                 return new ApiSuccessResult<CheckoutViewModel>(newbill);
             }
             else
@@ -103,66 +128,40 @@ namespace GameShop.Application.Catalog.Checkouts
 
         public async Task<PagedResult<GameViewModel>> GetPurchasedGames(string UserID, GetManageGamePagingRequest request)
         {
-            var query = _context.OrderedGames.AsQueryable();
-            query = query.Where(x => x.Cart.UserID.ToString() == UserID && x.Cart.Status.Equals((Status)0));
+            var query = _context.Checkouts
+                .Where(x => x.Cart.UserID.ToString() == UserID).SelectMany(x => x.SoldGames).AsQueryable();
+            //query = query.Where(x => x.Cart.UserID.ToString() == UserID && x.Cart.Status.Equals((Status)0));
             if (!string.IsNullOrEmpty(request.Keyword))
             {
-                query = query.Where(x => x.Game.GameName.Contains(request.Keyword));
+                query = query.Where(x => x.GameName.Contains(request.Keyword));
             }
 
-            if (request.GenreID != null)
-            {
-                query = query.Where(x => x.Game.GameInGenres.Any(x => x.GenreID == request.GenreID));
-            }
+            //if (request.GenreID != null)
+            //{
+            //    query = query.Where(x => x.GameInGenres.Any(x => x.GenreID == request.GenreID));
+            //}
+
             int totalrow = await query.CountAsync();
             var data = await query
                 .Skip((request.PageIndex - 1) * request.PageSize)
                 .Take(request.PageSize)
                 .Select(x => new GameViewModel()
                 {
-                    CreatedDate = x.Game.CreatedDate,
-                    GameID = x.Game.GameID,
-                    Name = x.Game.GameName,
-                    Description = x.Game.Description,
-                    UpdatedDate = x.Game.UpdatedDate,
-                    Gameplay = x.Game.Gameplay,
-                    Discount = x.Game.Discount,
-                    GenreName = new List<string>(),
-                    GenreIDs = x.Game.GameInGenres.Select(y => y.GenreID).ToList(),
-                    Status = x.Game.Status.ToString(),
-                    Price = x.Cart.Checkout.TotalPrice,
-                    ListImage = new List<string>(),
-                    SRM = new SystemRequireMin()
-                    {
-                        OS = x.Game.SystemRequirementMin.OS,
-                        Processor = x.Game.SystemRequirementMin.Processor,
-                        Memory = x.Game.SystemRequirementMin.Memory,
-                        Graphics = x.Game.SystemRequirementMin.Graphics,
-                        Storage = x.Game.SystemRequirementMin.Storage,
-                        AdditionalNotes = x.Game.SystemRequirementMin.Storage,
-                        Soundcard = x.Game.SystemRequirementMin.Soundcard
-                    },
-
-                    SRR = new SystemRequirementRecommend()
-                    {
-                        OS = x.Game.SystemRequirementRecommended.OS,
-                        Processor = x.Game.SystemRequirementRecommended.Processor,
-                        Memory = x.Game.SystemRequirementRecommended.Memory,
-                        Graphics = x.Game.SystemRequirementRecommended.Graphics,
-                        Storage = x.Game.SystemRequirementRecommended.Storage,
-                        AdditionalNotes = x.Game.SystemRequirementRecommended.Storage,
-                        Soundcard = x.Game.SystemRequirementRecommended.Soundcard
-                    }
+                    GameID = x.GameID,
+                    Name = x.GameName,
+                    Price = x.Price,
+                    Discount = x.Discount,
+                    ListImage = new List<string>()
                 }).ToListAsync();
-            var genres = _context.Genres.AsQueryable();
-            foreach (var item in data)
-            {
-                foreach (var genre in item.GenreIDs)
-                {
-                    var name = genres.Where(x => x.GenreID == genre).Select(y => y.GenreName).FirstOrDefault();
-                    item.GenreName.Add(name);
-                }
-            }
+            //var genres = _context.Genres.AsQueryable();
+            //foreach (var item in data)
+            //{
+            //    foreach (var genre in item.GenreIDs)
+            //    {
+            //        var name = genres.Where(x => x.GenreID == genre).Select(y => y.GenreName).FirstOrDefault();
+            //        item.GenreName.Add(name);
+            //    }
+            //}
             var thumbnailimage = _context.GameImages.AsQueryable();
             foreach (var item in data)
             {

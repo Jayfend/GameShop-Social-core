@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace GameShop.Data.Migrations
 {
-    public partial class All : Migration
+    public partial class AllTable : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -468,29 +468,52 @@ namespace GameShop.Data.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "SoldGames",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    GameID = table.Column<int>(nullable: false),
+                    GameName = table.Column<string>(nullable: true),
+                    Price = table.Column<decimal>(nullable: false),
+                    Discount = table.Column<int>(nullable: false),
+                    CheckoutID = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SoldGames", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_SoldGames_Checkouts_CheckoutID",
+                        column: x => x.CheckoutID,
+                        principalTable: "Checkouts",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Description", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { new Guid("8d04dce2-969a-435d-bba4-df3f325983dc"), "2159d1e0-2688-431c-afd4-2528abaa1dd1", "Administrator role", "admin", "ADMIN" },
-                    { new Guid("52503f03-bdea-4bf8-8a1a-d21ae2646483"), "a9d93d8c-56e3-4326-99ce-d8eac56fc768", "User role", "User", "USER" }
+                    { new Guid("8d04dce2-969a-435d-bba4-df3f325983dc"), "9afb35a6-b738-4373-b96d-e4a5704ead7b", "Administrator role", "admin", "ADMIN" },
+                    { new Guid("52503f03-bdea-4bf8-8a1a-d21ae2646483"), "44421a5c-e81b-436f-921d-1313f7ab1741", "User role", "User", "USER" }
                 });
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Dob", "Email", "EmailConfirmed", "FirstName", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { new Guid("69bd714f-9576-45ba-b5b7-f00649be00de"), 0, "932be1f0-4517-47bf-9e38-3581ed9269c7", new DateTime(2001, 7, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "leenguyen1721@gmail.com", true, "Luan", "Nguyen Phung Le", false, null, "LEENGUYEN1721@gmail.com", "JAYFEND", "AQAAAAEAACcQAAAAECYho35LRR6o+JrUjbK67cTYz5JYvt0cZkdMI3bFv3P0HBT2BTHBQGnQdqNgqdS39w==", null, false, "", false, "Jayfend" });
+                values: new object[] { new Guid("69bd714f-9576-45ba-b5b7-f00649be00de"), 0, "0ae64e6f-6c49-4ed9-b0e2-167dc96c71d0", new DateTime(2001, 7, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "leenguyen1721@gmail.com", true, "Luan", "Nguyen Phung Le", false, null, "LEENGUYEN1721@gmail.com", "JAYFEND", "AQAAAAEAACcQAAAAEBnY5rlQ105XetVHQHNjwiFx9999v2YVP4guJ31cz6iBxKHLtQFg2EAc6OXCjyRWsw==", null, false, "", false, "Jayfend" });
 
             migrationBuilder.InsertData(
                 table: "Games",
                 columns: new[] { "GameID", "BaseEntityID", "CreatedDate", "Description", "GameName", "Gameplay", "Price", "Status", "UpdatedDate" },
-                values: new object[] { 1, 0, new DateTime(2022, 9, 10, 10, 57, 8, 710, DateTimeKind.Local).AddTicks(8616), "The best game in the world", "Grand Theft Auto V", "Destroy the city", 250000m, 1, new DateTime(2022, 9, 10, 10, 57, 8, 711, DateTimeKind.Local).AddTicks(5957) });
+                values: new object[] { 1, 0, new DateTime(2022, 11, 14, 23, 19, 11, 350, DateTimeKind.Local).AddTicks(4270), "The best game in the world", "Grand Theft Auto V", "Destroy the city", 250000m, 1, new DateTime(2022, 11, 14, 23, 19, 11, 351, DateTimeKind.Local).AddTicks(4972) });
 
             migrationBuilder.InsertData(
                 table: "Games",
                 columns: new[] { "GameID", "BaseEntityID", "CreatedDate", "Description", "Discount", "GameName", "Gameplay", "Price", "Status", "UpdatedDate" },
-                values: new object[] { 2, 0, new DateTime(2022, 9, 10, 10, 57, 8, 711, DateTimeKind.Local).AddTicks(6492), "Back to the cowboy town", 20, "Red Dead Redemption 2", "Discover the cowboy world", 250000m, 1, new DateTime(2022, 9, 10, 10, 57, 8, 711, DateTimeKind.Local).AddTicks(6516) });
+                values: new object[] { 2, 0, new DateTime(2022, 11, 14, 23, 19, 11, 351, DateTimeKind.Local).AddTicks(5583), "Back to the cowboy town", 20, "Red Dead Redemption 2", "Discover the cowboy world", 250000m, 1, new DateTime(2022, 11, 14, 23, 19, 11, 351, DateTimeKind.Local).AddTicks(5607) });
 
             migrationBuilder.InsertData(
                 table: "Genres",
@@ -541,6 +564,16 @@ namespace GameShop.Data.Migrations
                     { 1, "", 1, "NVIDIA GTX 660 2GB / AMD HD 7870 2GB", "8 GB RAM", "Windows 10 64 Bit, Windows 8.1 64 Bit, Windows 8 64 Bit, Windows 7 64 Bit Service Pack 1", " Intel Core i5 3470 @ 3.2GHz (4 CPUs) / AMD X8 FX-8350 @ 4GHz (8 CPUs)", "100% DirectX 10 compatible", "72 GB available space" },
                     { 2, "", 2, "NVIDIA GTX 660 2GB / AMD HD 7870 2GB", "8 GB RAM", "Windows 10 64 Bit, Windows 8.1 64 Bit, Windows 8 64 Bit, Windows 7 64 Bit Service Pack 1", " Intel Core i5 3470 @ 3.2GHz (4 CPUs) / AMD X8 FX-8350 @ 4GHz (8 CPUs)", "100% DirectX 10 compatible", "72 GB available space" }
                 });
+
+            migrationBuilder.InsertData(
+                table: "UserAvatar",
+                columns: new[] { "ImageID", "ImagePath", "UpdateDate", "UserID" },
+                values: new object[] { 1, "imgnotfound.jpg", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new Guid("69bd714f-9576-45ba-b5b7-f00649be00de") });
+
+            migrationBuilder.InsertData(
+                table: "UserThumbnail",
+                columns: new[] { "ImageID", "ImagePath", "UpdateDate", "UserID" },
+                values: new object[] { 1, "imgnotfound.jpg", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new Guid("69bd714f-9576-45ba-b5b7-f00649be00de") });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -613,6 +646,11 @@ namespace GameShop.Data.Migrations
                 column: "GameID");
 
             migrationBuilder.CreateIndex(
+                name: "IX_SoldGames_CheckoutID",
+                table: "SoldGames",
+                column: "CheckoutID");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_SystemRequirementMin_GameID",
                 table: "SystemRequirementMin",
                 column: "GameID",
@@ -674,9 +712,6 @@ namespace GameShop.Data.Migrations
                 name: "Contacts");
 
             migrationBuilder.DropTable(
-                name: "Checkouts");
-
-            migrationBuilder.DropTable(
                 name: "GameImages");
 
             migrationBuilder.DropTable(
@@ -684,6 +719,9 @@ namespace GameShop.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "OrderedGames");
+
+            migrationBuilder.DropTable(
+                name: "SoldGames");
 
             migrationBuilder.DropTable(
                 name: "SystemRequirementMin");
@@ -707,13 +745,16 @@ namespace GameShop.Data.Migrations
                 name: "Genres");
 
             migrationBuilder.DropTable(
-                name: "Carts");
+                name: "Checkouts");
 
             migrationBuilder.DropTable(
                 name: "Games");
 
             migrationBuilder.DropTable(
                 name: "Wishlists");
+
+            migrationBuilder.DropTable(
+                name: "Carts");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

@@ -13,6 +13,7 @@ namespace GameShop.Data.Entities
         public int Discount { get; set; }
         public string Description { get; set; }
         public string Gameplay { get; set; }
+        public string Publisher { get; set; }
         public List<GameinGenre> GameInGenres { get; set; }
         public SystemRequirementMin SystemRequirementMin { get; set; }
         public SystemRequirementRecommended SystemRequirementRecommended { get; set; }

@@ -17,6 +17,7 @@ namespace GameShop.ViewModels.Catalog.Games
         public List<string> GenreName { get; set; }
         public List<int> GenreIDs { get; set; }
         public string Status { get; set; }
+        public string Publisher { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime UpdatedDate { get; set; }
         public SystemRequireMin SRM { get; set; }

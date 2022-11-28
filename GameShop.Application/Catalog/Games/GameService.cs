@@ -43,6 +43,7 @@ namespace GameShop.Application.Catalog.Games
                 Gameplay = request.Gameplay,
                 CreatedDate = DateTime.Now,
                 UpdatedDate = DateTime.Now,
+                Publisher = request.Publisher,
                 Status = (Status)request.Status
             };
             var genrelist = from g in _context.Genres select g;
@@ -157,6 +158,7 @@ namespace GameShop.Application.Catalog.Games
                     UpdatedDate = x.UpdatedDate,
                     Gameplay = x.Gameplay,
                     Discount = x.Discount,
+                    Publisher = x.Publisher,
                     GenreName = new List<string>(),
                     GenreIDs = x.GameInGenres.Select(y => y.GenreID).ToList(),
                     Status = x.Status.ToString(),
@@ -230,6 +232,7 @@ namespace GameShop.Application.Catalog.Games
                 game.Gameplay = request.Gameplay;
                 game.UpdatedDate = DateTime.Now;
                 game.Status = (Status)request.Status;
+                game.Publisher = request.Publisher;
                 game.Price = request.Price;
                 if (request.SRR != null)
                 {
@@ -314,6 +317,7 @@ namespace GameShop.Application.Catalog.Games
                 Description = x.Description,
                 Discount = x.Discount,
                 Price = x.Price,
+                Publisher = x.Publisher,
                 ListImage = new List<string>(),
                 SRM = new SystemRequireMin()
                 {
@@ -475,6 +479,7 @@ namespace GameShop.Application.Catalog.Games
                 GenreIDs = x.GameInGenres.Select(y => y.GenreID).ToList(),
                 Status = x.Status.ToString(),
                 Price = x.Price,
+                Publisher = x.Publisher,
                 ListImage = new List<string>(),
                 SRM = new SystemRequireMin()
                 {
@@ -550,6 +555,7 @@ namespace GameShop.Application.Catalog.Games
                 GenreIDs = x.GameInGenres.Select(y => y.GenreID).ToList(),
                 Status = x.Status.ToString(),
                 Price = x.Price,
+                Publisher = x.Publisher,
                 ListImage = new List<string>(),
                 SRM = new SystemRequireMin()
                 {
@@ -656,6 +662,7 @@ namespace GameShop.Application.Catalog.Games
                 Status = x.Status.ToString(),
                 Price = x.Price,
                 BuyCount = 0,
+                Publisher = x.Publisher,
                 ListImage = new List<string>(),
                 SRM = new SystemRequireMin()
                 {

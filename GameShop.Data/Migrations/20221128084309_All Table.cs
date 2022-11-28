@@ -478,7 +478,8 @@ namespace GameShop.Data.Migrations
                     GameName = table.Column<string>(nullable: true),
                     Price = table.Column<decimal>(nullable: false),
                     Discount = table.Column<int>(nullable: false),
-                    CheckoutID = table.Column<int>(nullable: false)
+                    CheckoutID = table.Column<int>(nullable: false),
+                    ImagePath = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -496,24 +497,24 @@ namespace GameShop.Data.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Description", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { new Guid("8d04dce2-969a-435d-bba4-df3f325983dc"), "9afb35a6-b738-4373-b96d-e4a5704ead7b", "Administrator role", "admin", "ADMIN" },
-                    { new Guid("52503f03-bdea-4bf8-8a1a-d21ae2646483"), "44421a5c-e81b-436f-921d-1313f7ab1741", "User role", "User", "USER" }
+                    { new Guid("8d04dce2-969a-435d-bba4-df3f325983dc"), "0c9da863-c61e-488f-b75d-b789c8f1e95f", "Administrator role", "admin", "ADMIN" },
+                    { new Guid("52503f03-bdea-4bf8-8a1a-d21ae2646483"), "30e0a8db-f5a1-411d-b736-221706328987", "User role", "User", "USER" }
                 });
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Dob", "Email", "EmailConfirmed", "FirstName", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { new Guid("69bd714f-9576-45ba-b5b7-f00649be00de"), 0, "0ae64e6f-6c49-4ed9-b0e2-167dc96c71d0", new DateTime(2001, 7, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "leenguyen1721@gmail.com", true, "Luan", "Nguyen Phung Le", false, null, "LEENGUYEN1721@gmail.com", "JAYFEND", "AQAAAAEAACcQAAAAEBnY5rlQ105XetVHQHNjwiFx9999v2YVP4guJ31cz6iBxKHLtQFg2EAc6OXCjyRWsw==", null, false, "", false, "Jayfend" });
+                values: new object[] { new Guid("69bd714f-9576-45ba-b5b7-f00649be00de"), 0, "f7bdda7f-3806-4ab7-a750-40368f70ad69", new DateTime(2001, 7, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "leenguyen1721@gmail.com", true, "Luan", "Nguyen Phung Le", false, null, "LEENGUYEN1721@gmail.com", "JAYFEND", "AQAAAAEAACcQAAAAEAoXj8Q3pogIgjweWLMWZOPOJ7HFySEqVPFZBbMA/vF9PK81MPseE4uYWNDRGq/wbQ==", null, false, "", false, "Jayfend" });
 
             migrationBuilder.InsertData(
                 table: "Games",
                 columns: new[] { "GameID", "BaseEntityID", "CreatedDate", "Description", "GameName", "Gameplay", "Price", "Status", "UpdatedDate" },
-                values: new object[] { 1, 0, new DateTime(2022, 11, 14, 23, 19, 11, 350, DateTimeKind.Local).AddTicks(4270), "The best game in the world", "Grand Theft Auto V", "Destroy the city", 250000m, 1, new DateTime(2022, 11, 14, 23, 19, 11, 351, DateTimeKind.Local).AddTicks(4972) });
+                values: new object[] { 1, 0, new DateTime(2022, 11, 28, 15, 43, 8, 637, DateTimeKind.Local).AddTicks(4178), "The best game in the world", "Grand Theft Auto V", "Destroy the city", 250000m, 1, new DateTime(2022, 11, 28, 15, 43, 8, 638, DateTimeKind.Local).AddTicks(4682) });
 
             migrationBuilder.InsertData(
                 table: "Games",
                 columns: new[] { "GameID", "BaseEntityID", "CreatedDate", "Description", "Discount", "GameName", "Gameplay", "Price", "Status", "UpdatedDate" },
-                values: new object[] { 2, 0, new DateTime(2022, 11, 14, 23, 19, 11, 351, DateTimeKind.Local).AddTicks(5583), "Back to the cowboy town", 20, "Red Dead Redemption 2", "Discover the cowboy world", 250000m, 1, new DateTime(2022, 11, 14, 23, 19, 11, 351, DateTimeKind.Local).AddTicks(5607) });
+                values: new object[] { 2, 0, new DateTime(2022, 11, 28, 15, 43, 8, 638, DateTimeKind.Local).AddTicks(5547), "Back to the cowboy town", 20, "Red Dead Redemption 2", "Discover the cowboy world", 250000m, 1, new DateTime(2022, 11, 28, 15, 43, 8, 638, DateTimeKind.Local).AddTicks(5568) });
 
             migrationBuilder.InsertData(
                 table: "Genres",

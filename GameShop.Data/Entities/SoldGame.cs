@@ -13,6 +13,6 @@ namespace GameShop.Data.Entities
         public int Discount { get; set; }
         public Checkout Checkout { get; set; }
         public int CheckoutID { get; set; }
-        public List<GameImage> GameImages { get; set; }
+        public string ImagePath { get; set; }
     }
 }

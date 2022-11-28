@@ -99,8 +99,13 @@ namespace GameShop.Application.Catalog.Games
             }
 
             _context.Games.Add(game);
-
-            await _context.SaveChangesAsync();
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+            }
             return game.GameID;
         }
 

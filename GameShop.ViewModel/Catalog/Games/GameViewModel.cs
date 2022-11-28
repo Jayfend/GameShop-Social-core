@@ -21,6 +21,6 @@ namespace GameShop.ViewModels.Catalog.Games
         public DateTime UpdatedDate { get; set; }
         public SystemRequireMin SRM { get; set; }
         public SystemRequirementRecommend SRR { get; set; }
-        public List<string> ListImage { get; set; }
+        public List<string> ListImage { get; set; } = new List<string>();
     }
 }

@@ -16,5 +16,7 @@ namespace GameShop.Application.Catalog.Checkouts
         Task<PagedResult<GameViewModel>> GetPurchasedGames(string UserID, GetManageGamePagingRequest request);
 
         Task<ApiResult<CheckoutViewModel>> GetBill(int checkoutID);
+
+        Task<ApiResult<List<CheckoutViewModel>>> GetAllBill();
     }
 }

@@ -120,6 +120,10 @@ namespace GameShop
             {
                 builder.WithOrigins("http://localhost:5000").AllowAnyMethod().AllowAnyHeader();
             }));
+            services.AddCors(options => options.AddPolicy("ApiCorsPolicy", builder =>
+            {
+                builder.WithOrigins("http://localhost:5003").AllowAnyMethod().AllowAnyHeader();
+            }));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

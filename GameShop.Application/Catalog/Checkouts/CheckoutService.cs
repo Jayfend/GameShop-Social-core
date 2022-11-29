@@ -93,6 +93,62 @@ namespace GameShop.Application.Catalog.Checkouts
             }
         }
 
+        public async Task<ApiResult<List<CheckoutViewModel>>> GetAllBill()
+        {
+            var listbill = new List<CheckoutViewModel>();
+            var newbill = new CheckoutViewModel();
+            var alluser = await _context.Users.ToListAsync();
+            foreach (var user in alluser)
+            {
+                var checkouts = _context.Checkouts.Where(x => x.Cart.UserID == user.Id).ToList();
+
+                foreach (var checkout in checkouts)
+                {
+                    var bill = await _context.Checkouts.Include(x => x.SoldGames).FirstOrDefaultAsync(x => x.ID == checkout.ID);
+                    if (bill != null)
+                    {
+                        newbill = new CheckoutViewModel()
+                        {
+                            CartID = bill.CartID,
+                            TotalPrice = bill.TotalPrice,
+                            Purchasedate = bill.Purchasedate,
+                            Username = bill.Username,
+                            Listgame = new List<GameViewModel>()
+                        };
+                        //var game = await _context.OrderedGames.Where(x => x.CartID == bill.CartID).Select(x => new GameViewModel()
+                        //{
+                        //    CreatedDate = x.Game.CreatedDate,
+                        //    Name = x.Game.GameName,
+                        //    Description = x.Game.Description,
+                        //    Gameplay = x.Game.Gameplay,
+                        //    Discount = x.Game.Discount,
+                        //    Price = x.Game.Price,
+                        //}).ToListAsync();
+                        foreach (var game in bill.SoldGames)
+                        {
+                            var soldgame = new GameViewModel()
+                            {
+                                GameID = game.GameID,
+                                Name = game.GameName,
+                                Price = game.Price,
+                                Discount = game.Discount,
+                            };
+                            soldgame.ListImage.Add(game.ImagePath);
+                            newbill.Listgame.Add(soldgame);
+                        }
+                        //newbill.Listgame = game;
+                    }
+                    else
+                    {
+                        return new ApiErrorResult<List<CheckoutViewModel>>("Không tìm thấy bill");
+                    }
+
+                    listbill.Add(newbill);
+                }
+            }
+            return new ApiSuccessResult<List<CheckoutViewModel>>(listbill);
+        }
+
         public async Task<ApiResult<CheckoutViewModel>> GetBill(int checkoutID)
         {
             var bill = await _context.Checkouts.Include(x => x.SoldGames).FirstOrDefaultAsync(x => x.ID == checkoutID);

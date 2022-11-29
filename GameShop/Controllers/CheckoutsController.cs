@@ -45,6 +45,20 @@ namespace GameShop.Controllers
             }
         }
 
+        [HttpGet("AllBill")]
+        public async Task<IActionResult> GetAllBill()
+        {
+            var result = await _checkoutService.GetAllBill();
+            if (!result.IsSuccess)
+            {
+                return BadRequest(result);
+            }
+            else
+            {
+                return Ok(result);
+            }
+        }
+
         [HttpGet("paging/{UserID}")]
         public async Task<IActionResult> GetAllPaging(string UserID, [FromQuery] GetManageGamePagingRequest request)
         {

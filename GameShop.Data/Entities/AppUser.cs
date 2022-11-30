@@ -17,5 +17,7 @@ namespace GameShop.Data.Entities
         public Wishlist Wishlist { get; set; }
         public UserAvatar UserAvatar { get; set; }
         public UserThumbnail UserThumbnail { get; set; }
+        public bool isConfirmed { get; set; }
+        public string ConfirmCode { get; set; }
     }
 }

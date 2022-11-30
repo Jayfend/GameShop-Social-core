@@ -171,5 +171,22 @@ namespace GameShop.Controllers
             }
             return Ok(result);
         }
+
+        [AllowAnonymous]
+        [HttpPost("Confirm")]
+        public async Task<IActionResult> ConfirmAccount(ConfirmAccountRequest request)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var result = await _userService.ConfirmAccount(request);
+            if (!result.IsSuccess)
+            {
+                return BadRequest(result);
+            }
+            return Ok(result);
+        }
     }
 }

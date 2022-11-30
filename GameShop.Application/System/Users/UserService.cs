@@ -4,6 +4,7 @@ using GameShop.Data.Entities;
 using GameShop.ViewModels.Catalog.UserImages;
 using GameShop.ViewModels.Common;
 using GameShop.ViewModels.System.Users;
+using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -14,7 +15,9 @@ using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Http.Headers;
+using System.Net.Mail;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
@@ -48,10 +51,19 @@ namespace GameShop.Application.System.Users
             {
                 return new ApiErrorResult<LoginResponse>("Tài khoản không tồn tại");
             }
+
             var result = await _signInManager.PasswordSignInAsync(user, request.Password, request.RememberMe, true);
             if (!result.Succeeded)
             {
                 return new ApiErrorResult<LoginResponse>("Đăng nhập không đúng");
+            }
+            else
+            {
+                if (user.isConfirmed == false)
+                {
+                    await _signInManager.SignOutAsync();
+                    return new ApiErrorResult<LoginResponse>("Tài khoản chưa kích hoạt");
+                }
             }
             var roles = await _userManager.GetRolesAsync(user);
             var claims = new[]
@@ -73,6 +85,7 @@ namespace GameShop.Application.System.Users
             LoginResponse response = new LoginResponse()
             {
                 UserId = user.Id.ToString(),
+                isConfirmed = user.isConfirmed,
                 Token = new JwtSecurityTokenHandler().WriteToken(token)
             };
             return new ApiSuccessResult<LoginResponse>(response);
@@ -213,18 +226,38 @@ namespace GameShop.Application.System.Users
             {
                 ImagePath = "imgnotfound.jpg"
             };
+            Random r = new Random();
+            int randNum = r.Next(1000000);
+            string sixDigitNumber = randNum.ToString("D6");
             user = new AppUser()
             {
                 UserName = request.UserName,
                 //Dob = request.Dob,
                 Email = request.Email,
                 UserAvatar = useravatar,
-                UserThumbnail = userthumbnail
+                UserThumbnail = userthumbnail,
+                isConfirmed = false,
+                ConfirmCode = sixDigitNumber
                 //FirstName = request.FirstName,
                 //LastName = request.LastName,
                 //PhoneNumber = request.PhoneNumber,
             };
 
+            using (MailMessage mail = new MailMessage())
+            {
+                mail.From = new MailAddress("gameshop1901@gmail.com");
+                mail.To.Add(user.Email);
+                mail.Subject = "Confirm Account";
+                mail.Body = "Thank for joining us, here is your code: " + user.ConfirmCode;
+                mail.IsBodyHtml = true;
+
+                using (SmtpClient smtp = new SmtpClient("smtp.gmail.com", 587))
+                {
+                    smtp.Credentials = new NetworkCredential("gameshop1901@gmail.com", "yfvcjmebvgggeult");
+                    smtp.EnableSsl = true;
+                    smtp.Send(mail);
+                }
+            }
             var result = await _userManager.CreateAsync(user, request.Password);
             if (result.Succeeded)
             {
@@ -360,6 +393,53 @@ namespace GameShop.Application.System.Users
             var filename = $"{Guid.NewGuid()}{Path.GetExtension(originalFileName)}";
             await _storageService.SaveFileAsync(file.OpenReadStream(), filename);
             return filename;
+        }
+
+        public async Task<ApiResult<bool>> ConfirmAccount(ConfirmAccountRequest request)
+        {
+            var user = await _userManager.FindByNameAsync(request.UserName);
+            if (user == null)
+            {
+                return new ApiErrorResult<bool>("Thông tin nhập không chính xác");
+            }
+            else
+            {
+                var hasher = new PasswordHasher<AppUser>();
+                //var haspassword = hasher.HashPassword(null, request.Password);
+                var check = hasher.VerifyHashedPassword(user, user.PasswordHash, request.Password);
+                if (check.Equals((PasswordVerificationResult)0))
+                {
+                    return new ApiErrorResult<bool>("Thông tin nhập không chính xác");
+                }
+                else
+                {
+                    if (user.ConfirmCode == request.ConfirmCode)
+                    {
+                        if (user.isConfirmed == false)
+                        {
+                            user.isConfirmed = true;
+
+                            var result = await _userManager.UpdateAsync(user);
+                            if (result.Succeeded)
+                            {
+                                return new ApiSuccessResult<bool>();
+                            }
+                            else
+                            {
+                                return new ApiErrorResult<bool>("Đã xảy ra lỗi");
+                            }
+                        }
+                        else
+                        {
+                            return new ApiErrorResult<bool>("Tài khoản đã kích hoạt");
+                        }
+                    }
+                    else
+                    {
+                        return new ApiErrorResult<bool>("Thông tin nhập không chính xác");
+                    }
+                }
+            }
         }
     }
 }

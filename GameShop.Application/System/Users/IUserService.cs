@@ -15,6 +15,8 @@ namespace GameShop.Application.System.Users
 
         Task<ApiResult<bool>> Register(RegisterRequest request);
 
+        Task<ApiResult<bool>> ConfirmAccount(ConfirmAccountRequest request);
+
         Task<ApiResult<bool>> UpdateUser(UserUpdateRequest request);
 
         Task<ApiResult<PagedResult<UserViewModel>>> GetUsersPaging(GetUserPagingRequest request);

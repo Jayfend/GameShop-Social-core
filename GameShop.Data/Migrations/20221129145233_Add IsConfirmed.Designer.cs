@@ -4,14 +4,16 @@ using GameShop.Data.EF;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace GameShop.Data.Migrations
 {
     [DbContext(typeof(GameShopDbContext))]
-    partial class GameShopDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221129145233_Add IsConfirmed")]
+    partial class AddIsConfirmed
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -55,7 +57,7 @@ namespace GameShop.Data.Migrations
                         new
                         {
                             Id = new Guid("8d04dce2-969a-435d-bba4-df3f325983dc"),
-                            ConcurrencyStamp = "c589b17c-cbf1-4e70-991c-7de84291cbf1",
+                            ConcurrencyStamp = "04752fdc-e2ee-4b78-8198-a54b23a8849d",
                             Description = "Administrator role",
                             Name = "admin",
                             NormalizedName = "ADMIN"
@@ -63,7 +65,7 @@ namespace GameShop.Data.Migrations
                         new
                         {
                             Id = new Guid("52503f03-bdea-4bf8-8a1a-d21ae2646483"),
-                            ConcurrencyStamp = "8e3df23a-3e8e-45f2-9351-261dbc992336",
+                            ConcurrencyStamp = "d94e70e4-cb3c-48e7-8c74-02e636254037",
                             Description = "User role",
                             Name = "User",
                             NormalizedName = "USER"
@@ -81,9 +83,6 @@ namespace GameShop.Data.Migrations
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ConfirmCode")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("Dob")
@@ -157,7 +156,7 @@ namespace GameShop.Data.Migrations
                         {
                             Id = new Guid("69bd714f-9576-45ba-b5b7-f00649be00de"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "14b8578c-2d30-4a5b-b480-716ea073b57d",
+                            ConcurrencyStamp = "846407eb-df09-41dd-a095-bb6e169c32dd",
                             Dob = new DateTime(2001, 7, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "leenguyen1721@gmail.com",
                             EmailConfirmed = true,
@@ -166,7 +165,7 @@ namespace GameShop.Data.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "LEENGUYEN1721@gmail.com",
                             NormalizedUserName = "JAYFEND",
-                            PasswordHash = "AQAAAAEAACcQAAAAEA++vCBsr579JJnE836VYrOhI0vAjGZglbcREoofrdUsFGQRc+LwM/vR8sxiwObKUA==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEHBR0R4tpegdxN7qHwyuMyJhS2BYiVLtAwu0kKkX3HzqIYFoaF6fWrykWsc0tPE8og==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
                             TwoFactorEnabled = false,
@@ -310,27 +309,27 @@ namespace GameShop.Data.Migrations
                         {
                             GameID = 1,
                             BaseEntityID = 0,
-                            CreatedDate = new DateTime(2022, 11, 29, 22, 28, 7, 836, DateTimeKind.Local).AddTicks(6062),
+                            CreatedDate = new DateTime(2022, 11, 29, 21, 52, 32, 473, DateTimeKind.Local).AddTicks(3182),
                             Description = "The best game in the world",
                             Discount = 0,
                             GameName = "Grand Theft Auto V",
                             Gameplay = "Destroy the city",
                             Price = 250000m,
                             Status = 1,
-                            UpdatedDate = new DateTime(2022, 11, 29, 22, 28, 7, 837, DateTimeKind.Local).AddTicks(5223)
+                            UpdatedDate = new DateTime(2022, 11, 29, 21, 52, 32, 474, DateTimeKind.Local).AddTicks(1867)
                         },
                         new
                         {
                             GameID = 2,
                             BaseEntityID = 0,
-                            CreatedDate = new DateTime(2022, 11, 29, 22, 28, 7, 837, DateTimeKind.Local).AddTicks(5726),
+                            CreatedDate = new DateTime(2022, 11, 29, 21, 52, 32, 474, DateTimeKind.Local).AddTicks(2382),
                             Description = "Back to the cowboy town",
                             Discount = 20,
                             GameName = "Red Dead Redemption 2",
                             Gameplay = "Discover the cowboy world",
                             Price = 250000m,
                             Status = 1,
-                            UpdatedDate = new DateTime(2022, 11, 29, 22, 28, 7, 837, DateTimeKind.Local).AddTicks(5751)
+                            UpdatedDate = new DateTime(2022, 11, 29, 21, 52, 32, 474, DateTimeKind.Local).AddTicks(2405)
                         });
                 });
 

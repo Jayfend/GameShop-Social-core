@@ -9,5 +9,6 @@ namespace GameShop.ViewModels.System.Users
         public string UserName { get; set; }
         public string Email { get; set; }
         public string NewPassword { get; set; }
+        public string ConfirmCode { get; set; }
     }
 }

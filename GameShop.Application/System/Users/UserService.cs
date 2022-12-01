@@ -139,6 +139,10 @@ namespace GameShop.Application.System.Users
             {
                 return new ApiErrorResult<bool>("Email không tồn tại");
             }
+            if (!user.ConfirmCode.Equals(request.ConfirmCode))
+            {
+                return new ApiErrorResult<bool>("Mã xác nhận không đúng");
+            }
             else
             {
                 var hasher = new PasswordHasher<AppUser>();
@@ -248,7 +252,14 @@ namespace GameShop.Application.System.Users
                 mail.From = new MailAddress("gameshop1901@gmail.com");
                 mail.To.Add(user.Email);
                 mail.Subject = "Confirm Account";
-                mail.Body = "Thank for joining us, here is your code: " + user.ConfirmCode;
+                mail.Body = $@"<html>
+                      <body>
+                      <p>Dear {user.UserName},</p>
+                      <p>Thank for joining us,here is your confirm code {user.ConfirmCode}</p>
+                      <p>Sincerely,<br>-STEM</br></p>
+                      </body>
+                      </html>
+                     ";
                 mail.IsBodyHtml = true;
 
                 using (SmtpClient smtp = new SmtpClient("smtp.gmail.com", 587))
@@ -439,6 +450,40 @@ namespace GameShop.Application.System.Users
                         return new ApiErrorResult<bool>("Thông tin nhập không chính xác");
                     }
                 }
+            }
+        }
+
+        public async Task<ApiResult<bool>> SendEmail(SendEmailRequest request)
+        {
+            var user = await _userManager.FindByNameAsync(request.UserName);
+            if (user != null)
+            {
+                using (MailMessage mail = new MailMessage())
+                {
+                    mail.From = new MailAddress("gameshop1901@gmail.com");
+                    mail.To.Add(user.Email);
+                    mail.Subject = "Confirm Account";
+                    mail.Body = $@"<html>
+                      <body>
+                      <p>Dear {user.UserName},</p>
+                      <p>You are looking for the confirm code? here is your code {user.ConfirmCode}</p>
+                      <p>Sincerely,<br>-STEM</br></p>
+                      </body>
+                      </html>
+                     ";
+                    mail.IsBodyHtml = true;
+                    using (SmtpClient smtp = new SmtpClient("smtp.gmail.com", 587))
+                    {
+                        smtp.Credentials = new NetworkCredential("gameshop1901@gmail.com", "yfvcjmebvgggeult");
+                        smtp.EnableSsl = true;
+                        smtp.Send(mail);
+                    }
+                }
+                return new ApiSuccessResult<bool>();
+            }
+            else
+            {
+                return new ApiErrorResult<bool>("Tài khoản không tồn tại");
             }
         }
     }

@@ -188,5 +188,21 @@ namespace GameShop.Controllers
             }
             return Ok(result);
         }
+
+        [AllowAnonymous]
+        [HttpPost("SendEmail")]
+        public async Task<IActionResult> SendEmail(SendEmailRequest request)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var result = await _userService.SendEmail(request);
+            if (!result.IsSuccess)
+            {
+                return BadRequest(result);
+            }
+            return Ok(result);
+        }
     }
 }

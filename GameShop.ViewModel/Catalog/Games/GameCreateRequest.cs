@@ -17,6 +17,7 @@ namespace GameShop.ViewModels.Catalog.Games
         public int Status { get; set; }
         public string Publisher { get; set; }
         public IFormFile ThumbnailImage { get; set; }
+        public IFormFile FileGame { get; set; }
         public SystemRequireMin SRM { get; set; } = new SystemRequireMin();
         public SystemRequirementRecommend SRR { get; set; } = new SystemRequirementRecommend();
     }

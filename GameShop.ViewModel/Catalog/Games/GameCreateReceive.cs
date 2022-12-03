@@ -18,5 +18,6 @@ namespace GameShop.ViewModels.Catalog.Games
         public string Publisher { get; set; }
         public string SRM { get; set; }
         public string SRR { get; set; }
+        public IFormFile FileGame { get; set; }
     }
 }

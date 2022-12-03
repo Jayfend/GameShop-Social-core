@@ -50,7 +50,7 @@ namespace GameShop.Application.Catalog.Checkouts
                 }
                 foreach (var item in gamelist)
                 {
-                    total = total + (item.Price - (item.Price * (item.Discount / 100)));
+                    total = total + (item.Price - (item.Price * item.Discount / 100));
                 }
                 Checkout newCheckout = new Checkout()
                 {

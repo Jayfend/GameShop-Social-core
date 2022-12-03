@@ -72,6 +72,10 @@ namespace GameShop.Application.Catalog.Games
                      }
                 };
             }
+            if (request.FileGame != null)
+            {
+                game.FilePath = await this.Savefile(request.FileGame);
+            }
             if (request.SRR != null)
             {
                 game.SystemRequirementRecommended = new SystemRequirementRecommended()
@@ -100,13 +104,9 @@ namespace GameShop.Application.Catalog.Games
             }
 
             _context.Games.Add(game);
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-            }
+
+            await _context.SaveChangesAsync();
+
             return game.GameID;
         }
 

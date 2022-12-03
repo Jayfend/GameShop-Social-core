@@ -20,5 +20,6 @@ namespace GameShop.Data.Entities
         public List<GameImage> GameImages { get; set; }
         public List<OrderedGame> OrderedGames { get; set; }
         public List<WishesGame> WishesGames { get; set; }
+        public string FilePath { get; set; }
     }
 }

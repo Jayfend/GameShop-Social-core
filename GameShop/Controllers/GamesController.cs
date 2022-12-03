@@ -110,6 +110,7 @@ namespace GameShop.Controllers
                 Genre = request.Genre,
                 Status = request.Status,
                 ThumbnailImage = request.ThumbnailImage,
+                FileGame = request.FileGame,
                 Publisher = request.Publisher,
                 SRM = JsonConvert.DeserializeObject<SystemRequireMin>(request.SRM),
                 SRR = JsonConvert.DeserializeObject<SystemRequirementRecommend>(request.SRR),

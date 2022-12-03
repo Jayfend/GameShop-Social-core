@@ -73,7 +73,16 @@ namespace GameShop.AdminApp.Services
                 ByteArrayContent bytes = new ByteArrayContent(data);
                 requestContent.Add(bytes, "thumbnailImage", request.ThumbnailImage.FileName);
             }
-
+            if (request.FileGame != null)
+            {
+                byte[] data;
+                using (var br = new BinaryReader(request.FileGame.OpenReadStream()))
+                {
+                    data = br.ReadBytes((int)request.FileGame.OpenReadStream().Length);
+                }
+                ByteArrayContent bytes = new ByteArrayContent(data);
+                requestContent.Add(bytes, "fileGame", request.FileGame.FileName);
+            }
             requestContent.Add(new StringContent(request.Price.ToString()), "price");
             requestContent.Add(new StringContent(string.IsNullOrEmpty(request.GameName) ? "" : request.GameName.ToString()), "gamename");
             requestContent.Add(new StringContent(string.IsNullOrEmpty(request.Publisher) ? "" : request.Publisher.ToString()), "publisher");

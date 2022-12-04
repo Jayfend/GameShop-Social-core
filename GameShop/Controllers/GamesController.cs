@@ -94,27 +94,27 @@ namespace GameShop.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromForm] GameCreateReceive request)
+        public async Task<IActionResult> Create([FromForm] GameCreateRequest request)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            var newgame = new GameCreateRequest()
-            {
-                GameName = request.GameName,
-                Price = request.Price,
-                Discount = request.Discount,
-                Description = request.Description,
-                Gameplay = request.Gameplay,
-                Genre = request.Genre,
-                Status = request.Status,
-                ThumbnailImage = request.ThumbnailImage,
-                Publisher = request.Publisher,
-                SRM = JsonConvert.DeserializeObject<SystemRequireMin>(request.SRM),
-                SRR = JsonConvert.DeserializeObject<SystemRequirementRecommend>(request.SRR),
-            };
-            var gameID = await _gameService.Create(newgame);
+            //var newgame = new GameCreateRequest()
+            //{
+            //    GameName = request.GameName,
+            //    Price = request.Price,
+            //    Discount = request.Discount,
+            //    Description = request.Description,
+            //    Gameplay = request.Gameplay,
+            //    Genre = request.Genre,
+            //    Status = request.Status,
+            //    ThumbnailImage = request.ThumbnailImage,
+            //    Publisher = request.Publisher,
+            //    SRM = JsonConvert.DeserializeObject<SystemRequireMin>(request.SRM),
+            //    SRR = JsonConvert.DeserializeObject<SystemRequirementRecommend>(request.SRR),
+            //};
+            var gameID = await _gameService.Create(request);
             if (gameID == 0)
             {
                 return BadRequest();

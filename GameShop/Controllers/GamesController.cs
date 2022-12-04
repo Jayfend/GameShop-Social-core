@@ -94,28 +94,28 @@ namespace GameShop.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromForm] GameCreateReceive request)
+        public async Task<IActionResult> Create([FromForm] GameCreateRequest request)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            var newgame = new GameCreateRequest()
-            {
-                GameName = request.GameName,
-                Price = request.Price,
-                Discount = request.Discount,
-                Description = request.Description,
-                Gameplay = request.Gameplay,
-                Genre = request.Genre,
-                Status = request.Status,
-                ThumbnailImage = request.ThumbnailImage,
-                FileGame = request.FileGame,
-                Publisher = request.Publisher,
-                SRM = JsonConvert.DeserializeObject<SystemRequireMin>(request.SRM),
-                SRR = JsonConvert.DeserializeObject<SystemRequirementRecommend>(request.SRR),
-            };
-            var gameID = await _gameService.Create(newgame);
+            //var newgame = new GameCreateRequest()
+            //{
+            //    GameName = request.GameName,
+            //    Price = request.Price,
+            //    Discount = request.Discount,
+            //    Description = request.Description,
+            //    Gameplay = request.Gameplay,
+            //    Genre = request.Genre,
+            //    Status = request.Status,
+            //    ThumbnailImage = request.ThumbnailImage,
+            //    FileGame = request.FileGame,
+            //    Publisher = request.Publisher,
+            //    SRM = JsonConvert.DeserializeObject<SystemRequireMin>(request.SRM),
+            //    SRR = JsonConvert.DeserializeObject<SystemRequirementRecommend>(request.SRR),
+            //};
+            var gameID = await _gameService.Create(request);
             if (gameID == 0)
             {
                 return BadRequest();
@@ -127,27 +127,27 @@ namespace GameShop.Controllers
         [HttpPut("{GameID}")]
         [Consumes("multipart/form-data")]
         [Authorize]
-        public async Task<IActionResult> Update([FromRoute] int GameID, [FromForm] GameEditReceive request)
+        public async Task<IActionResult> Update([FromRoute] int GameID, [FromForm] GameEditRequest request)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            var editgame = new GameEditRequest()
-            {
-                GameID = GameID,
-                Name = request.Name,
-                Price = request.Price,
-                Discount = request.Discount,
-                Description = request.Description,
-                Gameplay = request.Gameplay,
-                Status = request.Status,
-                ThumbnailImage = request.ThumbnailImage,
-                Publisher = request.Publisher,
-                SRM = JsonConvert.DeserializeObject<SystemRequireMin>(request.SRM),
-                SRR = JsonConvert.DeserializeObject<SystemRequirementRecommend>(request.SRR),
-            };
-            var affedtedResult = await _gameService.Update(GameID, editgame);
+            //var editgame = new GameEditRequest()
+            //{
+            //    GameID = GameID,
+            //    Name = request.Name,
+            //    Price = request.Price,
+            //    Discount = request.Discount,
+            //    Description = request.Description,
+            //    Gameplay = request.Gameplay,
+            //    Status = request.Status,
+            //    ThumbnailImage = request.ThumbnailImage,
+            //    Publisher = request.Publisher,
+            //    SRM = JsonConvert.DeserializeObject<SystemRequireMin>(request.SRM),
+            //    SRR = JsonConvert.DeserializeObject<SystemRequirementRecommend>(request.SRR),
+            //};
+            var affedtedResult = await _gameService.Update(GameID, request);
             if (affedtedResult == 0)
             {
                 return BadRequest();

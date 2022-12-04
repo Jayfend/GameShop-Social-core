@@ -70,7 +70,8 @@ namespace GameShop.Application.Catalog.Checkouts
                         Discount = item.Discount,
                         Price = item.Price,
                         ImagePath = image,
-                        Checkout = newCheckout
+                        Checkout = newCheckout,
+                        GameFile = item.FilePath
                     };
                     await _context.SoldGames.AddAsync(soldgame);
                 }
@@ -229,7 +230,8 @@ namespace GameShop.Application.Catalog.Checkouts
                         Name = x.GameName,
                         Price = x.Price,
                         Discount = x.Discount,
-                        ListImage = new List<string>() { x.ImagePath }
+                        ListImage = new List<string>() { x.ImagePath },
+                        FileGame = x.GameFile
                     }).ToListAsync();
                 //var genres = _context.Genres.AsQueryable();
                 //foreach (var item in data)

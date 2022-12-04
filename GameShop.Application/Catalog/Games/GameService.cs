@@ -275,9 +275,13 @@ namespace GameShop.Application.Catalog.Games
                          ImagePath=  await this.Savefile(request.ThumbnailImage),
                          isDefault = true,
                          SortOrder = 1,
-                             }
+                          }
                         };
                     }
+                }
+                if (request.FileGame != null)
+                {
+                    game.FilePath = await this.Savefile(request.FileGame);
                 }
                 _context.Games.Update(game);
                 return await _context.SaveChangesAsync();

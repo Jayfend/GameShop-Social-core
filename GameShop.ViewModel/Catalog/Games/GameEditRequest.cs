@@ -18,5 +18,6 @@ namespace GameShop.ViewModels.Catalog.Games
         public IFormFile ThumbnailImage { get; set; }
         public SystemRequireMin SRM { get; set; } = new SystemRequireMin();
         public SystemRequirementRecommend SRR { get; set; } = new SystemRequirementRecommend();
+        public IFormFile FileGame { get; set; }
     }
 }

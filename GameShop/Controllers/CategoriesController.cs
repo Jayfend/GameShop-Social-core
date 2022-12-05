@@ -1,4 +1,5 @@
 ﻿using GameShop.Application.Catalog.Categories;
+using GameShop.ViewModels.Catalog.Categories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -10,6 +11,7 @@ namespace GameShop.Controllers
     public class CategoriesController : ControllerBase
     {
         private readonly ICategoryService _categoryService;
+
         public CategoriesController(
             ICategoryService categoryService)
         {
@@ -24,11 +26,40 @@ namespace GameShop.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetById( int id)
+        public async Task<IActionResult> GetById(int id)
         {
             var category = await _categoryService.GetById(id);
             return Ok(category);
         }
 
+        [HttpPost]
+        public async Task<IActionResult> CreateGenre(CreateCategoryRequest request)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var result = await _categoryService.CreateCategory(request);
+            if (!result.IsSuccess)
+            {
+                return BadRequest(result);
+            }
+            return Ok(result);
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> EditGenre(EditCategoryRequest request)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var result = await _categoryService.EditCategory(request);
+            if (!result.IsSuccess)
+            {
+                return BadRequest(result);
+            }
+            return Ok(result);
+        }
     }
 }

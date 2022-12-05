@@ -71,7 +71,8 @@ namespace GameShop.Application.Catalog.Checkouts
                         Price = item.Price,
                         ImagePath = image,
                         Checkout = newCheckout,
-                        GameFile = item.FilePath
+                        GameFile = item.FilePath,
+                        PurcharsedDate = newCheckout.Purchasedate,
                     };
                     await _context.SoldGames.AddAsync(soldgame);
                 }
@@ -133,6 +134,7 @@ namespace GameShop.Application.Catalog.Checkouts
                                 Name = game.GameName,
                                 Price = game.Price,
                                 Discount = game.Discount,
+                                CreatedDate = game.PurcharsedDate
                             };
                             soldgame.ListImage.Add(game.ImagePath);
                             newbill.Listgame.Add(soldgame);
@@ -180,6 +182,7 @@ namespace GameShop.Application.Catalog.Checkouts
                         Name = game.GameName,
                         Price = game.Price,
                         Discount = game.Discount,
+                        CreatedDate = game.PurcharsedDate
                     };
                     soldgame.ListImage.Add(game.ImagePath);
                     newbill.Listgame.Add(soldgame);
@@ -231,7 +234,8 @@ namespace GameShop.Application.Catalog.Checkouts
                         Price = x.Price,
                         Discount = x.Discount,
                         ListImage = new List<string>() { x.ImagePath },
-                        FileGame = x.GameFile
+                        FileGame = x.GameFile,
+                        CreatedDate = x.PurcharsedDate
                     }).ToListAsync();
                 //var genres = _context.Genres.AsQueryable();
                 //foreach (var item in data)

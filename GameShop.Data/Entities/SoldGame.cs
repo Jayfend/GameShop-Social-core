@@ -15,5 +15,6 @@ namespace GameShop.Data.Entities
         public int CheckoutID { get; set; }
         public string ImagePath { get; set; }
         public string GameFile { get; set; }
+        public DateTime PurcharsedDate { get; set; }
     }
 }

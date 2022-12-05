@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 using System.Linq;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using GameShop.ViewModels.Catalog.Games;
+using GameShop.ViewModels.Common;
+using GameShop.Data.Entities;
 
 namespace GameShop.Application.Catalog.Categories
 {
@@ -20,13 +22,47 @@ namespace GameShop.Application.Catalog.Categories
             _context = context;
         }
 
+        public async Task<ApiResult<bool>> CreateCategory(CreateCategoryRequest request)
+        {
+            var check = await _context.Genres.FirstOrDefaultAsync(x => x.GenreName.Contains(request.GenreName.Trim()));
+            if (check != null)
+            {
+                return new ApiErrorResult<bool>("Thể loại đã tồn tại");
+            }
+            else
+            {
+                var newGenre = new Genre()
+                {
+                    GenreName = request.GenreName
+                };
+                await _context.Genres.AddAsync(newGenre);
+                await _context.SaveChangesAsync();
+                return new ApiSuccessResult<bool>();
+            }
+        }
+
+        public async Task<ApiResult<bool>> EditCategory(EditCategoryRequest request)
+        {
+            var genre = await _context.Genres.FirstOrDefaultAsync(x => x.GenreID == request.GenreID);
+            if (genre == null)
+            {
+                return new ApiErrorResult<bool>("Không tìm thấy thể loại");
+            }
+            else
+            {
+                genre.GenreName = request.GenreName.Trim();
+                _context.Genres.Update(genre);
+                await _context.SaveChangesAsync();
+                return new ApiSuccessResult<bool>();
+            }
+        }
+
         public async Task<List<CategoryViewModel>> GetAll()
         {
             var query = await _context.Genres.Select(x => new CategoryViewModel()
             {
                 Id = x.GenreID,
                 Name = x.GenreName,
-                
             }).ToListAsync();
             return query;
         }
@@ -34,12 +70,12 @@ namespace GameShop.Application.Catalog.Categories
         public async Task<CategoryViewModel> GetById(int id)
         {
             var query = await _context.Genres.Where(x => x.GenreID == id).FirstOrDefaultAsync();
-            if(query != null)
+            if (query != null)
             {
                 CategoryViewModel genre = new CategoryViewModel()
                 {
                     Name = query.GenreName,
-                  Id = query.GenreID
+                    Id = query.GenreID
                 };
                 return genre;
             }
@@ -47,7 +83,6 @@ namespace GameShop.Application.Catalog.Categories
             {
                 return null;
             }
-          
         }
     }
 }

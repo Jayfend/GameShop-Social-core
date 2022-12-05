@@ -94,6 +94,7 @@ namespace GameShop.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> Create([FromForm] GameCreateRequest request)
         {
             if (!ModelState.IsValid)
@@ -126,7 +127,7 @@ namespace GameShop.Controllers
 
         [HttpPut("{GameID}")]
         [Consumes("multipart/form-data")]
-        [Authorize]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> Update([FromRoute] int GameID, [FromForm] GameEditRequest request)
         {
             if (!ModelState.IsValid)
@@ -157,7 +158,7 @@ namespace GameShop.Controllers
         }
 
         [HttpDelete("{GameID}")]
-        [Authorize]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> Delete(int GameID)
         {
             var affedtedResult = await _gameService.Delete(GameID);
@@ -170,6 +171,7 @@ namespace GameShop.Controllers
         }
 
         [HttpPatch("price/{GameID}/{newPrice}")]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> UpdatePrice([FromRoute] int GameID, decimal newPrice)
         {
             var isSuccess = await _gameService.UpdatePrice(GameID, newPrice);
@@ -184,6 +186,7 @@ namespace GameShop.Controllers
         // Image
         [HttpPost("{GameID}/Images")]
         [Consumes("multipart/form-data")]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> CreateImage([FromRoute] int GameID, [FromForm] GameImageCreateRequest request)
         {
             if (!ModelState.IsValid)
@@ -225,6 +228,7 @@ namespace GameShop.Controllers
         }
 
         [HttpPut("{GameID}/Images/{ImageID}")]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> UpdateImage(int ImageID, [FromForm] GameImageUpdateRequest request)
         {
             if (!ModelState.IsValid)
@@ -238,6 +242,7 @@ namespace GameShop.Controllers
         }
 
         [HttpDelete("{GameID}/Images/{ImageID}")]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> DeleteImage(int ImageID)
         {
             if (!ModelState.IsValid)
@@ -253,7 +258,7 @@ namespace GameShop.Controllers
         }
 
         [HttpPut("{id}/genres")]
-        [Authorize]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> CategoryAssign(int id, [FromBody] CategoryAssignRequest request)
         {
             if (!ModelState.IsValid)

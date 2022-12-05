@@ -88,6 +88,7 @@ namespace GameShop.Controllers
         }
 
         [HttpPut]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> Update([FromBody] UserUpdateRequest request)
         {
             if (!ModelState.IsValid)
@@ -103,6 +104,7 @@ namespace GameShop.Controllers
         }
 
         [HttpPut("{id}/roles")]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> RoleAssign(Guid Id, [FromBody] RoleAssignRequest request)
         {
             if (!ModelState.IsValid)
@@ -132,6 +134,7 @@ namespace GameShop.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> Delete(Guid id)
         {
             var result = await _userService.Delete(id);

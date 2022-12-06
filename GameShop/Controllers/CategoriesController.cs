@@ -1,5 +1,6 @@
 ﻿using GameShop.Application.Catalog.Categories;
 using GameShop.ViewModels.Catalog.Categories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -33,6 +34,7 @@ namespace GameShop.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> CreateGenre(CreateCategoryRequest request)
         {
             if (!ModelState.IsValid)
@@ -48,6 +50,7 @@ namespace GameShop.Controllers
         }
 
         [HttpPut]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> EditGenre(EditCategoryRequest request)
         {
             if (!ModelState.IsValid)

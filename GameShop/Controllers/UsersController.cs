@@ -87,6 +87,22 @@ namespace GameShop.Controllers
             return Ok(result);
         }
 
+        [HttpPost("adminregister")]
+        [AllowAnonymous]
+        public async Task<IActionResult> AdminRegister([FromBody] RegisterRequest request)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var result = await _userService.AdminRegister(request);
+            if (!result.IsSuccess)
+            {
+                return BadRequest(result);
+            }
+            return Ok(result);
+        }
+
         [HttpPut]
         [Authorize(Roles = "admin")]
         public async Task<IActionResult> Update([FromBody] UserUpdateRequest request)

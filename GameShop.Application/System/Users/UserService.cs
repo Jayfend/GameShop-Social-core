@@ -486,5 +486,52 @@ namespace GameShop.Application.System.Users
                 return new ApiErrorResult<bool>("Tài khoản không tồn tại");
             }
         }
+
+        public async Task<ApiResult<bool>> AdminRegister(RegisterRequest request)
+        {
+            var user = await _userManager.FindByNameAsync(request.UserName);
+            if (user != null)
+            {
+                return new ApiErrorResult<bool>("Tài khoản đã tồn tại");
+            }
+            if (await _userManager.FindByEmailAsync(request.Email) != null)
+            {
+                return new ApiErrorResult<bool>("Emai đã tồn tại");
+            }
+            var useravatar = new UserAvatar()
+            {
+                ImagePath = "imgnotfound.jpg",
+            };
+            var userthumbnail = new UserThumbnail()
+            {
+                ImagePath = "imgnotfound.jpg"
+            };
+            Random r = new Random();
+            int randNum = r.Next(1000000);
+            string sixDigitNumber = randNum.ToString("D6");
+            user = new AppUser()
+            {
+                UserName = request.UserName,
+                //Dob = request.Dob,
+                Email = request.Email,
+                UserAvatar = useravatar,
+                UserThumbnail = userthumbnail,
+                isConfirmed = true,
+                ConfirmCode = sixDigitNumber,
+                //FirstName = request.FirstName,
+                //LastName = request.LastName,
+                //PhoneNumber = request.PhoneNumber,
+            };
+
+            var result = await _userManager.CreateAsync(user, request.Password);
+            if (result.Succeeded)
+            {
+                return new ApiSuccessResult<bool>();
+            }
+            else
+            {
+                return new ApiErrorResult<bool>("Đăng ký không thành công");
+            }
+        }
     }
 }

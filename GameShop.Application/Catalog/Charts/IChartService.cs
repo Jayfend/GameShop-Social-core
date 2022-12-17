@@ -8,6 +8,8 @@ namespace GameShop.Application.Catalog.Charts
 {
     public interface IChartService
     {
-        Task<List<GameBuyCountModel>> GameStatisticalByMonthAndYear(int Year, int Month);
+        Task<List<GameBuyCountModel>> GameStatisticalByMonthAndYear(int Year, int Month, int take);
+
+        Task<List<GameBuyCountModel>> GameStatisticalByMonthAndYearSortbyTotal(int Year, int Month, int take);
     }
 }

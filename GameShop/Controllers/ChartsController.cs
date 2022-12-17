@@ -16,10 +16,17 @@ namespace GameShop.Controllers
             _chartService = chartService;
         }
 
-        [HttpGet("BestSellerPerMonth/{Year}/{Month}")]
-        public async Task<IActionResult> GameStatisticalByMonthAndYear(int Year, int Month)
+        [HttpGet("BestSellerPerMonthSortbyBuy/{Year}/{Month}/{Take}")]
+        public async Task<IActionResult> GameStatisticalByMonthAndYearSortbyBuy(int Year, int Month, int Take)
         {
-            var result = await _chartService.GameStatisticalByMonthAndYear(Year, Month);
+            var result = await _chartService.GameStatisticalByMonthAndYear(Year, Month, Take);
+            return Ok(result);
+        }
+
+        [HttpGet("BestSellerPerMonthSortbyTotal/{Year}/{Month}/{Take}")]
+        public async Task<IActionResult> GameStatisticalByMonthAndYearSortbyToTal(int Year, int Month, int Take)
+        {
+            var result = await _chartService.GameStatisticalByMonthAndYearSortbyTotal(Year, Month, Take);
             return Ok(result);
         }
     }

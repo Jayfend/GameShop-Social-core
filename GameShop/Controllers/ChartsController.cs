@@ -29,5 +29,12 @@ namespace GameShop.Controllers
             var result = await _chartService.GameStatisticalByMonthAndYearSortbyTotal(Year, Month, Take);
             return Ok(result);
         }
+
+        [HttpGet("TotalProfit")]
+        public async Task<IActionResult> TotalProfit()
+        {
+            var result = await _chartService.TotalProfit();
+            return Ok(result);
+        }
     }
 }

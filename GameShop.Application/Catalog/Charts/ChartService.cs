@@ -115,5 +115,16 @@ namespace GameShop.Application.Catalog.Charts
             }
             return listGames.OrderByDescending(x => x.Total).Take(take).ToList();
         }
+
+        public async Task<decimal> TotalProfit()
+        {
+            var listCheckout = await _context.Checkouts.ToListAsync();
+            decimal total = 0;
+            foreach (var checkout in listCheckout)
+            {
+                total += checkout.TotalPrice;
+            }
+            return total;
+        }
     }
 }

@@ -13,5 +13,7 @@ namespace GameShop.Application.Catalog.Charts
         Task<List<GameBuyCountModel>> GameStatisticalByMonthAndYearSortbyTotal(int Year, int Month, int take);
 
         Task<decimal> TotalProfit();
+
+        Task<List<GameBuyCountModel>> GameTotalPurchased();
     }
 }

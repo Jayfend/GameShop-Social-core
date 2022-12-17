@@ -116,6 +116,32 @@ namespace GameShop.Application.Catalog.Charts
             return listGames.OrderByDescending(x => x.Total).Take(take).ToList();
         }
 
+        public async Task<List<GameBuyCountModel>> GameTotalPurchased()
+        {
+            var listGames = await _context.Games.Select(x => new GameBuyCountModel
+            {
+                Name = x.GameName,
+                GameID = x.GameID,
+                BuyCount = 0,
+                Total = 0
+            }).ToListAsync();
+            var soldgames = await _context.SoldGames.ToListAsync();
+            foreach (var game in listGames)
+            {
+                foreach (var soldgame in soldgames)
+                {
+                    decimal totalprice = 0;
+                    if (game.GameID == soldgame.GameID)
+                    {
+                        game.BuyCount++;
+                        totalprice = totalprice + (soldgame.Price - (soldgame.Price * soldgame.Discount / 100));
+                        game.Total += totalprice;
+                    }
+                }
+            }
+            return listGames;
+        }
+
         public async Task<decimal> TotalProfit()
         {
             var listCheckout = await _context.Checkouts.ToListAsync();

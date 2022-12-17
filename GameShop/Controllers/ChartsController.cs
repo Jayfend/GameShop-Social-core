@@ -36,5 +36,12 @@ namespace GameShop.Controllers
             var result = await _chartService.TotalProfit();
             return Ok(result);
         }
+
+        [HttpGet("GameTotalPurchased")]
+        public async Task<IActionResult> GameTotalPurchased()
+        {
+            var result = await _chartService.GameTotalPurchased();
+            return Ok(result);
+        }
     }
 }

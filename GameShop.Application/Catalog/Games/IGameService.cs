@@ -12,13 +12,13 @@ namespace GameShop.Application.Catalog.Games
 {
     public interface IGameService
     {
-        Task<int> Create(GameCreateRequest request);
+        Task<Guid> Create(GameCreateRequest request);
 
-        Task<int> Update(int GameID, GameEditRequest request);
+        Task<int> Update(Guid GameID, GameEditRequest request);
 
-        Task<int> Delete(int GameID);
+        Task<int> Delete(Guid GameID);
 
-        Task<bool> UpdatePrice(int GameID, Decimal newPrice);
+        Task<bool> UpdatePrice(Guid GameID, Decimal newPrice);
 
         Task<string> Savefile(IFormFile file);
 
@@ -30,19 +30,19 @@ namespace GameShop.Application.Catalog.Games
 
         Task<PagedResult<GameViewModel>> GetAllPaging(GetManageGamePagingRequest request);
 
-        Task<int> AddImage(int GameID, GameImageCreateRequest newimage);
+        Task<Guid> AddImage(Guid GameID, GameImageCreateRequest newimage);
 
-        Task<int> RemoveImage(int ImageID);
+        Task<int> RemoveImage(Guid imageId);
 
-        Task<int> UpdateImage(int ImageID, GameImageUpdateRequest Image);
+        Task<int> UpdateImage(Guid imageId, GameImageUpdateRequest Image);
 
-        Task<List<GameImageViewModel>> GetListImages(int GameID);
+        Task<List<GameImageViewModel>> GetListImages(Guid GameID);
 
-        Task<GameViewModel> GetById(int GameID);
+        Task<GameViewModel> GetById(Guid GameID);
 
-        Task<GameImageViewModel> GetImageById(int ImageID);
+        Task<GameImageViewModel> GetImageById(Guid imageId);
 
-        Task<ApiResult<bool>> CategoryAssign(int id, CategoryAssignRequest request);
+        Task<ApiResult<bool>> CategoryAssign(Guid id, CategoryAssignRequest request);
 
         Task<PagedResult<GameBestSeller>> GetBestSeller(GetManageGamePagingRequest request);
     }

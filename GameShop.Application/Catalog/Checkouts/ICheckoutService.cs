@@ -11,11 +11,11 @@ namespace GameShop.Application.Catalog.Checkouts
 {
     public interface ICheckoutService
     {
-        Task<ApiResult<int>> CheckoutGame(string UserID);
+        Task<ApiResult<Guid>> CheckoutGame(Guid UserID);
 
-        Task<PagedResult<GameViewModel>> GetPurchasedGames(string UserID, GetManageGamePagingRequest request);
+        Task<PagedResult<GameViewModel>> GetPurchasedGames(Guid UserID, GetManageGamePagingRequest request);
 
-        Task<ApiResult<CheckoutViewModel>> GetBill(int checkoutID);
+        Task<ApiResult<CheckoutViewModel>> GetBill(Guid checkoutID);
 
         Task<ApiResult<List<CheckoutViewModel>>> GetAllBill();
     }

@@ -6,6 +6,6 @@ namespace GameShop.ViewModels.Catalog.Carts
 {
     public class OrderItemDelete
     {
-        public int GameID { get; set; }
+        public Guid Id { get; set; }
     }
 }

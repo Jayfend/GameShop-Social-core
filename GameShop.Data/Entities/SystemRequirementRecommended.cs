@@ -4,9 +4,8 @@ using System.Text;
 
 namespace GameShop.Data.Entities
 {
-    public class SystemRequirementRecommended
+    public class SystemRequirementRecommended : BaseEntity
     {
-        public int SRRID { get; set; }
         public string OS { get; set; }
         public string Processor { get; set; }
         public string Memory { get; set; }

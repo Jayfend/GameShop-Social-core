@@ -4,11 +4,10 @@ using System.Text;
 
 namespace GameShop.Data.Entities
 {
-  public class GameinGenre
+  public class GameinGenre : BaseEntity
     {
-        public int GameID { get; set; }
         public Game Game { get; set; }
-        public int GenreID { get; set; }
+        public Guid GenreID { get; set; }
         public Genre Genre { get; set; }
     }
 }

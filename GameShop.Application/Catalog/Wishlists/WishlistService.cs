@@ -26,13 +26,13 @@ namespace GameShop.Application.Catalog.Wishlists
             _signInManager = signInManager;
         }
 
-        public async Task<ApiResult<bool>> AddWishlist(string UserID, AddWishlistRequest addWishlistRequest)
+        public async Task<ApiResult<bool>> AddWishlist(Guid UserID, AddWishlistRequest addWishlistRequest)
         {
-            var getCart = await _context.Wishlists.FirstOrDefaultAsync(x => x.UserID.ToString() == UserID);
+            var getCart = await _context.Wishlists.FirstOrDefaultAsync(x => x.UserID == UserID);
             if (getCart != null)
             {
                 var orderedgames = await _context.OrderedGames.ToListAsync();
-                var bills = await _context.Checkouts.Where(x => x.Cart.UserID.ToString() == UserID).Select(y => y.CartID).ToListAsync();
+                var bills = await _context.Checkouts.Where(x => x.Cart.UserID == UserID).Select(y => y.CartID).ToListAsync();
                 if (bills.Count > 0)
                 {
                     foreach (var item in bills)
@@ -44,7 +44,7 @@ namespace GameShop.Application.Catalog.Wishlists
                         }
                     }
                 }
-                var check = await _context.WishesGames.FirstOrDefaultAsync(x => x.ID == getCart.ID && x.GameID == addWishlistRequest.GameID);
+                var check = await _context.WishesGames.FirstOrDefaultAsync(x => x.Id == getCart.Id && x.GameID == addWishlistRequest.GameID);
                 if (check != null)
                 {
                     return new ApiErrorResult<bool>("Bạn đã thêm game này rồi");
@@ -54,8 +54,8 @@ namespace GameShop.Application.Catalog.Wishlists
                     WishesGame newgame = new WishesGame()
                     {
                         GameID = addWishlistRequest.GameID,
-                        WishID = getCart.ID,
-                        AddedDate = DateTime.Now
+                        WishID = getCart.Id,
+                        CreatedDate = DateTime.Now
                     };
                     _context.WishesGames.Add(newgame);
                     await _context.SaveChangesAsync();
@@ -65,7 +65,7 @@ namespace GameShop.Application.Catalog.Wishlists
             else
             {
                 var orderedgames = await _context.OrderedGames.ToListAsync();
-                var bills = await _context.Checkouts.Where(x => x.Cart.UserID.ToString() == UserID).Select(y => y.CartID).ToListAsync();
+                var bills = await _context.Checkouts.Where(x => x.Cart.UserID == UserID).Select(y => y.CartID).ToListAsync();
                 if (bills.Count > 0)
                 {
                     foreach (var item in bills)
@@ -79,13 +79,13 @@ namespace GameShop.Application.Catalog.Wishlists
                 }
                 Wishlist newcart = new Wishlist()
                 {
-                    UserID = new Guid(UserID),
+                    UserID = UserID
                 };
                 WishesGame newgame = new WishesGame()
                 {
                     GameID = addWishlistRequest.GameID,
                     Wishlist = newcart,
-                    AddedDate = DateTime.Now
+                    CreatedDate = DateTime.Now
                 };
                 _context.WishesGames.Add(newgame);
                 await _context.SaveChangesAsync();
@@ -93,10 +93,10 @@ namespace GameShop.Application.Catalog.Wishlists
             }
         }
 
-        public async Task<ApiResult<bool>> DeleteItem(string UserID, DeleteItemRequest orderItemDelete)
+        public async Task<ApiResult<bool>> DeleteItem(Guid UserID, DeleteItemRequest orderItemDelete)
         {
             var orderitem = await _context.WishesGames
-                .FirstOrDefaultAsync(x => x.Wishlist.UserID.ToString() == UserID && x.GameID == orderItemDelete.GameID);
+                .FirstOrDefaultAsync(x => x.Wishlist.UserID == UserID && x.GameID == orderItemDelete.GameID);
             if (orderitem == null)
             {
                 return new ApiErrorResult<bool>("Không tìm thấy game");
@@ -109,9 +109,9 @@ namespace GameShop.Application.Catalog.Wishlists
             }
         }
 
-        public async Task<ApiResult<List<WishlistItemResponse>>> GetWishlist(string UserID)
+        public async Task<ApiResult<List<WishlistItemResponse>>> GetWishlist(Guid UserID)
         {
-            var getCart = await _context.WishesGames.Where(x => x.Wishlist.UserID.ToString() == UserID)
+            var getCart = await _context.WishesGames.Where(x => x.Wishlist.UserID == UserID)
                  .Select(x => new WishlistItemResponse()
                  {
                      GameID = x.GameID,
@@ -119,7 +119,7 @@ namespace GameShop.Application.Catalog.Wishlists
                      Price = x.Game.Price,
                      Discount = x.Game.Discount,
                      ImageList = new List<string>(),
-                     AddedDate = x.AddedDate,
+                     AddedDate = x.CreatedDate,
                      GenreName = new List<string>(),
                      GenreIds = x.Game.GameInGenres.Select(y => y.GenreID).ToList(),
                  }).ToListAsync();
@@ -129,7 +129,7 @@ namespace GameShop.Application.Catalog.Wishlists
             {
                 foreach (var genre in item.GenreIds)
                 {
-                    var name = genres.Where(x => x.GenreID == genre).Select(y => y.GenreName).FirstOrDefault();
+                    var name = genres.Where(x => x.Id == genre).Select(y => y.GenreName).FirstOrDefault();
                     item.GenreName.Add(name);
                 }
             }

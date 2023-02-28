@@ -32,7 +32,7 @@ namespace GameShop.Application.Catalog.Games
             _storageService = storageService;
         }
 
-        public async Task<int> Create(GameCreateRequest request)
+        public async Task<Guid> Create(GameCreateRequest request)
         {
             var game = new Game()
             {
@@ -48,7 +48,7 @@ namespace GameShop.Application.Catalog.Games
             };
             var genrelist = from g in _context.Genres select g;
 
-            var genre = genrelist.FirstOrDefault(x => x.GenreID == request.Genre);
+            var genre = genrelist.FirstOrDefault(x => x.Id == request.Genre);
 
             var newgameingenre = new GameinGenre()
             {
@@ -107,10 +107,10 @@ namespace GameShop.Application.Catalog.Games
 
             await _context.SaveChangesAsync();
 
-            return game.GameID;
+            return game.Id;
         }
 
-        public async Task<int> Delete(int GameID)
+        public async Task<int> Delete(Guid GameID)
         {
             var game = await _context.Games.FindAsync(GameID);
             if (game == null)
@@ -152,7 +152,7 @@ namespace GameShop.Application.Catalog.Games
                 .Take(request.PageSize).Select(x => new GameViewModel()
                 {
                     CreatedDate = x.CreatedDate,
-                    GameID = x.GameID,
+                    Id = x.Id,
                     Name = x.GameName,
                     Description = x.Description,
                     UpdatedDate = x.UpdatedDate,
@@ -192,14 +192,14 @@ namespace GameShop.Application.Catalog.Games
             {
                 foreach (var genre in item.GenreIDs)
                 {
-                    var name = genres.Where(x => x.GenreID == genre).Select(y => y.GenreName).FirstOrDefault();
+                    var name = genres.Where(x => x.Id == genre).Select(y => y.GenreName).FirstOrDefault();
                     item.GenreName.Add(name);
                 }
             }
             var thumbnailimage = _context.GameImages.AsQueryable();
             foreach (var item in data)
             {
-                var listgame = thumbnailimage.Where(x => x.GameID == item.GameID).Select(y => y.ImagePath).ToList();
+                var listgame = thumbnailimage.Where(x => x.GameID == item.Id).Select(y => y.ImagePath).ToList();
                 item.ListImage = listgame;
             }
             //select and projection
@@ -213,9 +213,9 @@ namespace GameShop.Application.Catalog.Games
             return pagedResult;
         }
 
-        public async Task<int> Update(int GameID, GameEditRequest request)
+        public async Task<int> Update(Guid GameID, GameEditRequest request)
         {
-            var game = await _context.Games.Where(x => x.GameID == GameID)
+            var game = await _context.Games.Where(x => x.Id == GameID)
                 .Include(y => y.SystemRequirementMin)
                 .Include(g => g.SystemRequirementRecommended)
                 .FirstOrDefaultAsync();
@@ -257,7 +257,7 @@ namespace GameShop.Application.Catalog.Games
                 if (request.ThumbnailImage != null)
                 {
                     var thumbnailImage = await _context.GameImages
-                        .FirstOrDefaultAsync(i => i.isDefault == true && i.GameID == request.GameID);
+                        .FirstOrDefaultAsync(i => i.isDefault == true && i.GameID == request.Id);
                     if (thumbnailImage != null)
                     {
                         thumbnailImage.Filesize = request.ThumbnailImage.Length;
@@ -288,7 +288,7 @@ namespace GameShop.Application.Catalog.Games
             }
         }
 
-        public async Task<bool> UpdatePrice(int GameID, decimal newPrice)
+        public async Task<bool> UpdatePrice(Guid GameID, decimal newPrice)
         {
             var game = await _context.Games.FindAsync(GameID);
             if (game == null)
@@ -303,20 +303,20 @@ namespace GameShop.Application.Catalog.Games
             }
         }
 
-        public async Task<GameViewModel> GetById(int GameID)
+        public async Task<GameViewModel> GetById(Guid GameID)
         {
             var categories = await (from c in _context.Genres
-                                    join pic in _context.GameinGenres on c.GenreID equals pic.GenreID
-                                    where pic.GameID == GameID
+                                    join pic in _context.GameinGenres on c.Id equals pic.GenreID
+                                    where pic.Id == GameID
                                     select c.GenreName).ToListAsync();
-            var gameview = await _context.Games.Where(x => x.GameID == GameID).Select(x => new GameViewModel()
+            var gameview = await _context.Games.Where(x => x.Id == GameID).Select(x => new GameViewModel()
             {
-                GameID = x.GameID,
+                Id = x.Id,
                 Name = x.GameName,
                 Gameplay = x.Gameplay,
                 CreatedDate = x.CreatedDate,
                 UpdatedDate = x.UpdatedDate,
-                GenreIDs = new List<int>(),
+                GenreIDs = new List<Guid>(),
                 GenreName = categories,
                 Description = x.Description,
                 Discount = x.Discount,
@@ -346,7 +346,7 @@ namespace GameShop.Application.Catalog.Games
                 }
             }).FirstOrDefaultAsync();
 
-            var genres = await _context.GameinGenres.Where(x => x.GameID == gameview.GameID).ToListAsync();
+            var genres = await _context.GameinGenres.Where(x => x.Id == gameview.Id).ToListAsync();
 
             foreach (var genre in genres)
             {
@@ -354,13 +354,13 @@ namespace GameShop.Application.Catalog.Games
             }
             var thumbnailimage = _context.GameImages.AsQueryable();
 
-            var listgame = thumbnailimage.Where(x => x.GameID == gameview.GameID).Select(y => y.ImagePath).ToList();
+            var listgame = thumbnailimage.Where(x => x.GameID == gameview.Id).Select(y => y.ImagePath).ToList();
             gameview.ListImage = listgame;
 
             return gameview;
         }
 
-        public async Task<int> AddImage(int GameID, GameImageCreateRequest newimage)
+        public async Task<Guid> AddImage(Guid GameID, GameImageCreateRequest newimage)
         {
             var gameimage = new GameImage()
             {
@@ -377,10 +377,10 @@ namespace GameShop.Application.Catalog.Games
             }
             _context.GameImages.Add(gameimage);
             await _context.SaveChangesAsync();
-            return gameimage.ImageID;
+            return gameimage.Id;
         }
 
-        public async Task<int> RemoveImage(int ImageID)
+        public async Task<int> RemoveImage(Guid ImageID)
         {
             var gameimage = await _context.GameImages.FindAsync(ImageID);
             if (gameimage != null)
@@ -394,7 +394,7 @@ namespace GameShop.Application.Catalog.Games
             }
         }
 
-        public async Task<int> UpdateImage(int ImageID, GameImageUpdateRequest Image)
+        public async Task<int> UpdateImage(Guid ImageID, GameImageUpdateRequest Image)
         {
             var gameimage = await _context.GameImages.FindAsync(ImageID);
             if (gameimage != null)
@@ -416,7 +416,7 @@ namespace GameShop.Application.Catalog.Games
             return await _context.SaveChangesAsync();
         }
 
-        public async Task<List<GameImageViewModel>> GetListImages(int GameID)
+        public async Task<List<GameImageViewModel>> GetListImages(Guid GameID)
         {
             return await _context.GameImages.Where(x => x.GameID == GameID)
                 .Select(i => new GameImageViewModel()
@@ -425,14 +425,14 @@ namespace GameShop.Application.Catalog.Games
                     Caption = i.Caption,
                     CreatedDate = i.CreatedDate,
                     FileSize = i.Filesize,
-                    ImageID = i.ImageID,
+                    ImageID = i.Id,
                     isDefault = i.isDefault,
                     GameID = GameID,
                     SortOrder = i.SortOrder,
                 }).ToListAsync();
         }
 
-        public async Task<GameImageViewModel> GetImageById(int ImageID)
+        public async Task<GameImageViewModel> GetImageById(Guid ImageID)
         {
             var image = await _context.GameImages.FindAsync(ImageID);
             if (image == null)
@@ -445,7 +445,7 @@ namespace GameShop.Application.Catalog.Games
                 Caption = image.Caption,
                 CreatedDate = image.CreatedDate,
                 FileSize = image.Filesize,
-                ImageID = image.ImageID,
+                ImageID = image.Id,
                 isDefault = image.isDefault,
                 GameID = image.GameID,
                 SortOrder = image.SortOrder,
@@ -473,7 +473,7 @@ namespace GameShop.Application.Catalog.Games
             var data = await query.Select(x => new GameViewModel()
             {
                 CreatedDate = x.CreatedDate,
-                GameID = x.GameID,
+                Id = x.Id,
                 Name = x.GameName,
                 Description = x.Description,
                 UpdatedDate = x.UpdatedDate,
@@ -513,14 +513,14 @@ namespace GameShop.Application.Catalog.Games
             {
                 foreach (var genre in item.GenreIDs)
                 {
-                    var name = genres.Where(x => x.GenreID == genre).Select(y => y.GenreName).FirstOrDefault();
+                    var name = genres.Where(x => x.Id == genre).Select(y => y.GenreName).FirstOrDefault();
                     item.GenreName.Add(name);
                 }
             }
             var thumbnailimage = _context.GameImages.AsQueryable();
             foreach (var item in data)
             {
-                var listgame = thumbnailimage.Where(x => x.GameID == item.GameID).Select(y => y.ImagePath).ToList();
+                var listgame = thumbnailimage.Where(x => x.GameID == item.Id).Select(y => y.ImagePath).ToList();
                 item.ListImage = listgame;
             }
             var newdata = data.OrderByDescending(x => x.CreatedDate).ToList();
@@ -549,7 +549,7 @@ namespace GameShop.Application.Catalog.Games
             var data = await query.Select(x => new GameViewModel()
             {
                 CreatedDate = x.CreatedDate,
-                GameID = x.GameID,
+                Id = x.Id,
                 Name = x.GameName,
                 Description = x.Description,
                 UpdatedDate = x.UpdatedDate,
@@ -589,14 +589,14 @@ namespace GameShop.Application.Catalog.Games
             {
                 foreach (var genre in item.GenreIDs)
                 {
-                    var name = genres.Where(x => x.GenreID == genre).Select(y => y.GenreName).FirstOrDefault();
+                    var name = genres.Where(x => x.Id == genre).Select(y => y.GenreName).FirstOrDefault();
                     item.GenreName.Add(name);
                 }
             }
             var thumbnailimage = _context.GameImages.AsQueryable();
             foreach (var item in data)
             {
-                var listgame = thumbnailimage.Where(x => x.GameID == item.GameID).Select(y => y.ImagePath).ToList();
+                var listgame = thumbnailimage.Where(x => x.GameID == item.Id).Select(y => y.ImagePath).ToList();
                 item.ListImage = listgame;
             }
             var newdata = data.OrderByDescending(x => x.Discount).ToList();
@@ -621,7 +621,7 @@ namespace GameShop.Application.Catalog.Games
             return filename;
         }
 
-        public async Task<ApiResult<bool>> CategoryAssign(int id, CategoryAssignRequest request)
+        public async Task<ApiResult<bool>> CategoryAssign(Guid id, CategoryAssignRequest request)
         {
             var game = await _context.Games.FindAsync(id);
             if (game == null)
@@ -631,8 +631,8 @@ namespace GameShop.Application.Catalog.Games
             foreach (var genre in request.Categories)
             {
                 var gameInGenre = await _context.GameinGenres
-                    .FirstOrDefaultAsync(x => x.GenreID == int.Parse(genre.Id)
-                    && x.GameID == id);
+                    .FirstOrDefaultAsync(x => x.GenreID == Guid.Parse(genre.Id)
+                    && x.Id == id);
                 if (gameInGenre != null && genre.Selected == false)
                 {
                     _context.GameinGenres.Remove(gameInGenre);
@@ -641,8 +641,8 @@ namespace GameShop.Application.Catalog.Games
                 {
                     await _context.GameinGenres.AddAsync(new GameinGenre()
                     {
-                        GenreID = int.Parse(genre.Id),
-                        GameID = id
+                        GenreID = Guid.Parse(genre.Id),
+                        Id = id
                     });
                 }
             }
@@ -655,7 +655,7 @@ namespace GameShop.Application.Catalog.Games
             var games = await _context.Games.Select(x => new GameBestSeller()
             {
                 CreatedDate = x.CreatedDate,
-                GameID = x.GameID,
+                GameID = x.Id,
                 Name = x.GameName,
                 Description = x.Description,
                 UpdatedDate = x.UpdatedDate,
@@ -710,7 +710,7 @@ namespace GameShop.Application.Catalog.Games
             {
                 foreach (var genre in item.GenreIDs)
                 {
-                    var name = genres.Where(x => x.GenreID == genre).Select(y => y.GenreName).FirstOrDefault();
+                    var name = genres.Where(x => x.Id == genre).Select(y => y.GenreName).FirstOrDefault();
                     item.GenreName.Add(name);
                 }
             }

@@ -10,10 +10,10 @@ namespace GameShop.Application.Catalog.Wishlists
 {
     public interface IWishlistService
     {
-        Task<ApiResult<bool>> AddWishlist(string UserID, AddWishlistRequest addWishlistRequest);
+        Task<ApiResult<bool>> AddWishlist(Guid UserID, AddWishlistRequest addWishlistRequest);
 
-        Task<ApiResult<List<WishlistItemResponse>>> GetWishlist(string UserID);
+        Task<ApiResult<List<WishlistItemResponse>>> GetWishlist(Guid UserID);
 
-        Task<ApiResult<bool>> DeleteItem(string UserID, DeleteItemRequest orderItemDelete);
+        Task<ApiResult<bool>> DeleteItem(Guid UserID, DeleteItemRequest orderItemDelete);
     }
 }

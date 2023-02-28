@@ -30,7 +30,7 @@ namespace GameShop.Application.Catalog.Carts
             var getCart = await _context.Carts.FirstOrDefaultAsync(x => x.UserID.ToString() == UserID && x.Status.Equals((Status)1));
             if (getCart != null)
             {
-                var check = await _context.OrderedGames.FirstOrDefaultAsync(x => x.CartID == getCart.CartID && x.GameID == cartCreateRequest.GameID);
+                var check = await _context.OrderedGames.FirstOrDefaultAsync(x => x.CartID == getCart.Id && x.GameID == cartCreateRequest.GameID);
                 if (check != null)
                 {
                     return new ApiErrorResult<bool>("Bạn đã thêm game này rồi");
@@ -40,8 +40,8 @@ namespace GameShop.Application.Catalog.Carts
                     OrderedGame newgame = new OrderedGame()
                     {
                         GameID = cartCreateRequest.GameID,
-                        CartID = getCart.CartID,
-                        AddedDate = DateTime.Now,
+                        CartID = getCart.Id,
+                        CreatedDate = DateTime.Now,
                     };
                     _context.OrderedGames.Add(newgame);
                     await _context.SaveChangesAsync();
@@ -73,7 +73,7 @@ namespace GameShop.Application.Catalog.Carts
                     {
                         GameID = cartCreateRequest.GameID,
                         Cart = cart,
-                        AddedDate = DateTime.Now
+                        CreatedDate = DateTime.Now
                     };
                     _context.OrderedGames.Add(game);
                     await _context.SaveChangesAsync();
@@ -91,7 +91,7 @@ namespace GameShop.Application.Catalog.Carts
                 {
                     GameID = cartCreateRequest.GameID,
                     Cart = newcart,
-                    AddedDate = DateTime.Now
+                    CreatedDate = DateTime.Now
                 };
                 _context.OrderedGames.Add(newgame);
                 await _context.SaveChangesAsync();
@@ -101,7 +101,7 @@ namespace GameShop.Application.Catalog.Carts
 
         public async Task<ApiResult<bool>> DeleteItem(string UserID, OrderItemDelete orderItemDelete)
         {
-            var orderitem = await _context.OrderedGames.FirstOrDefaultAsync(x => x.Cart.UserID.ToString() == UserID && x.GameID == orderItemDelete.GameID);
+            var orderitem = await _context.OrderedGames.FirstOrDefaultAsync(x => x.Cart.UserID.ToString() == UserID && x.GameID == orderItemDelete.Id);
             if (orderitem == null)
             {
                 return new ApiErrorResult<bool>("Không tìm thấy game");
@@ -114,17 +114,17 @@ namespace GameShop.Application.Catalog.Carts
             }
         }
 
-        public async Task<ApiResult<List<OrderItemResponse>>> GetCart(string UserID)
+        public async Task<ApiResult<List<OrderItemResponse>>> GetCart(string userId)
         {
-            var getCart = await _context.OrderedGames.Where(x => x.Cart.UserID.ToString() == UserID && x.Cart.Status.Equals((Status)1))
+            var getCart = await _context.OrderedGames.Where(x => x.Cart.UserID.ToString() == userId && x.Cart.Status.Equals((Status)1))
                 .Select(x => new OrderItemResponse()
                 {
-                    GameId = x.GameID,
+                    Id = x.GameID,
                     Name = x.Game.GameName,
                     Price = x.Game.Price,
                     Discount = x.Game.Discount,
                     ImageList = new List<string>(),
-                    AddedDate = x.AddedDate,
+                    AddedDate = x.CreatedDate,
                     GenreName = new List<string>(),
                     GenreIds = x.Game.GameInGenres.Select(y => y.GenreID).ToList(),
                 }).ToListAsync();
@@ -134,14 +134,14 @@ namespace GameShop.Application.Catalog.Carts
             {
                 foreach (var genre in item.GenreIds)
                 {
-                    var name = genres.Where(x => x.GenreID == genre).Select(y => y.GenreName).FirstOrDefault();
+                    var name = genres.Where(x => x.Id == genre).Select(y => y.GenreName).FirstOrDefault();
                     item.GenreName.Add(name);
                 }
             }
             var thumbnailimage = _context.GameImages.AsQueryable();
             foreach (var item in getCart)
             {
-                var listgame = thumbnailimage.Where(x => x.GameID == item.GameId).Select(y => y.ImagePath).ToList();
+                var listgame = thumbnailimage.Where(x => x.GameID == item.Id).Select(y => y.ImagePath).ToList();
                 item.ImageList = listgame;
             }
 

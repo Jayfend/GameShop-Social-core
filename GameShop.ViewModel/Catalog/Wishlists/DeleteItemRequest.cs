@@ -6,6 +6,6 @@ namespace GameShop.ViewModels.Catalog.Wishlists
 {
     public class DeleteItemRequest
     {
-        public int GameID { get; set; }
+        public Guid GameID { get; set; }
     }
 }

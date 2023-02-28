@@ -4,6 +4,7 @@ using GameShop.ViewModels.Catalog.Games;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Threading.Tasks;
 
 namespace GameShop.Controllers
@@ -21,7 +22,7 @@ namespace GameShop.Controllers
         }
 
         [HttpPost("UserID")]
-        public async Task<IActionResult> Checkout(string UserID)
+        public async Task<IActionResult> Checkout(Guid UserID)
         {
             var result = await _checkoutService.CheckoutGame(UserID);
             if (!result.IsSuccess)
@@ -32,7 +33,7 @@ namespace GameShop.Controllers
         }
 
         [HttpGet("CheckoutID")]
-        public async Task<IActionResult> GetBill(int CheckoutID)
+        public async Task<IActionResult> GetBill(Guid CheckoutID)
         {
             var result = await _checkoutService.GetBill(CheckoutID);
             if (!result.IsSuccess)
@@ -60,7 +61,7 @@ namespace GameShop.Controllers
         }
 
         [HttpGet("paging/{UserID}")]
-        public async Task<IActionResult> GetAllPaging(string UserID, [FromQuery] GetManageGamePagingRequest request)
+        public async Task<IActionResult> GetAllPaging(Guid UserID, [FromQuery] GetManageGamePagingRequest request)
         {
             var games = await _checkoutService.GetPurchasedGames(UserID, request);
             if (games == null)

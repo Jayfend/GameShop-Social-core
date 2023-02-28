@@ -7,7 +7,6 @@ namespace GameShop.Data.Entities
 {
     public class Game : BaseEntity
     {
-        public int GameID { get; set; }
         public string GameName { get; set; }
         public Decimal Price { get; set; }
         public int Discount { get; set; }

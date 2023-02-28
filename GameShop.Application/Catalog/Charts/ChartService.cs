@@ -35,7 +35,7 @@ namespace GameShop.Application.Catalog.Charts
             var listGames = await _context.Games.Select(x => new GameBuyCountModel
             {
                 Name = x.GameName,
-                GameID = x.GameID,
+                Id = x.Id,
                 BuyCount = 0,
                 Total = 0
             }).ToListAsync();
@@ -57,7 +57,7 @@ namespace GameShop.Application.Catalog.Charts
                 foreach (var soldgame in listSoldGame)
                 {
                     decimal totalprice = 0;
-                    if (game.GameID == soldgame.GameID)
+                    if (game.Id == soldgame.GameID)
                     {
                         game.BuyCount++;
                         totalprice = totalprice + (soldgame.Price - (soldgame.Price * soldgame.Discount / 100));
@@ -83,7 +83,7 @@ namespace GameShop.Application.Catalog.Charts
             var listGames = await _context.Games.Select(x => new GameBuyCountModel
             {
                 Name = x.GameName,
-                GameID = x.GameID,
+                Id = x.Id,
                 BuyCount = 0,
                 Total = 0
             }).ToListAsync();
@@ -105,7 +105,7 @@ namespace GameShop.Application.Catalog.Charts
                 foreach (var soldgame in listSoldGame)
                 {
                     decimal totalprice = 0;
-                    if (game.GameID == soldgame.GameID)
+                    if (game.Id == soldgame.GameID)
                     {
                         game.BuyCount++;
                         totalprice = totalprice + (soldgame.Price - (soldgame.Price * soldgame.Discount / 100));
@@ -121,7 +121,7 @@ namespace GameShop.Application.Catalog.Charts
             var listGames = await _context.Games.Select(x => new GameBuyCountModel
             {
                 Name = x.GameName,
-                GameID = x.GameID,
+                Id = x.Id,
                 BuyCount = 0,
                 Total = 0
             }).ToListAsync();
@@ -131,7 +131,7 @@ namespace GameShop.Application.Catalog.Charts
                 foreach (var soldgame in soldgames)
                 {
                     decimal totalprice = 0;
-                    if (game.GameID == soldgame.GameID)
+                    if (game.Id == soldgame.GameID)
                     {
                         game.BuyCount++;
                         totalprice = totalprice + (soldgame.Price - (soldgame.Price * soldgame.Discount / 100));

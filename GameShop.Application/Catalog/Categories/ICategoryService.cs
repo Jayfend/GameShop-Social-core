@@ -10,7 +10,7 @@ namespace GameShop.Application.Catalog.Categories
 {
     public interface ICategoryService
     {
-        Task<CategoryViewModel> GetById(int id);
+        Task<CategoryViewModel> GetById(Guid id);
 
         Task<List<CategoryViewModel>> GetAll();
 

@@ -43,7 +43,7 @@ namespace GameShop.Application.Catalog.Categories
 
         public async Task<ApiResult<bool>> EditCategory(EditCategoryRequest request)
         {
-            var genre = await _context.Genres.FirstOrDefaultAsync(x => x.GenreID == request.GenreID);
+            var genre = await _context.Genres.FirstOrDefaultAsync(x => x.Id == request.GenreID);
             if (genre == null)
             {
                 return new ApiErrorResult<bool>("Không tìm thấy thể loại");
@@ -61,21 +61,21 @@ namespace GameShop.Application.Catalog.Categories
         {
             var query = await _context.Genres.Select(x => new CategoryViewModel()
             {
-                Id = x.GenreID,
+                Id = x.Id,
                 Name = x.GenreName,
             }).ToListAsync();
             return query;
         }
 
-        public async Task<CategoryViewModel> GetById(int id)
+        public async Task<CategoryViewModel> GetById(Guid id)
         {
-            var query = await _context.Genres.Where(x => x.GenreID == id).FirstOrDefaultAsync();
+            var query = await _context.Genres.Where(x => x.Id == id).FirstOrDefaultAsync();
             if (query != null)
             {
                 CategoryViewModel genre = new CategoryViewModel()
                 {
                     Name = query.GenreName,
-                    Id = query.GenreID
+                    Id = query.Id
                 };
                 return genre;
             }

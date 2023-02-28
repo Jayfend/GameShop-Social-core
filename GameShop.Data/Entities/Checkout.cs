@@ -4,11 +4,10 @@ using System.Text;
 
 namespace GameShop.Data.Entities
 {
-    public class Checkout
+    public class Checkout : BaseEntity
     {
-        public int ID { get; set; }
         public Cart Cart { get; set; }
-        public int CartID { get; set; }
+        public Guid CartID { get; set; }
         public Decimal TotalPrice { get; set; }
         public DateTime Purchasedate { get; set; }
         public string Username { get; set; }

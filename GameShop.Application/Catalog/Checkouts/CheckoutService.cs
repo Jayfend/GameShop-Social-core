@@ -29,21 +29,21 @@ namespace GameShop.Application.Catalog.Checkouts
             _signInManager = signInManager;
         }
 
-        public async Task<ApiResult<int>> CheckoutGame(string UserID)
+        public async Task<ApiResult<Guid>> CheckoutGame(Guid UserID)
         {
-            var user = await _userManager.FindByIdAsync(UserID);
+            var user = await _userManager.FindByIdAsync(UserID.ToString());
             Decimal total = 0;
-            var getCart = await _context.Carts.FirstOrDefaultAsync(x => x.UserID.ToString() == UserID && x.Status.Equals((Status)1));
+            var getCart = await _context.Carts.FirstOrDefaultAsync(x => x.UserID == UserID && x.Status.Equals((Status)1));
             if (getCart == null)
             {
-                return new ApiErrorResult<int>("Không tìm thấy giỏ hàng");
+                return new ApiErrorResult<Guid>("Không tìm thấy giỏ hàng");
             }
             else
             {
                 var gamelist = new List<Game>();
                 try
                 {
-                    gamelist = await _context.OrderedGames.Where(x => x.CartID == getCart.CartID).Select(y => y.Game).ToListAsync();
+                    gamelist = await _context.OrderedGames.Where(x => x.CartID == getCart.Id).Select(y => y.Game).ToListAsync();
                 }
                 catch (Exception ex)
                 {
@@ -62,25 +62,25 @@ namespace GameShop.Application.Catalog.Checkouts
                 //_context.Checkouts.Add(newCheckout);
                 foreach (var item in gamelist)
                 {
-                    var image = _context.GameImages.Where(x => x.GameID == item.GameID).Select(x => x.ImagePath).FirstOrDefault();
+                    var image = _context.GameImages.Where(x => x.GameID == item.Id).Select(x => x.ImagePath).FirstOrDefault();
                     var soldgame = new SoldGame()
                     {
-                        GameID = item.GameID,
+                        GameID = item.Id,
                         GameName = item.GameName,
                         Discount = item.Discount,
                         Price = item.Price,
                         ImagePath = image,
                         Checkout = newCheckout,
                         GameFile = item.FilePath,
-                        PurcharsedDate = newCheckout.Purchasedate,
+                        CreatedDate = newCheckout.Purchasedate,
                     };
                     await _context.SoldGames.AddAsync(soldgame);
                 }
 
-                var listgame = await _context.OrderedGames.Where(x => x.CartID == getCart.CartID).ToListAsync();
+                var listgame = await _context.OrderedGames.Where(x => x.CartID == getCart.Id).ToListAsync();
                 foreach (var game in listgame)
                 {
-                    var wishedgames = await _context.WishesGames.FirstOrDefaultAsync(x => x.GameID == game.GameID && x.Wishlist.UserID.ToString() == UserID);
+                    var wishedgames = await _context.WishesGames.FirstOrDefaultAsync(x => x.GameID == game.GameID && x.Wishlist.UserID== UserID);
                     if (wishedgames != null)
                     {
                         _context.WishesGames.Remove(wishedgames);
@@ -91,7 +91,7 @@ namespace GameShop.Application.Catalog.Checkouts
 
                 await _context.SaveChangesAsync();
 
-                return new ApiSuccessResult<int>(newCheckout.ID);
+                return new ApiSuccessResult<Guid>(newCheckout.Id);
             }
         }
 
@@ -106,7 +106,7 @@ namespace GameShop.Application.Catalog.Checkouts
 
                 foreach (var checkout in checkouts)
                 {
-                    var bill = await _context.Checkouts.Include(x => x.SoldGames).FirstOrDefaultAsync(x => x.ID == checkout.ID);
+                    var bill = await _context.Checkouts.Include(x => x.SoldGames).FirstOrDefaultAsync(x => x.Id == checkout.Id);
                     if (bill != null)
                     {
                         newbill = new CheckoutViewModel()
@@ -130,11 +130,11 @@ namespace GameShop.Application.Catalog.Checkouts
                         {
                             var soldgame = new GameViewModel()
                             {
-                                GameID = game.GameID,
+                                Id = game.GameID,
                                 Name = game.GameName,
                                 Price = game.Price,
                                 Discount = game.Discount,
-                                CreatedDate = game.PurcharsedDate
+                                CreatedDate = game.CreatedDate
                             };
                             soldgame.ListImage.Add(game.ImagePath);
                             newbill.Listgame.Add(soldgame);
@@ -152,9 +152,9 @@ namespace GameShop.Application.Catalog.Checkouts
             return new ApiSuccessResult<List<CheckoutViewModel>>(listbill);
         }
 
-        public async Task<ApiResult<CheckoutViewModel>> GetBill(int checkoutID)
+        public async Task<ApiResult<CheckoutViewModel>> GetBill(Guid checkoutID)
         {
-            var bill = await _context.Checkouts.Include(x => x.SoldGames).FirstOrDefaultAsync(x => x.ID == checkoutID);
+            var bill = await _context.Checkouts.Include(x => x.SoldGames).FirstOrDefaultAsync(x => x.Id == checkoutID);
             if (bill != null)
             {
                 var newbill = new CheckoutViewModel()
@@ -178,11 +178,11 @@ namespace GameShop.Application.Catalog.Checkouts
                 {
                     var soldgame = new GameViewModel()
                     {
-                        GameID = game.GameID,
+                        Id = game.GameID,
                         Name = game.GameName,
                         Price = game.Price,
                         Discount = game.Discount,
-                        CreatedDate = game.PurcharsedDate
+                        CreatedDate = game.CreatedDate
                     };
                     soldgame.ListImage.Add(game.ImagePath);
                     newbill.Listgame.Add(soldgame);
@@ -196,10 +196,10 @@ namespace GameShop.Application.Catalog.Checkouts
             }
         }
 
-        public async Task<PagedResult<GameViewModel>> GetPurchasedGames(string UserID, GetManageGamePagingRequest request)
+        public async Task<PagedResult<GameViewModel>> GetPurchasedGames(Guid UserID, GetManageGamePagingRequest request)
         {
             var query = _context.Checkouts
-                .Where(x => x.Cart.UserID.ToString() == UserID).SelectMany(x => x.SoldGames).AsQueryable();
+                .Where(x => x.Cart.UserID == UserID).SelectMany(x => x.SoldGames).AsQueryable();
             if (!query.Any())
             {
                 return new PagedResult<GameViewModel>()
@@ -229,13 +229,13 @@ namespace GameShop.Application.Catalog.Checkouts
                     .Take(request.PageSize)
                     .Select(x => new GameViewModel()
                     {
-                        GameID = x.GameID,
+                        Id = x.GameID,
                         Name = x.GameName,
                         Price = x.Price,
                         Discount = x.Discount,
                         ListImage = new List<string>() { x.ImagePath },
                         FileGame = x.GameFile,
-                        CreatedDate = x.PurcharsedDate
+                        CreatedDate = x.CreatedDate
                     }).ToListAsync();
                 //var genres = _context.Genres.AsQueryable();
                 //foreach (var item in data)

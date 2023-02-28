@@ -4,13 +4,12 @@ using System.Text;
 
 namespace GameShop.Data.Entities
 {
-    public class WishesGame
+    public class WishesGame : BaseEntity
     {
-        public int ID { get; set; }
+
         public Game Game { get; set; }
         public Wishlist Wishlist { get; set; }
-        public int WishID { get; set; }
-        public int GameID { get; set; }
-        public DateTime AddedDate { get; set; }
+        public Guid WishID { get; set; }
+        public Guid GameID { get; set; }
     }
 }

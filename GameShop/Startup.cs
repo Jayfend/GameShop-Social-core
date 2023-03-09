@@ -57,6 +57,8 @@ namespace GameShop
             services.AddTransient<ICheckoutService, CheckoutService>();
             services.AddTransient<IContactService, ContactService>();
             services.AddTransient<IChartService, ChartService>();
+            services.AddSignalR();
+            services.AddSingleton<IDictionary<string, AppUser>>(opts => new Dictionary<string, AppUser>());
             //services.AddTransient<IValidator<LoginRequest>, LoginRequestValidator>();
             services.AddControllers()
              .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<LoginRequestValidator>());

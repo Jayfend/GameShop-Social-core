@@ -19,5 +19,6 @@ namespace GameShop.Data.Entities
         public UserThumbnail UserThumbnail { get; set; }
         public bool isConfirmed { get; set; }
         public string ConfirmCode { get; set; }
+        public string Room { get; set; }
     }
 }

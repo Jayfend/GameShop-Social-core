@@ -7,7 +7,6 @@ namespace GameShop.Data.Entities
 {
     public class BaseEntity
     {   public Guid Id { get; set; }
-        public int BaseEntityID { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime UpdatedDate { get; set; }
         public Status Status { get; set; }

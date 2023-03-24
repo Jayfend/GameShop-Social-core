@@ -1,8 +1,5 @@
-﻿using GameShop.Application.Catalog.Carts;
-using GameShop.Application.Catalog.Wishlists;
-using GameShop.ViewModels.Catalog.Carts;
+﻿using GameShop.Application.Services.Wishlists;
 using GameShop.ViewModels.Catalog.Wishlists;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;

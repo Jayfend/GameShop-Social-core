@@ -1,4 +1,4 @@
-﻿using GameShop.Application.Catalog.Carts;
+﻿using GameShop.Application.Services.Carts;
 using GameShop.Application.System.Users;
 using GameShop.ViewModels.Catalog.Carts;
 using Microsoft.AspNetCore.Authorization;

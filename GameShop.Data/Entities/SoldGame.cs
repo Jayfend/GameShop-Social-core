@@ -11,7 +11,7 @@ namespace GameShop.Data.Entities
         public Decimal Price { get; set; }
         public int Discount { get; set; }
         public Checkout Checkout { get; set; }
-        public int CheckoutID { get; set; }
+        public Guid CheckoutID { get; set; }
         public string ImagePath { get; set; }
         public string GameFile { get; set; }
     }

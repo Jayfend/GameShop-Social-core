@@ -11,14 +11,12 @@ namespace GameShop.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<Comment> builder)
         {
-            builder.ToTable("Checkouts");
+            builder.ToTable("Comments");
             builder.HasKey(x => x.Id);
-            builder.HasOne(x => x.Cart)
-               .WithOne(x => x.Checkout)
-               .HasForeignKey<Checkout>(x => x.CartID);
-            builder.Property(x => x.Purchasedate).IsRequired();
-            builder.Property(x => x.TotalPrice).IsRequired();
-            builder.Property(x => x.Username).IsRequired();
+            builder.HasOne(x => x.AppUser).WithMany(x => x.Comments).HasForeignKey(x => x.CreatorId);
+            builder.Property(x => x.CreatedDate).IsRequired();
+            builder.Property(x => x.UpdatedDate).IsRequired();
+            builder.Property(x => x.Content).HasMaxLength(1000);
         }
     }
 }

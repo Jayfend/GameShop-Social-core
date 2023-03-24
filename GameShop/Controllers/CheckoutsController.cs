@@ -1,8 +1,6 @@
-﻿using GameShop.Application.Catalog.Checkouts;
-using GameShop.ViewModels.Catalog.Carts;
+﻿using GameShop.Application.Services.Checkouts;
 using GameShop.ViewModels.Catalog.Games;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;

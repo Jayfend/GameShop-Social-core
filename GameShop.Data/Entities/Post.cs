@@ -6,10 +6,12 @@ namespace GameShop.Data.Entities
 {
     public class Post : BaseEntity
     {
-        public Guid UserId  { get; set; }
         public string Content { get; set; }
+        public string ImagePath {get; set; }
         public List<Comment> Comments { get; set; } 
         public List<Like> Likes { get; set; }
         public AppUser AppUser { get; set; }
+        public Guid CreatorId { get; set; }
+        
     }
 }

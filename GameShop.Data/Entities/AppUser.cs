@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace GameShop.Data.Entities
 {
@@ -14,6 +13,9 @@ namespace GameShop.Data.Entities
         public DateTime Dob { get; set; }
 
         public List<Cart> Carts { get; set; }
+        public List<Post> Posts { get; set; }
+        public List<Comment> Comments { get; set; }
+        public List<Like> Likes { get; set; }
         public Wishlist Wishlist { get; set; }
         public UserAvatar UserAvatar { get; set; }
         public UserThumbnail UserThumbnail { get; set; }

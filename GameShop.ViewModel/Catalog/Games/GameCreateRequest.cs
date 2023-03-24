@@ -14,7 +14,7 @@ namespace GameShop.ViewModels.Catalog.Games
         public string Description { get; set; }
         public string Gameplay { get; set; }
         public Guid Genre { get; set; }
-        public int Status { get; set; }
+        public bool Status { get; set; }
         public string Publisher { get; set; }
         public IFormFile ThumbnailImage { get; set; }
         public IFormFile FileGame { get; set; }

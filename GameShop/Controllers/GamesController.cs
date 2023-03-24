@@ -1,4 +1,4 @@
-﻿using GameShop.Application.Catalog.Games;
+﻿using GameShop.Application.Services.Games;
 using GameShop.ViewModels.Catalog.GameImages;
 using GameShop.ViewModels.Catalog.Games;
 using GameShop.ViewModels.Catalog.UserImages;

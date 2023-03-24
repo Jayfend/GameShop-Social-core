@@ -1,13 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace GameShop.Data.Entities
 {
     public class Like : BaseEntity
     {
-        public Guid UserId { get; set; }
         public bool IsLiked { get; set; }
         public AppUser AppUser { get; set; }
+        public Guid CreatorId { get; set; }
+        public Post Post { get; set; }
+        public Guid PostId { get; set; }
     }
 }

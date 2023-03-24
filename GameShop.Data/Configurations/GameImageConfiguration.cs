@@ -14,7 +14,6 @@ namespace GameShop.Data.Configurations
         {
             builder.ToTable("GameImages");
             builder.HasKey(x => x.Id);
-            builder.Property(x => x.Id).UseIdentityColumn();
             builder.HasOne(x => x.Game).WithMany(x => x.GameImages).HasForeignKey(x => x.GameID);
             builder.Property(x => x.ImagePath).IsRequired();
             builder.Property(x => x.Caption).HasMaxLength(200).IsRequired();

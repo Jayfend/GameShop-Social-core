@@ -6,7 +6,11 @@ namespace GameShop.Data.Entities
 {
     public class Comment : BaseEntity
     {
-        public Guid UserId { get; set; }
+        public AppUser AppUser { get; set; }
+        public Guid CreatorId { get; set; }
+        public string Content { get; set; }
+        public Post Post { get; set; }
+        public Guid PostId { get; set; }
 
 
     }

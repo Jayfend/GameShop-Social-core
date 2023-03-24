@@ -1,4 +1,4 @@
-﻿using GameShop.Application.Catalog.Categories;
+﻿using GameShop.Application.Services.Categories;
 using GameShop.ViewModels.Catalog.Categories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;

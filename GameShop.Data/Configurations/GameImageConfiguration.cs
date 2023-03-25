@@ -13,8 +13,7 @@ namespace GameShop.Data.Configurations
         public void Configure(EntityTypeBuilder<GameImage> builder)
         {
             builder.ToTable("GameImages");
-            builder.HasKey(x => x.ImageID);
-            builder.Property(x => x.ImageID).UseIdentityColumn();
+            builder.HasKey(x => x.Id);
             builder.HasOne(x => x.Game).WithMany(x => x.GameImages).HasForeignKey(x => x.GameID);
             builder.Property(x => x.ImagePath).IsRequired();
             builder.Property(x => x.Caption).HasMaxLength(200).IsRequired();

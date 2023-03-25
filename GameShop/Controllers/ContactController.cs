@@ -1,4 +1,4 @@
-﻿using GameShop.Application.Catalog.Contacts;
+﻿using GameShop.Application.Services.Contacts;
 using GameShop.ViewModels.Catalog.Contacts;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

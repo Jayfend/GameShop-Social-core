@@ -33,7 +33,7 @@ namespace GameShop.AdminApp.Services
             _httpClientFactory = httpClientFactory;
         }
 
-        public async Task<ApiResult<bool>> CategoryAssign(int id, CategoryAssignRequest request)
+        public async Task<ApiResult<bool>> CategoryAssign(Guid id, CategoryAssignRequest request)
         {
             var client = _httpClientFactory.CreateClient();
             client.BaseAddress = new Uri(_configuration["BaseAddress"]);
@@ -153,7 +153,7 @@ namespace GameShop.AdminApp.Services
             return response.IsSuccessStatusCode;
         }
 
-        public async Task<GameViewModel> GetById(int id)
+        public async Task<GameViewModel> GetById(Guid id)
         {
             var data = await GetAsync<GameViewModel>($"/api/games/{id}");
 
@@ -230,7 +230,7 @@ namespace GameShop.AdminApp.Services
             }
             requestContent.Add(new StringContent(request.Status.ToString()), "status");
 
-            var response = await client.PutAsync($"/api/games/" + request.GameID, requestContent);
+            var response = await client.PutAsync($"/api/games/" + request.Id, requestContent);
             return response.IsSuccessStatusCode;
         }
     }

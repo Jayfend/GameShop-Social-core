@@ -5,6 +5,6 @@ using System.Text;
 namespace GameShop.ViewModels.Catalog.Carts
 {
     public class CartCreateRequest
-    {   public int GameID { get; set; }
+    {   public Guid GameID { get; set; }
     }
 }

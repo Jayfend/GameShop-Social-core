@@ -9,10 +9,10 @@ namespace GameShop.Data.Configurations
 {
     public class CheckoutConfiguration : IEntityTypeConfiguration<Checkout>
     {
-        public void Configure(EntityTypeBuilder<Checkout> builder)
+        public void Configure(EntityTypeBuilder<Checkout> builder) 
         {
             builder.ToTable("Checkouts");
-            builder.HasKey(x => x.ID);
+            builder.HasKey(x => x.Id);
             builder.HasOne(x => x.Cart)
                .WithOne(x => x.Checkout)
                .HasForeignKey<Checkout>(x => x.CartID);

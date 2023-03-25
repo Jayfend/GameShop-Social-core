@@ -12,7 +12,7 @@ namespace GameShop.Data.Configurations
         public void Configure(EntityTypeBuilder<Game> builder)
         {
             builder.ToTable("Games");
-            builder.HasKey(x => x.GameID);
+            builder.HasKey(x => x.Id);
             builder.Property(x => x.GameName).IsRequired();
             builder.Property(x => x.Price).IsRequired();
             builder.Property(x => x.Discount).IsRequired().HasDefaultValue(0);

@@ -1,4 +1,4 @@
-﻿using GameShop.Application.Catalog.Charts;
+﻿using GameShop.Application.Services.Charts;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;

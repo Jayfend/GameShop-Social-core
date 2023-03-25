@@ -9,7 +9,7 @@ namespace GameShop.Data.Configurations
         public void Configure(EntityTypeBuilder<Cart> builder)
         {
             builder.ToTable("Carts");
-            builder.HasKey(x => x.CartID);
+            builder.HasKey(x => x.Id);
             builder.HasOne(x => x.AppUser)
                 .WithMany(x => x.Carts)
                 .HasForeignKey(x => x.UserID)

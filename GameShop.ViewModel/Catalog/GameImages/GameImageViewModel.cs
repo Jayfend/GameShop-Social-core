@@ -7,8 +7,8 @@ namespace GameShop.ViewModels.Catalog.GameImages
 {
     public class GameImageViewModel
     {
-        public int GameID { get; set; }
-        public int ImageID { get; set; }
+        public Guid GameID { get; set; }
+        public Guid ImageID { get; set; }
         public string FilePath { get; set; }
         public bool isDefault { get; set; }
         public DateTime CreatedDate { get; set; }

@@ -7,7 +7,7 @@ namespace GameShop.ViewModels.Catalog.Charts
 {
     public class GameBuyCountModel
     {
-        public int GameID { get; set; }
+        public Guid Id { get; set; }
         public string Name { get; set; }
         public int BuyCount { get; set; }
         public Decimal Total { get; set; }

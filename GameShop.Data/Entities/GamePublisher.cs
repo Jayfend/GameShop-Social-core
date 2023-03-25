@@ -4,9 +4,9 @@ using System.Text;
 
 namespace GameShop.Data.Entities
 {
-    public class GamePublisher
+    public class GamePublisher : BaseEntity
     {
-        public int GPubID { get; set; }
+ 
         
     }
 

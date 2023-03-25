@@ -1,9 +1,7 @@
-﻿using GameShop.Application.Catalog.Carts;
-using GameShop.Application.Catalog.Wishlists;
-using GameShop.ViewModels.Catalog.Carts;
+﻿using GameShop.Application.Services.Wishlists;
 using GameShop.ViewModels.Catalog.Wishlists;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Threading.Tasks;
 
 namespace GameShop.Controllers
@@ -20,7 +18,7 @@ namespace GameShop.Controllers
         }
 
         [HttpPost("UserID")]
-        public async Task<IActionResult> AddWishlist(string UserID, AddWishlistRequest addWishlistRequest)
+        public async Task<IActionResult> AddWishlist(Guid UserID, AddWishlistRequest addWishlistRequest)
         {
             if (!ModelState.IsValid)
             {
@@ -35,7 +33,7 @@ namespace GameShop.Controllers
         }
 
         [HttpGet("UserID")]
-        public async Task<IActionResult> GetWishlist(string UserID)
+        public async Task<IActionResult> GetWishlist(Guid UserID)
         {
             var result = await _wishlistService.GetWishlist(UserID);
             if (!result.IsSuccess)
@@ -49,7 +47,7 @@ namespace GameShop.Controllers
         }
 
         [HttpDelete("UserID")]
-        public async Task<IActionResult> DeleteItem(string UserID, [FromBody] DeleteItemRequest deleteItemRequest)
+        public async Task<IActionResult> DeleteItem(Guid UserID, [FromBody] DeleteItemRequest deleteItemRequest)
         {
             if (!ModelState.IsValid)
             {

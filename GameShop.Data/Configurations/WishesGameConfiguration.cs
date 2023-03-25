@@ -12,7 +12,7 @@ namespace GameShop.Data.Configurations
         public void Configure(EntityTypeBuilder<WishesGame> builder)
         {
             builder.ToTable("WishesGames");
-            builder.HasKey(x => x.Id);
+            builder.HasKey(x => x.ID);
             builder.HasOne(x => x.Wishlist).WithMany(x => x.WishesGame).HasForeignKey(x => x.WishID);
             builder.HasOne(x => x.Game).WithMany(x => x.WishesGames).HasForeignKey(x => x.GameID);
         }

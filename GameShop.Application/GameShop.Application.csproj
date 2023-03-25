@@ -6,7 +6,6 @@
 
   <ItemGroup>
 	  <FrameworkReference Include="Microsoft.AspNetCore.App" />
-	  <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.0" />
     <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="3.1.27" />
   </ItemGroup>
 
@@ -14,10 +13,6 @@
     <ProjectReference Include="..\GameShop.Data\GameShop.Data.csproj" />
     <ProjectReference Include="..\GameShop.Utilities\GameShop.Utilities.csproj" />
     <ProjectReference Include="..\GameShop.ViewModel\GameShop.ViewModels.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="NewFolder\" />
   </ItemGroup>
 
 </Project>

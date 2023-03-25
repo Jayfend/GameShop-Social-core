@@ -4,8 +4,9 @@ using System.Text;
 
 namespace GameShop.Data.Entities
 {
-    public class UserThumbnail : BaseEntity
+    public class UserThumbnail
     {
+        public int ImageID { get; set; }
         public AppUser AppUser { get; set; }
         public Guid UserID { get; set; }
         public DateTime UpdateDate { get; set; }

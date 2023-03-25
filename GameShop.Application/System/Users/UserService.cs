@@ -247,15 +247,12 @@ namespace GameShop.Application.System.Users
                 //PhoneNumber = request.PhoneNumber,
             };
 
-            var result = await _userManager.CreateAsync(user, request.Password);
-            if (result.Succeeded)
+            using (MailMessage mail = new MailMessage())
             {
-                using (MailMessage mail = new MailMessage())
-                {
-                    mail.From = new MailAddress("gameshop1901@gmail.com");
-                    mail.To.Add(user.Email);
-                    mail.Subject = "Confirm Account";
-                    mail.Body = $@"<html>
+                mail.From = new MailAddress("gameshop1901@gmail.com");
+                mail.To.Add(user.Email);
+                mail.Subject = "Confirm Account";
+                mail.Body = $@"<html>
                       <body>
                       <p>Dear {user.UserName},</p>
                       <p>Thank for joining us,here is your confirm code {user.ConfirmCode}</p>
@@ -263,15 +260,18 @@ namespace GameShop.Application.System.Users
                       </body>
                       </html>
                      ";
-                    mail.IsBodyHtml = true;
+                mail.IsBodyHtml = true;
 
-                    using (SmtpClient smtp = new SmtpClient("smtp.gmail.com", 587))
-                    {
-                        smtp.Credentials = new NetworkCredential("gameshop1901@gmail.com", "yfvcjmebvgggeult");
-                        smtp.EnableSsl = true;
-                        smtp.Send(mail);
-                    }
+                using (SmtpClient smtp = new SmtpClient("smtp.gmail.com", 587))
+                {
+                    smtp.Credentials = new NetworkCredential("gameshop1901@gmail.com", "yfvcjmebvgggeult");
+                    smtp.EnableSsl = true;
+                    smtp.Send(mail);
                 }
+            }
+            var result = await _userManager.CreateAsync(user, request.Password);
+            if (result.Succeeded)
+            {
                 return new ApiSuccessResult<bool>();
             }
             else

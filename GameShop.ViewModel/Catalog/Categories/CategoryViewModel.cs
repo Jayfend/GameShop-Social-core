@@ -6,7 +6,7 @@ namespace GameShop.ViewModels.Catalog.Categories
 {
     public class CategoryViewModel
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
 
         public string Name { get; set; }
 

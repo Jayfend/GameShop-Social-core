@@ -1,9 +1,8 @@
-﻿using GameShop.Application.Services.Categories;
+﻿using GameShop.Application.Catalog.Categories;
 using GameShop.ViewModels.Catalog.Categories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Threading.Tasks;
 
 namespace GameShop.Controllers
@@ -28,7 +27,7 @@ namespace GameShop.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(Guid id)
+        public async Task<IActionResult> GetById(int id)
         {
             var category = await _categoryService.GetById(id);
             return Ok(category);

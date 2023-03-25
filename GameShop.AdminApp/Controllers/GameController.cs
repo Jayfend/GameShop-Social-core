@@ -27,7 +27,7 @@ namespace GameShop.AdminApp.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index(string keyword, Guid? GenreId, int pageIndex = 1, int pageSize = 5)
+        public async Task<IActionResult> Index(string keyword, int? GenreId, int pageIndex = 1, int pageSize = 5)
         {
             var request = new GetManageGamePagingRequest()
             {
@@ -70,7 +70,7 @@ namespace GameShop.AdminApp.Controllers
 
         [HttpPost]
         [Consumes("multipart/form-data")]
-        public async Task<IActionResult> Create([FromForm] GameCreateRequest request, Guid GenreId)
+        public async Task<IActionResult> Create([FromForm] GameCreateRequest request, int GenreId)
         {
             if (!ModelState.IsValid)
                 return View(request);
@@ -88,7 +88,7 @@ namespace GameShop.AdminApp.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> CategoryAssign(Guid id)
+        public async Task<IActionResult> CategoryAssign(int id)
         {
             var roleAssignRequest = await GetCategoryAssignRequest(id);
             return View(roleAssignRequest);
@@ -114,7 +114,7 @@ namespace GameShop.AdminApp.Controllers
             return View(roleAssignRequest);
         }
 
-        private async Task<CategoryAssignRequest> GetCategoryAssignRequest(Guid id)
+        private async Task<CategoryAssignRequest> GetCategoryAssignRequest(int id)
         {
             var productObj = await _gameApiClient.GetById(id);
             var categories = await _categoryApiClient.GetAll();
@@ -182,12 +182,12 @@ namespace GameShop.AdminApp.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Edit(Guid id)
+        public async Task<IActionResult> Edit(int id)
         {
             var game = await _gameApiClient.GetById(id);
             var editVm = new GameEditRequest()
             {
-                Id = game.Id,
+                GameID = game.GameID,
                 Description = game.Description,
                 Name = game.Name,
                 Price = game.Price,
@@ -218,7 +218,7 @@ namespace GameShop.AdminApp.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Details(Guid id)
+        public async Task<IActionResult> Details(int id)
         {
             var result = await _gameApiClient.GetById(id);
             return View(result);

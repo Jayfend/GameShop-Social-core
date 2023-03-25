@@ -1,13 +1,12 @@
 using FluentValidation.AspNetCore;
+using GameShop.Application.Catalog.Carts;
+using GameShop.Application.Catalog.Categories;
+using GameShop.Application.Catalog.Charts;
+using GameShop.Application.Catalog.Checkouts;
+using GameShop.Application.Catalog.Contacts;
+using GameShop.Application.Catalog.Games;
+using GameShop.Application.Catalog.Wishlists;
 using GameShop.Application.Common;
-using GameShop.Application.Services.Carts;
-using GameShop.Application.Services.Categories;
-using GameShop.Application.Services.Charts;
-using GameShop.Application.Services.Checkouts;
-using GameShop.Application.Services.Contacts;
-using GameShop.Application.Services.Games;
-using GameShop.Application.Services.Posts;
-using GameShop.Application.Services.Wishlists;
 using GameShop.Application.System.Roles;
 using GameShop.Application.System.Users;
 using GameShop.Data.EF;
@@ -24,7 +23,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using System;
 using System.Collections.Generic;
 
 namespace GameShop
@@ -59,11 +57,6 @@ namespace GameShop
             services.AddTransient<ICheckoutService, CheckoutService>();
             services.AddTransient<IContactService, ContactService>();
             services.AddTransient<IChartService, ChartService>();
-            services.AddTransient<IPostService, PostService>();
-            services.AddTransient<ISaveFileService, SaveFileService>();
-            services.AddSignalR();
-            services.AddSingleton<IDictionary<string, AppUser>>(opts => new Dictionary<string, AppUser>());
-            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             //services.AddTransient<IValidator<LoginRequest>, LoginRequestValidator>();
             services.AddControllers()
              .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<LoginRequestValidator>());

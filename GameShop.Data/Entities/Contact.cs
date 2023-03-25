@@ -4,8 +4,9 @@ using System.Text;
 
 namespace GameShop.Data.Entities
 {
-    public class Contact : BaseEntity
+    public class Contact
     {
+        public int Id { get; set; }
         public string Email { get; set; }
         public string Titile { get; set; }
         public string Content { get; set; }

@@ -12,7 +12,7 @@ namespace GameShop.Data.Configurations
         public void Configure(EntityTypeBuilder<UserAvatar> builder)
         {
             builder.ToTable("UserAvatar");
-            builder.HasKey(x => x.Id);
+            builder.HasKey(x => x.ImageID);
             builder.Property(x => x.ImagePath).IsRequired();
             builder.HasOne(x => x.AppUser).WithOne(x => x.UserAvatar).HasForeignKey<UserAvatar>(x => x.UserID);
         }

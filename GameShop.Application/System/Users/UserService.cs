@@ -267,7 +267,7 @@ namespace GameShop.Application.System.Users
 
                     using (SmtpClient smtp = new SmtpClient("smtp.gmail.com", 587))
                     {
-                        smtp.Credentials = new NetworkCredential("gameshop1901@gmail.com", "yfvcjmebvgggeult");
+                        smtp.Credentials = new NetworkCredential("gameshop1972@gmail.com", "jrzaapildthctszp");
                         smtp.EnableSsl = true;
                         smtp.Send(mail);
                     }

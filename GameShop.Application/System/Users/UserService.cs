@@ -252,7 +252,7 @@ namespace GameShop.Application.System.Users
             {
                 using (MailMessage mail = new MailMessage())
                 {
-                    mail.From = new MailAddress("gameshop1901@gmail.com");
+                    mail.From = new MailAddress("gameshop1972@gmail.com");
                     mail.To.Add(user.Email);
                     mail.Subject = "Confirm Account";
                     mail.Body = $@"<html>

@@ -474,7 +474,7 @@ namespace GameShop.Application.System.Users
                     mail.IsBodyHtml = true;
                     using (SmtpClient smtp = new SmtpClient("smtp.gmail.com", 587))
                     {
-                        smtp.Credentials = new NetworkCredential("stemgameshop@gmail.com", "tditidglubtzxojy\r\n");
+                        smtp.Credentials = new NetworkCredential("stemgameshop@gmail.com", "tditidglubtzxojy");
                         smtp.EnableSsl = true;
                         smtp.Send(mail);
                     }

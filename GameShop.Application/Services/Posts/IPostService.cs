@@ -1,4 +1,5 @@
-﻿using GameShop.ViewModels.Catalog.Posts;
+﻿using GameShop.ViewModels.Catalog.Likes;
+using GameShop.ViewModels.Catalog.Posts;
 using GameShop.ViewModels.Common;
 using System;
 using System.Collections.Generic;
@@ -14,5 +15,6 @@ namespace GameShop.Application.Services.Posts
         Task<PostUpdateResModel> UpdateAsync(PostUpdateReqModel req);
         Task<PostResModel>GetByIdAsync(Guid id);
         Task<PagedResult<PostResModel>> GetAsync(GetPostPagingRequest req);
+        Task<bool> LikeAsync(LikeReqModel req);
     }
 }

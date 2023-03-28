@@ -6,7 +6,8 @@ using System.Text;
 namespace GameShop.ViewModels.Catalog.Posts
 {
     public class GetPostPagingRequest : PagingRequestBase
-    {
+    {   
+        public Guid UserId { get; set; }
         public string Keyword { get; set; }
         public string UserName { get; set; }
     }

@@ -1,4 +1,5 @@
 ﻿using GameShop.Application.Services.Posts;
+using GameShop.ViewModels.Catalog.Likes;
 using GameShop.ViewModels.Catalog.Posts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -44,9 +45,15 @@ namespace GameShop.Controllers
             return Ok(response);
         }
         [HttpGet]
-        public async Task<IActionResult> GetAsync(GetPostPagingRequest req)
+        public async Task<IActionResult> GetAsync([FromQuery] GetPostPagingRequest req)
         {
             var response = await _postService.GetAsync(req);
+            return Ok(response);
+        }
+        [HttpPost("Like")]
+        public async Task<IActionResult> LikeAsync([FromBody] LikeReqModel req)
+        {
+            var response = await _postService.LikeAsync(req);
             return Ok(response);
         }
     }

@@ -15,8 +15,7 @@ namespace GameShop.ViewModels.Catalog.Posts
         public bool Status { get; set; }
         public string Content { get; set; }
         public string ImagePath { get; set; }
-        public List<CommentDTO> Comments { get; set; }
-        public List<LikeDTO> Likes { get; set; }
+        public bool IsLike { get; set; }
         public Guid CreatorId { get; set; }
     }
 }

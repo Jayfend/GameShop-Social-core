@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using GameShop.Data.Entities;
+using GameShop.ViewModels.Catalog.Likes;
 using GameShop.ViewModels.Catalog.Posts;
 using System;
 using System.Collections.Generic;
@@ -13,6 +14,7 @@ namespace GameShop.Application.Mapper
             CreateMap<Post, PostResModel>();
             CreateMap<Post, PostCreateResModel>();
             CreateMap<Post, PostUpdateResModel>();
+            CreateMap<Like, LikeDTO>();
         }
     }
 }

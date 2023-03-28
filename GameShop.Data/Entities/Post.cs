@@ -12,6 +12,7 @@ namespace GameShop.Data.Entities
         public List<Like> Likes { get; set; }
         public AppUser AppUser { get; set; }
         public Guid CreatorId { get; set; }
+        public string UserName { get; set; }
         
     }
 }

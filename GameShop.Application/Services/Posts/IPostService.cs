@@ -1,4 +1,5 @@
 ﻿using GameShop.ViewModels.Catalog.Posts;
+using GameShop.ViewModels.Common;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -12,5 +13,6 @@ namespace GameShop.Application.Services.Posts
         Task<bool> DeleteAsync(Guid id);
         Task<PostUpdateResModel> UpdateAsync(PostUpdateReqModel req);
         Task<PostResModel>GetByIdAsync(Guid id);
+        Task<PagedResult<PostResModel>> GetAsync(GetPostPagingRequest req);
     }
 }

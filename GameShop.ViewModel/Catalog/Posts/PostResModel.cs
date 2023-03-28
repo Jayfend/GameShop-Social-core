@@ -9,6 +9,7 @@ namespace GameShop.ViewModels.Catalog.Posts
     public class PostResModel
     {
         public Guid Id { get; set; }
+        public string UserName { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime UpdatedDate { get; set; }
         public bool Status { get; set; }

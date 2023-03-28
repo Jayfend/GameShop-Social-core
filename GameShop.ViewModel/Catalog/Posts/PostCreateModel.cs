@@ -13,6 +13,7 @@ namespace GameShop.ViewModels.Catalog.Posts
         public Guid UserId { get; set; }
         public string Content { get; set; }
         public IFormFile Image { get; set; }
+
     }
     public class PostCreateResModel
     {
@@ -25,5 +26,6 @@ namespace GameShop.ViewModels.Catalog.Posts
         public List<CommentDTO> Comments { get; set; }
         public List<LikeDTO> Likes { get; set; }
         public Guid CreatorId { get; set; }
+        public string UserName { get; set; }
     }
 }

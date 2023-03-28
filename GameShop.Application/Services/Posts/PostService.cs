@@ -4,8 +4,11 @@ using GameShop.Data.EF;
 using GameShop.Data.Entities;
 using GameShop.Utilities.Exceptions;
 using GameShop.ViewModels.Catalog.Comments;
+using GameShop.ViewModels.Catalog.Games;
 using GameShop.ViewModels.Catalog.Posts;
+using GameShop.ViewModels.Common;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -19,13 +22,15 @@ namespace GameShop.Application.Services.Posts
 {
     public class PostService : IPostService
     {   private readonly ISaveFileService _saveFileService;
+        private readonly UserManager<AppUser> _userManager;
         private readonly GameShopDbContext _context;
         private readonly IMapper _mapper;
-        public PostService(ISaveFileService saveFileService, GameShopDbContext context, IMapper mapper) 
+        public PostService(ISaveFileService saveFileService, GameShopDbContext context, IMapper mapper, UserManager<AppUser> userManager) 
         {
             _saveFileService = saveFileService;
             _context = context;
             _mapper = mapper;
+            _userManager = userManager;
         }
         public async Task<PostCreateResModel> CreateAsync(PostCreateReqModel req)
         {
@@ -33,6 +38,11 @@ namespace GameShop.Application.Services.Posts
             {
                 throw new GameShopException("yêu cầu không được rỗng");
 
+            }
+            var user = await _userManager.FindByIdAsync(req.UserId.ToString());
+            if(user == null)
+            {
+                throw new GameShopException("Không tìm thấy người dùng");
             }
             var newPost = new Post()
             {
@@ -42,7 +52,8 @@ namespace GameShop.Application.Services.Posts
                 CreatedDate = DateTime.Now,
                 Comments = new List<Comment>(),
                 Likes = new List<Like>(),
-                Status = true
+                Status = true,
+                UserName = user.UserName
                 
             };
             await  _context.Posts.AddAsync(newPost);
@@ -62,6 +73,33 @@ namespace GameShop.Application.Services.Posts
              _context.Posts.Update(post);
              await _context.SaveChangesAsync();
             return true;
+        }
+
+        public async Task<PagedResult<PostResModel>> GetAsync(GetPostPagingRequest req)
+        {
+            var query = _context.Posts.AsQueryable();
+
+            // filter
+            if (!string.IsNullOrEmpty(req.Keyword))
+            {
+                query = query.Where(x => x.Content.Contains(req.Keyword));
+            }
+
+            if (req.UserName != null)
+            {
+                query = query.Where(x => x.UserName == req.UserName);
+            }
+            //paging
+            int totalrow = await query.CountAsync();
+            var result = _mapper.Map<List<Post>, List<PostResModel>>(await query.ToListAsync());
+            var pagedResult = new PagedResult<PostResModel>()
+            {
+                TotalRecords = totalrow,
+                PageIndex = req.PageIndex,
+                PageSize = req.PageSize,
+                Items = result
+            };
+            return pagedResult;
         }
 
         public async Task<PostResModel> GetByIdAsync(Guid id)

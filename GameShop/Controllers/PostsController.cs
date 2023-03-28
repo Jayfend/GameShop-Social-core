@@ -12,21 +12,21 @@ namespace GameShop.Controllers
     [ApiController]
     [Authorize]
     public class PostsController : ControllerBase
-    {       IPostService _postService { get; set; }
+    { IPostService _postService { get; set; }
         public PostsController(IPostService postService)
         {
             _postService = postService;
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateAsync([FromForm]PostCreateReqModel req)
+        public async Task<IActionResult> CreateAsync([FromForm] PostCreateReqModel req)
         {
             var response = await _postService.CreateAsync(req);
-            return  Ok(response);
-            
+            return Ok(response);
+
         }
         [HttpPut]
-        public async Task<IActionResult> UpdateAsync([FromForm]PostUpdateReqModel req)
+        public async Task<IActionResult> UpdateAsync([FromForm] PostUpdateReqModel req)
         {
             var response = await _postService.UpdateAsync(req);
             return Ok(response);
@@ -37,10 +37,16 @@ namespace GameShop.Controllers
             var response = await _postService.DeleteAsync(id);
             return Ok(response);
         }
-        [HttpGet]
+        [HttpGet("detail/{id}")]
         public async Task<IActionResult>GetByIdAsync(Guid id)
         {
             var response = await _postService.GetByIdAsync(id);
+            return Ok(response);
+        }
+        [HttpGet]
+        public async Task<IActionResult> GetAsync(GetPostPagingRequest req)
+        {
+            var response = await _postService.GetAsync(req);
             return Ok(response);
         }
     }

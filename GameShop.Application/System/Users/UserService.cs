@@ -249,7 +249,7 @@ namespace GameShop.Application.System.Users
 
             using (MailMessage mail = new MailMessage())
             {
-                mail.From = new MailAddress("gameshop1901@gmail.com");
+                mail.From = new MailAddress("stemgameshopv2@gmail.com");
                 mail.To.Add(user.Email);
                 mail.Subject = "Confirm Account";
                 mail.Body = $@"<html>
@@ -264,7 +264,7 @@ namespace GameShop.Application.System.Users
 
                 using (SmtpClient smtp = new SmtpClient("smtp.gmail.com", 587))
                 {
-                    smtp.Credentials = new NetworkCredential("gameshop1901@gmail.com", "yfvcjmebvgggeult");
+                    smtp.Credentials = new NetworkCredential("stemgameshopv2@gmail.com", "beggmiysyxnmobzr\r\n");
                     smtp.EnableSsl = true;
                     smtp.Send(mail);
                 }
@@ -460,7 +460,7 @@ namespace GameShop.Application.System.Users
             {
                 using (MailMessage mail = new MailMessage())
                 {
-                    mail.From = new MailAddress("gameshop1901@gmail.com");
+                    mail.From = new MailAddress("stemgameshopv2@gmail.com");
                     mail.To.Add(user.Email);
                     mail.Subject = "Confirm Account";
                     mail.Body = $@"<html>
@@ -474,7 +474,7 @@ namespace GameShop.Application.System.Users
                     mail.IsBodyHtml = true;
                     using (SmtpClient smtp = new SmtpClient("smtp.gmail.com", 587))
                     {
-                        smtp.Credentials = new NetworkCredential("gameshop1901@gmail.com", "yfvcjmebvgggeult");
+                        smtp.Credentials = new NetworkCredential("stemgameshopv2@gmail.com", "beggmiysyxnmobzr");
                         smtp.EnableSsl = true;
                         smtp.Send(mail);
                     }

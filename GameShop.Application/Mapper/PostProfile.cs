@@ -11,10 +11,7 @@ namespace GameShop.Application.Mapper
     public class PostProfile : Profile
     {
         public PostProfile() { 
-            CreateMap<Post, PostResModel>();
-            CreateMap<Post, PostCreateResModel>();
-            CreateMap<Post, PostUpdateResModel>();
-            CreateMap<Like, LikeDTO>();
+          
         }
     }
 }

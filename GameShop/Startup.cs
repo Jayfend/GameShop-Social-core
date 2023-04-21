@@ -6,7 +6,6 @@ using GameShop.Application.Services.Charts;
 using GameShop.Application.Services.Checkouts;
 using GameShop.Application.Services.Contacts;
 using GameShop.Application.Services.Games;
-using GameShop.Application.Services.Posts;
 using GameShop.Application.Services.Wishlists;
 using GameShop.Application.System.Roles;
 using GameShop.Application.System.Users;
@@ -59,7 +58,6 @@ namespace GameShop
             services.AddTransient<ICheckoutService, CheckoutService>();
             services.AddTransient<IContactService, ContactService>();
             services.AddTransient<IChartService, ChartService>();
-            services.AddTransient<IPostService, PostService>();
             services.AddTransient<ISaveFileService, SaveFileService>();
             services.AddSignalR();
             services.AddSingleton<IDictionary<string, AppUser>>(opts => new Dictionary<string, AppUser>());

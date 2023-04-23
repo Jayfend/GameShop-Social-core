@@ -10,8 +10,7 @@ namespace GameShop.ViewModels.Catalog.Comments
         public DateTime CreatedDate { get; set; }
         public DateTime UpdatedDate { get; set; }
         public bool Status { get; set; }
-        public Guid CreatorId { get; set; }
         public string Content { get; set; }
-        public Guid PostId { get; set; }
+        public Guid GameId { get; set; }
     }
 }

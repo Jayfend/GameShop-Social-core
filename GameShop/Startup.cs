@@ -4,6 +4,7 @@ using GameShop.Application.Services.Carts;
 using GameShop.Application.Services.Categories;
 using GameShop.Application.Services.Charts;
 using GameShop.Application.Services.Checkouts;
+using GameShop.Application.Services.Comments;
 using GameShop.Application.Services.Contacts;
 using GameShop.Application.Services.Games;
 using GameShop.Application.Services.Wishlists;
@@ -59,6 +60,7 @@ namespace GameShop
             services.AddTransient<IContactService, ContactService>();
             services.AddTransient<IChartService, ChartService>();
             services.AddTransient<ISaveFileService, SaveFileService>();
+            services.AddTransient<ICommentService, CommentService>();
             services.AddSignalR();
             services.AddSingleton<IDictionary<string, AppUser>>(opts => new Dictionary<string, AppUser>());
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());

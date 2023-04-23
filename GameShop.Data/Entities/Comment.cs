@@ -8,7 +8,7 @@ namespace GameShop.Data.Entities
     {
         public Guid UserId { get; set; }
         public Guid GameId { get; set; }
-        public Guid Content {  get; set; }
+        public string Content {  get; set; }
         public AppUser AppUser { get; set; }
         public Game Game { get; set; }
 

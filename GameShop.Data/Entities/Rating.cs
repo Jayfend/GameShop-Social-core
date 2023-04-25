@@ -4,13 +4,12 @@ using System.Text;
 
 namespace GameShop.Data.Entities
 {
-    public class Comment : BaseEntity
+    public class Rating : BaseEntity
     {
-        public Guid UserId { get; set; }
         public Guid GameId { get; set; }
-        public string Content {  get; set; }
-        public AppUser AppUser { get; set; }
         public Game Game { get; set; }
-
+        public int Point { get; set; }
+        public Guid UserId { get; set; }
+        public AppUser AppUser { get; set; }
     }
 }

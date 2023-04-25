@@ -4,14 +4,16 @@ using GameShop.Data.EF;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace GameShop.Data.Migrations
 {
     [DbContext(typeof(GameShopDbContext))]
-    partial class GameShopDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230413075536_modify database")]
+    partial class modifydatabase
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -55,7 +57,7 @@ namespace GameShop.Data.Migrations
                         new
                         {
                             Id = new Guid("8d04dce2-969a-435d-bba4-df3f325983dc"),
-                            ConcurrencyStamp = "71a0138b-dce1-4c96-bf0a-2a02cdc4dd11",
+                            ConcurrencyStamp = "9e7b4b10-9ecc-4f81-855b-b3a462b1b132",
                             Description = "Administrator role",
                             Name = "admin",
                             NormalizedName = "ADMIN"
@@ -63,7 +65,7 @@ namespace GameShop.Data.Migrations
                         new
                         {
                             Id = new Guid("52503f03-bdea-4bf8-8a1a-d21ae2646483"),
-                            ConcurrencyStamp = "209c7b7c-8f00-4cb6-bbce-9d4b85dec41f",
+                            ConcurrencyStamp = "2b01e6f0-f8c9-492b-8f63-d69e81c53924",
                             Description = "User role",
                             Name = "User",
                             NormalizedName = "USER"
@@ -160,7 +162,7 @@ namespace GameShop.Data.Migrations
                         {
                             Id = new Guid("69bd714f-9576-45ba-b5b7-f00649be00de"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "1a4914c9-5f34-4dab-9c56-c60025d89c12",
+                            ConcurrencyStamp = "4111a9d8-8634-45cc-a693-63fd3e426419",
                             Dob = new DateTime(2001, 7, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "leenguyen1721@gmail.com",
                             EmailConfirmed = true,
@@ -169,7 +171,7 @@ namespace GameShop.Data.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "LEENGUYEN1721@gmail.com",
                             NormalizedUserName = "JAYFEND",
-                            PasswordHash = "AQAAAAEAACcQAAAAED1PSW88JmsghxRvF44YsdVMIOj+xS+VGZy0M+3j6hIdJ50NbPxpp/SPi3ZSJZahDg==",
+                            PasswordHash = "AQAAAAEAACcQAAAAELmoqkS+dbOgBKtOnyXU8iWSIAenJl0MhNdjRP7G9JtyJ46EODvYTFDs/Z54jkWZ6g==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
                             TwoFactorEnabled = false,
@@ -251,8 +253,8 @@ namespace GameShop.Data.Migrations
                     b.Property<Guid?>("AppUserId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Content")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<Guid>("Content")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
@@ -477,7 +479,7 @@ namespace GameShop.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("9124ed1f-5647-4f1d-998c-e3252afb7bee"),
+                            Id = new Guid("484da5f9-5869-4952-8139-f7aeaff36d46"),
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             GenreName = "Action",
                             Status = false,
@@ -485,7 +487,7 @@ namespace GameShop.Data.Migrations
                         },
                         new
                         {
-                            Id = new Guid("9fb5b065-97dc-49b2-bcd6-001af98b1236"),
+                            Id = new Guid("4c0db0ad-0b26-468b-b662-4b7574904401"),
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             GenreName = "Open-World",
                             Status = false,
@@ -493,7 +495,7 @@ namespace GameShop.Data.Migrations
                         },
                         new
                         {
-                            Id = new Guid("19543b51-cd15-4f1f-8cfe-5d4bf2dd4203"),
+                            Id = new Guid("a9b5bca0-2838-427a-92fe-28aeec2aa1e4"),
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             GenreName = "Multiplayer",
                             Status = false,
@@ -501,7 +503,7 @@ namespace GameShop.Data.Migrations
                         },
                         new
                         {
-                            Id = new Guid("7ba0156a-f2c8-4e4f-909d-2d94007ba605"),
+                            Id = new Guid("103c402d-58e0-4f91-aa60-85306b44fe05"),
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             GenreName = "Action RPG",
                             Status = false,
@@ -509,7 +511,7 @@ namespace GameShop.Data.Migrations
                         },
                         new
                         {
-                            Id = new Guid("b3512484-6aa4-4db1-ae74-640ae1be9c9c"),
+                            Id = new Guid("4cbec419-1bbd-4164-b39a-58ac427594b1"),
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             GenreName = "Simulation",
                             Status = false,
@@ -517,7 +519,7 @@ namespace GameShop.Data.Migrations
                         },
                         new
                         {
-                            Id = new Guid("4ee9c55b-3384-4e6d-8689-8e498821795f"),
+                            Id = new Guid("858dd4fa-29d5-4205-aa42-93972c576dad"),
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             GenreName = "Horror",
                             Status = false,
@@ -525,7 +527,7 @@ namespace GameShop.Data.Migrations
                         },
                         new
                         {
-                            Id = new Guid("0da988d5-13a4-4332-820a-7b9f49e05859"),
+                            Id = new Guid("4b5357ea-cff4-4d3c-a062-176d32f0bfc2"),
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             GenreName = "Sports & Racing",
                             Status = false,
@@ -533,7 +535,7 @@ namespace GameShop.Data.Migrations
                         },
                         new
                         {
-                            Id = new Guid("800bbef4-9044-4129-b3a7-ed15cbfc48ed"),
+                            Id = new Guid("ce7e8e75-daf2-406b-bd21-2dafa54af919"),
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             GenreName = "Role-Playing",
                             Status = false,
@@ -541,7 +543,7 @@ namespace GameShop.Data.Migrations
                         },
                         new
                         {
-                            Id = new Guid("c14f62e6-ee7d-4188-8710-3bebea13029b"),
+                            Id = new Guid("90709602-827f-447a-9668-72d75e584e55"),
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             GenreName = "Visual Novel",
                             Status = false,
@@ -787,7 +789,7 @@ namespace GameShop.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("285c2a4a-5349-4b12-9f06-25f620892647"),
+                            Id = new Guid("0a1362c7-a4b5-485a-89d5-62f8abe4a674"),
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             ImagePath = "imgnotfound.jpg",
                             Status = false,
@@ -832,7 +834,7 @@ namespace GameShop.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("19a9746f-8896-4ba9-94a9-b14a8be25d29"),
+                            Id = new Guid("73f581c5-7a53-41ee-be61-56eaf6cd6715"),
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             ImagePath = "imgnotfound.jpg",
                             Status = false,

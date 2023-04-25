@@ -22,8 +22,4 @@
     <ProjectReference Include="..\GameShop.ViewModel\GameShop.ViewModels.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="NewFolder\" />
-  </ItemGroup>
-
 </Project>

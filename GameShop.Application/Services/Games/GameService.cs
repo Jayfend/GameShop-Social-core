@@ -43,6 +43,7 @@ namespace GameShop.Application.Services.Games
                 CreatedDate = DateTime.Now,
                 UpdatedDate = DateTime.Now,
                 Publisher = request.Publisher,
+                RatePoint = 0,
                 Status = request.Status
             };
             var genrelist = from g in _context.Genres select g;

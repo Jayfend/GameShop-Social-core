@@ -21,5 +21,11 @@ namespace GameShop.Controllers
             var response = await _commentService.CreateComment(req);
             return Ok(response);
         }
+        [HttpGet]
+        public async Task<IActionResult> GetAsync([FromQuery] GetCommentRequest req)
+        {
+            var response = await _commentService.GetComment(req);
+            return Ok(response);
+        }
     }
 }

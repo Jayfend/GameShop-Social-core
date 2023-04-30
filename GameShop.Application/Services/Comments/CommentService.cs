@@ -5,6 +5,8 @@ using GameShop.Data.EF;
 using GameShop.Data.Entities;
 using GameShop.Utilities.Exceptions;
 using GameShop.ViewModels.Catalog.Comments;
+using GameShop.ViewModels.Catalog.Games;
+using GameShop.ViewModels.Common;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -72,5 +74,27 @@ namespace GameShop.Application.Services.Comments
 
         }
 
+        public async Task<PagedResult<CommentDTO>> GetComment(GetCommentRequest req)
+        {
+            var game = await _context.Games.Where(x => x.Id ==req.GameId ).FirstOrDefaultAsync();
+            if (game == null)
+            {
+                throw new GameShopException("không tìm thấy game");
+            }
+            var commentList = await _context.Comments.Where(x=>x.GameId == req.GameId).ToListAsync();
+            var totalRow = commentList.Count();
+            var comments = _mapper.Map<List<CommentDTO>>(commentList);
+            comments = comments.Skip((req.PageIndex - 1) * req.PageSize)
+              .Take(req.PageSize).ToList();
+            //select and projection
+            var pagedResult = new PagedResult<CommentDTO>()
+            {
+                TotalRecords = totalRow,
+                PageIndex = req.PageIndex,
+                PageSize = req.PageSize,
+                Items = comments
+            };
+            return pagedResult;
+        }
     }
 }

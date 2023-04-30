@@ -345,7 +345,14 @@ namespace GameShop.Application.Services.Games
                     Soundcard = x.SystemRequirementRecommended.Soundcard
                 }
             }).FirstOrDefaultAsync();
-
+            var ratings = await _context.Rating.Where(x => x.GameId == GameID).Select(x=>x.Point).ToListAsync();
+            int pointRating = 0;
+            foreach(var point in ratings)
+            {
+                pointRating = pointRating + point; 
+            }
+            gameview.RatePoint = pointRating / (ratings.Count());
+            
             var genres = await _context.GameinGenres.Where(x => x.GameId == gameview.Id).ToListAsync();
 
             foreach (var genre in genres)

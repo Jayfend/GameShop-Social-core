@@ -54,10 +54,18 @@ namespace GameShop.Application.Services.Comments
                 Content = req.Content,
                
             };
+            var newRating = new Rating()
+            {
+                Game = game,
+                AppUser = user,
+                Point = req.Point
+            };
+            await _context.Rating.AddAsync(newRating);
             await _context.Comments.AddAsync(newComment);
             await _context.SaveChangesAsync();
            return _mapper.Map<CommentDTO>(newComment);
 
         }
+
     }
 }

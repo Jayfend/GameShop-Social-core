@@ -55,11 +55,11 @@ namespace GameShop.Application.Services.Comments
             {
                 throw new GameShopException("Bạn chưa mua game này");
             }
-            if( await _context.Comments.Where(x=>x.UserId == req.UserId).FirstOrDefaultAsync() != null)
+            if( await _context.Comments.Where(x=>x.UserId == req.UserId && x.GameId == req.GameId).FirstOrDefaultAsync() != null)
             {
                 throw new GameShopException("Bạn đã bình luận rồi");
             }
-            if(await _context.Rating.Where(x=>x.UserId == req.UserId).FirstOrDefaultAsync()!=null)
+            if(await _context.Rating.Where(x=>x.UserId == req.UserId && x.GameId == req.GameId).FirstOrDefaultAsync()!=null)
             {
                 throw new GameShopException("Bạn đã đánh giá rồi");
             }

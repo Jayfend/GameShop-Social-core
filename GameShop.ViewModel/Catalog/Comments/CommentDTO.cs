@@ -12,5 +12,8 @@ namespace GameShop.ViewModels.Catalog.Comments
         public bool Status { get; set; }
         public string Content { get; set; }
         public Guid GameId { get; set; }
+        public Guid UserId { get; set; }
+        public int Rating { get; set; }
+
     }
 }

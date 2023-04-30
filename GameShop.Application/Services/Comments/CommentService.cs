@@ -82,12 +82,25 @@ namespace GameShop.Application.Services.Comments
                 throw new GameShopException("không tìm thấy game");
             }
             var commentList = await _context.Comments.Where(x=>x.GameId == req.GameId).ToListAsync();
+            
             var totalRow = commentList.Count();
-            var comments = _mapper.Map<List<CommentDTO>>(commentList);
-            comments = comments.Skip((req.PageIndex - 1) * req.PageSize)
+            var comments = _mapper.Map<List<CommentDTO>>(commentList);          
+                comments = comments.Skip((req.PageIndex - 1) * req.PageSize)
               .Take(req.PageSize).ToList();
-            //select and projection
-            var pagedResult = new PagedResult<CommentDTO>()
+            foreach ( var comment in comments)
+            {
+                var rating =  await _context.Rating.Where(x=>x.UserId== comment.UserId).FirstOrDefaultAsync();
+                if(rating == null)
+                {
+                    comment.Rating = 0;
+                }
+                else
+                {
+                    comment.Rating = rating.Point;
+                }
+            }
+                //select and projection
+                var pagedResult = new PagedResult<CommentDTO>()
             {
                 TotalRecords = totalRow,
                 PageIndex = req.PageIndex,

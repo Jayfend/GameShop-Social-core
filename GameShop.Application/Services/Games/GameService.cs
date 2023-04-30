@@ -346,13 +346,21 @@ namespace GameShop.Application.Services.Games
                 }
             }).FirstOrDefaultAsync();
             var ratings = await _context.Rating.Where(x => x.GameId == GameID).Select(x=>x.Point).ToListAsync();
-            int pointRating = 0;
-            foreach(var point in ratings)
+            if (ratings.Any())
             {
-                pointRating = pointRating + point; 
+                int pointRating = 0;
+                foreach (var point in ratings)
+                {
+                    pointRating = pointRating + point;
+                }
+                gameview.RatePoint = pointRating / (ratings.Count());
+
             }
-            gameview.RatePoint = pointRating / (ratings.Count());
-            
+            else
+            {
+                gameview.RatePoint = 0;
+            }
+
             var genres = await _context.GameinGenres.Where(x => x.GameId == gameview.Id).ToListAsync();
 
             foreach (var genre in genres)

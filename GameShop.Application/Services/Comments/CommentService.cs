@@ -47,6 +47,11 @@ namespace GameShop.Application.Services.Comments
             {
                 throw new GameShopException("không tìm thấy game");
             }
+            var checkBought = await _context.Checkouts.Where(x => x.Username == user.UserName && x.SoldGames.Any(x => x.GameID == req.GameId)).FirstOrDefaultAsync();
+            if (checkBought == null)
+            {
+                throw new GameShopException("Bạn chưa mua game này");
+            }
             var newComment = new Comment()
             {
                Game = game,

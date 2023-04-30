@@ -9,6 +9,7 @@ using GameShop.ViewModels.Catalog.Games;
 using GameShop.ViewModels.Common;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -54,18 +55,28 @@ namespace GameShop.Application.Services.Comments
             {
                 throw new GameShopException("Bạn chưa mua game này");
             }
+            if( await _context.Comments.Where(x=>x.UserId == req.UserId).FirstOrDefaultAsync() != null)
+            {
+                throw new GameShopException("Bạn đã bình luận rồi");
+            }
+            if(await _context.Rating.Where(x=>x.UserId == req.UserId).FirstOrDefaultAsync()!=null)
+            {
+                throw new GameShopException("Bạn đã đánh giá rồi");
+            }
             var newComment = new Comment()
             {
                Game = game,
                AppUser = user,
                 Content = req.Content,
+                UserId = user.Id
                
             };
             var newRating = new Rating()
             {
                 Game = game,
                 AppUser = user,
-                Point = req.Point
+                Point = req.Point,
+                UserId = user.Id
             };
             await _context.Rating.AddAsync(newRating);
             await _context.Comments.AddAsync(newComment);

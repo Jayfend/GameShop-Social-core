@@ -20,6 +20,8 @@ using Microsoft.Extensions.Options;
 using System.Security.Policy;
 using GameShop.Utilities.Exceptions;
 using Newtonsoft.Json;
+using StackExchange.Redis;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace GameShop.Application.Services.Checkouts
 {
@@ -106,18 +108,20 @@ namespace GameShop.Application.Services.Checkouts
                 _context.Carts.Update(getCart);
 
                 await _context.SaveChangesAsync();
-                foreach(var gameBought in gamelist)
+                
+                foreach (var gameBought in gamelist)
                 { var publisher = await _context.Publishers.Where(x => x.Id == gameBought.PublisherId).FirstOrDefaultAsync();
                     var keys =  await _redisUtil.HashGetAllAsync(string.Format(_redisConfig.DSMKey, publisher.Name, gameBought.GameName));
-                   var keyList = new List<Key>();
-                    Key keyCode = null;
+                   var keyList = new List<Data.Entities.Key>();
+
                     foreach(var key in keys)
                     {
-                        var parsedKey = JsonConvert.DeserializeObject<Key>(key);
+                        var parsedKey = JsonConvert.DeserializeObject<Data.Entities.Key>(key);
                         keyList.Add(parsedKey);
                     }
-                     keyCode = keyList.Where(x => x.GameName == gameBought.GameName && x.Status == true).FirstOrDefault();
-                   if(keyCode != null)
+                     var keyCode = keyList.Where(x => x.GameName == gameBought.GameName && x.Status == true).FirstOrDefault();
+                    keyCode.Status = false;
+                    if (keyCode != null)
                     {
                         using (MailMessage mail = new MailMessage())
                         {
@@ -142,11 +146,13 @@ namespace GameShop.Application.Services.Checkouts
                             }
                         }
                     }
+                    List<HashEntry> entries = new List<HashEntry>();
+                    var hashKey = new HashEntry(keyCode.Id.ToString(), JsonConvert.SerializeObject(keyCode));
+                    entries.Add(hashKey);
+                    await _redisUtil.SetMultiAsync(string.Format(_redisConfig.DSMKey, publisher.Name, gameBought.GameName),entries.ToArray(),null);
 
-
-                    await _redisUtil.RemoveAsync(string.Format(_redisConfig.DSMKey, publisher.Name, gameBought.GameName), keyCode.Id.ToString());
                 }
-               
+              
                 return new ApiSuccessResult<Guid>(newCheckout.Id);
             }
         }

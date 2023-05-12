@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GameShop.Data.Migrations
 {
     [DbContext(typeof(GameShopDbContext))]
-    [Migration("20230311060458_initial")]
-    partial class initial
+    [Migration("20230511141819_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -57,7 +57,7 @@ namespace GameShop.Data.Migrations
                         new
                         {
                             Id = new Guid("8d04dce2-969a-435d-bba4-df3f325983dc"),
-                            ConcurrencyStamp = "7c7b0bd1-1c47-4b7d-a4de-f7545269c774",
+                            ConcurrencyStamp = "8f4b4c3d-3459-4afe-aa79-fa06eae6c1ad",
                             Description = "Administrator role",
                             Name = "admin",
                             NormalizedName = "ADMIN"
@@ -65,7 +65,7 @@ namespace GameShop.Data.Migrations
                         new
                         {
                             Id = new Guid("52503f03-bdea-4bf8-8a1a-d21ae2646483"),
-                            ConcurrencyStamp = "baf52871-11e3-4823-9d55-bca05b9f4c29",
+                            ConcurrencyStamp = "7abddaff-0947-4165-9183-3c5de6b6b2d5",
                             Description = "User role",
                             Name = "User",
                             NormalizedName = "USER"
@@ -162,7 +162,7 @@ namespace GameShop.Data.Migrations
                         {
                             Id = new Guid("69bd714f-9576-45ba-b5b7-f00649be00de"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "4d92d56e-66dd-41ce-ba9f-162098ca8c1d",
+                            ConcurrencyStamp = "b3a2be1d-7afa-46ff-bf29-981875fed64a",
                             Dob = new DateTime(2001, 7, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "leenguyen1721@gmail.com",
                             EmailConfirmed = true,
@@ -171,7 +171,7 @@ namespace GameShop.Data.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "LEENGUYEN1721@gmail.com",
                             NormalizedUserName = "JAYFEND",
-                            PasswordHash = "AQAAAAEAACcQAAAAEBvohTIZaSn+5i4SWafvz1vEJ7rTvEj7zdRhYe7+fCJeYYz1No3UlXrYcu0h3DAgoQ==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEGjEYiil1uWgCFsOZT7T42++rdmAKrbi66LnWxtT6kgz27XS97HzKIa3DC9cF5+rQA==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
                             TwoFactorEnabled = false,
@@ -192,8 +192,8 @@ namespace GameShop.Data.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
+                    b.Property<bool>("Status")
+                        .HasColumnType("bit");
 
                     b.Property<DateTime>("UpdatedDate")
                         .HasColumnType("datetime2");
@@ -223,8 +223,8 @@ namespace GameShop.Data.Migrations
                     b.Property<DateTime>("Purchasedate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
+                    b.Property<bool>("Status")
+                        .HasColumnType("bit");
 
                     b.Property<decimal>("TotalPrice")
                         .HasColumnType("decimal(18,2)");
@@ -259,25 +259,25 @@ namespace GameShop.Data.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("CreatorId")
+                    b.Property<Guid>("GameId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("PostId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
+                    b.Property<bool>("Status")
+                        .HasColumnType("bit");
 
                     b.Property<DateTime>("UpdatedDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
                     b.HasIndex("AppUserId");
 
-                    b.HasIndex("PostId");
+                    b.HasIndex("GameId");
 
-                    b.ToTable("Comment");
+                    b.ToTable("Comments");
                 });
 
             modelBuilder.Entity("GameShop.Data.Entities.Contact", b =>
@@ -298,8 +298,8 @@ namespace GameShop.Data.Migrations
                     b.Property<DateTime>("ReceiveDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
+                    b.Property<bool>("Status")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Titile")
                         .HasColumnType("nvarchar(max)");
@@ -310,32 +310,6 @@ namespace GameShop.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Contacts");
-                });
-
-            modelBuilder.Entity("GameShop.Data.Entities.Friend", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("UpdatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("UserId1")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("UserId2")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Friend");
                 });
 
             modelBuilder.Entity("GameShop.Data.Entities.Game", b =>
@@ -370,16 +344,21 @@ namespace GameShop.Data.Migrations
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<string>("Publisher")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<Guid>("PublisherId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
+                    b.Property<float>("RatePoint")
+                        .HasColumnType("real");
+
+                    b.Property<bool>("Status")
+                        .HasColumnType("bit");
 
                     b.Property<DateTime>("UpdatedDate")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("PublisherId");
 
                     b.ToTable("Games");
                 });
@@ -411,8 +390,8 @@ namespace GameShop.Data.Migrations
                     b.Property<int>("SortOrder")
                         .HasColumnType("int");
 
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
+                    b.Property<bool>("Status")
+                        .HasColumnType("bit");
 
                     b.Property<DateTime>("UpdatedDate")
                         .HasColumnType("datetime2");
@@ -425,26 +404,6 @@ namespace GameShop.Data.Migrations
                     b.HasIndex("GameID");
 
                     b.ToTable("GameImages");
-                });
-
-            modelBuilder.Entity("GameShop.Data.Entities.GamePublisher", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("UpdatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("GamePublisher");
                 });
 
             modelBuilder.Entity("GameShop.Data.Entities.GameinGenre", b =>
@@ -462,8 +421,8 @@ namespace GameShop.Data.Migrations
                     b.Property<Guid>("GenreID")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
+                    b.Property<bool>("Status")
+                        .HasColumnType("bit");
 
                     b.Property<DateTime>("UpdatedDate")
                         .HasColumnType("datetime2");
@@ -489,8 +448,8 @@ namespace GameShop.Data.Migrations
                     b.Property<string>("GenreName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
+                    b.Property<bool>("Status")
+                        .HasColumnType("bit");
 
                     b.Property<DateTime>("UpdatedDate")
                         .HasColumnType("datetime2");
@@ -502,112 +461,105 @@ namespace GameShop.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("be105fd2-42b7-4a4a-8ce0-be4b42203e16"),
+                            Id = new Guid("0899e12e-3339-44d6-bca5-d4b1a87872ae"),
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             GenreName = "Action",
-                            Status = 0,
+                            Status = false,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
-                            Id = new Guid("c286ee77-b976-4acc-832e-2a8b41f7ab8a"),
+                            Id = new Guid("add14cda-951d-427e-ae21-da4d00f2a3e7"),
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             GenreName = "Open-World",
-                            Status = 0,
+                            Status = false,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
-                            Id = new Guid("f7bd7f16-b38f-49f8-a2ba-24161f352743"),
+                            Id = new Guid("02c0f051-07ae-424c-89d1-3f95c47894f1"),
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             GenreName = "Multiplayer",
-                            Status = 0,
+                            Status = false,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
-                            Id = new Guid("e50b2197-570d-4369-a614-c647836df2f2"),
+                            Id = new Guid("4534ad5f-4478-455d-8f5e-bc5e65d7dbb2"),
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             GenreName = "Action RPG",
-                            Status = 0,
+                            Status = false,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
-                            Id = new Guid("4986d39c-4714-42bb-abcc-7ccd6537151d"),
+                            Id = new Guid("e5882604-a0c8-4780-82d8-e11971c71935"),
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             GenreName = "Simulation",
-                            Status = 0,
+                            Status = false,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
-                            Id = new Guid("396f9a7c-6604-40ae-a514-382172b0bdd9"),
+                            Id = new Guid("75134861-cab9-4d44-ac05-c154e8af0fb1"),
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             GenreName = "Horror",
-                            Status = 0,
+                            Status = false,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
-                            Id = new Guid("3585b1dc-4a1c-4a43-89ab-d78eaf0ebce0"),
+                            Id = new Guid("e30fd5f0-9fcb-4422-9060-13bb113d6d55"),
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             GenreName = "Sports & Racing",
-                            Status = 0,
+                            Status = false,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
-                            Id = new Guid("8ab85896-708e-4d26-8261-ebf5d2fd9632"),
+                            Id = new Guid("3c51723a-4312-463a-9196-1bd893482a91"),
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             GenreName = "Role-Playing",
-                            Status = 0,
+                            Status = false,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
-                            Id = new Guid("f0d64fad-12ae-455d-8fff-dddbe4e77076"),
+                            Id = new Guid("9758ba95-8173-4b11-87f7-f96a6f1094a9"),
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             GenreName = "Visual Novel",
-                            Status = 0,
+                            Status = false,
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         });
                 });
 
-            modelBuilder.Entity("GameShop.Data.Entities.Like", b =>
+            modelBuilder.Entity("GameShop.Data.Entities.Key", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("AppUserId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("CreatorId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("GameName")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("IsLiked")
+                    b.Property<string>("KeyCode")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PublisherName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("Status")
                         .HasColumnType("bit");
-
-                    b.Property<Guid>("PostId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
 
                     b.Property<DateTime>("UpdatedDate")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AppUserId");
-
-                    b.HasIndex("PostId");
-
-                    b.ToTable("Like");
+                    b.ToTable("Keys");
                 });
 
             modelBuilder.Entity("GameShop.Data.Entities.OrderedGame", b =>
@@ -625,8 +577,8 @@ namespace GameShop.Data.Migrations
                     b.Property<Guid>("GameID")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
+                    b.Property<bool>("Status")
+                        .HasColumnType("bit");
 
                     b.Property<DateTime>("UpdatedDate")
                         .HasColumnType("datetime2");
@@ -640,7 +592,30 @@ namespace GameShop.Data.Migrations
                     b.ToTable("OrderedGames");
                 });
 
-            modelBuilder.Entity("GameShop.Data.Entities.Post", b =>
+            modelBuilder.Entity("GameShop.Data.Entities.Publisher", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("Status")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("UpdatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Publishers");
+                });
+
+            modelBuilder.Entity("GameShop.Data.Entities.Rating", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -649,20 +624,17 @@ namespace GameShop.Data.Migrations
                     b.Property<Guid?>("AppUserId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Content")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("CreatorId")
+                    b.Property<Guid>("GameId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("ImagePath")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Status")
+                    b.Property<int>("Point")
                         .HasColumnType("int");
+
+                    b.Property<bool>("Status")
+                        .HasColumnType("bit");
 
                     b.Property<DateTime>("UpdatedDate")
                         .HasColumnType("datetime2");
@@ -674,7 +646,9 @@ namespace GameShop.Data.Migrations
 
                     b.HasIndex("AppUserId");
 
-                    b.ToTable("Post");
+                    b.HasIndex("GameId");
+
+                    b.ToTable("Ratings");
                 });
 
             modelBuilder.Entity("GameShop.Data.Entities.SoldGame", b =>
@@ -707,8 +681,8 @@ namespace GameShop.Data.Migrations
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
+                    b.Property<bool>("Status")
+                        .HasColumnType("bit");
 
                     b.Property<DateTime>("UpdatedDate")
                         .HasColumnType("datetime2");
@@ -750,8 +724,8 @@ namespace GameShop.Data.Migrations
                     b.Property<string>("Soundcard")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
+                    b.Property<bool>("Status")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Storage")
                         .HasColumnType("nvarchar(max)");
@@ -797,8 +771,8 @@ namespace GameShop.Data.Migrations
                     b.Property<string>("Soundcard")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
+                    b.Property<bool>("Status")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Storage")
                         .HasColumnType("nvarchar(max)");
@@ -827,8 +801,8 @@ namespace GameShop.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
+                    b.Property<bool>("Status")
+                        .HasColumnType("bit");
 
                     b.Property<DateTime>("UpdateDate")
                         .HasColumnType("datetime2");
@@ -849,10 +823,10 @@ namespace GameShop.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("d58487df-e675-4b2f-8fbe-c666984b9ce6"),
+                            Id = new Guid("30d4757e-4d40-4e10-a83f-110b15722d36"),
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             ImagePath = "imgnotfound.jpg",
-                            Status = 0,
+                            Status = false,
                             UpdateDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             UserID = new Guid("69bd714f-9576-45ba-b5b7-f00649be00de")
@@ -872,8 +846,8 @@ namespace GameShop.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
+                    b.Property<bool>("Status")
+                        .HasColumnType("bit");
 
                     b.Property<DateTime>("UpdateDate")
                         .HasColumnType("datetime2");
@@ -894,10 +868,10 @@ namespace GameShop.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("2cb1dfd9-ce44-4031-9ad4-d7fcf3784863"),
+                            Id = new Guid("cd6af843-0dda-46cb-b601-b27e8524305a"),
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             ImagePath = "imgnotfound.jpg",
-                            Status = 0,
+                            Status = false,
                             UpdateDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             UserID = new Guid("69bd714f-9576-45ba-b5b7-f00649be00de")
@@ -916,8 +890,8 @@ namespace GameShop.Data.Migrations
                     b.Property<Guid>("GameID")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
+                    b.Property<bool>("Status")
+                        .HasColumnType("bit");
 
                     b.Property<DateTime>("UpdatedDate")
                         .HasColumnType("datetime2");
@@ -943,8 +917,8 @@ namespace GameShop.Data.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
+                    b.Property<bool>("Status")
+                        .HasColumnType("bit");
 
                     b.Property<DateTime>("UpdatedDate")
                         .HasColumnType("datetime2");
@@ -1092,9 +1066,18 @@ namespace GameShop.Data.Migrations
                         .WithMany("Comments")
                         .HasForeignKey("AppUserId");
 
-                    b.HasOne("GameShop.Data.Entities.Post", "Post")
+                    b.HasOne("GameShop.Data.Entities.Game", "Game")
                         .WithMany("Comments")
-                        .HasForeignKey("PostId")
+                        .HasForeignKey("GameId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("GameShop.Data.Entities.Game", b =>
+                {
+                    b.HasOne("GameShop.Data.Entities.Publisher", "Publisher")
+                        .WithMany("Games")
+                        .HasForeignKey("PublisherId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -1123,19 +1106,6 @@ namespace GameShop.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("GameShop.Data.Entities.Like", b =>
-                {
-                    b.HasOne("GameShop.Data.Entities.AppUser", "AppUser")
-                        .WithMany("Likes")
-                        .HasForeignKey("AppUserId");
-
-                    b.HasOne("GameShop.Data.Entities.Post", "Post")
-                        .WithMany("Likes")
-                        .HasForeignKey("PostId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("GameShop.Data.Entities.OrderedGame", b =>
                 {
                     b.HasOne("GameShop.Data.Entities.Cart", "Cart")
@@ -1151,11 +1121,17 @@ namespace GameShop.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("GameShop.Data.Entities.Post", b =>
+            modelBuilder.Entity("GameShop.Data.Entities.Rating", b =>
                 {
                     b.HasOne("GameShop.Data.Entities.AppUser", "AppUser")
-                        .WithMany("Posts")
+                        .WithMany("Ratings")
                         .HasForeignKey("AppUserId");
+
+                    b.HasOne("GameShop.Data.Entities.Game", "Game")
+                        .WithMany("Ratings")
+                        .HasForeignKey("GameId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("GameShop.Data.Entities.SoldGame", b =>

@@ -13,6 +13,7 @@ namespace GameShop.Data.Configurations
         {
             builder.ToTable("Games");
             builder.HasKey(x => x.Id);
+            builder.HasOne(x=>x.Publisher).WithMany(x=>x.Games).HasForeignKey(x=>x.PublisherId);
             builder.Property(x => x.GameName).IsRequired();
             builder.Property(x => x.Price).IsRequired();
             builder.Property(x => x.Discount).IsRequired().HasDefaultValue(0);

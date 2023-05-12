@@ -33,6 +33,10 @@ namespace GameShop.Application.Services.Games
 
         public async Task<Guid> Create(GameCreateRequest request)
         {
+            if(await _context.Publishers.Where(x=>x.Id == request.PublisherId).FirstOrDefaultAsync() == null)
+            {
+                throw new GameShopException("Không tìm thấy nhà phát hành");
+            }
             var game = new Game()
             {
                 GameName = request.GameName,
@@ -42,7 +46,7 @@ namespace GameShop.Application.Services.Games
                 Gameplay = request.Gameplay,
                 CreatedDate = DateTime.Now,
                 UpdatedDate = DateTime.Now,
-                Publisher = request.Publisher,
+                PublisherId = request.PublisherId,
                 RatePoint = 0,
                 Status = request.Status
             };
@@ -158,7 +162,7 @@ namespace GameShop.Application.Services.Games
                     UpdatedDate = x.UpdatedDate,
                     Gameplay = x.Gameplay,
                     Discount = x.Discount,
-                    Publisher = x.Publisher,
+                    PublisherId = x.PublisherId,
                     GenreName = new List<string>(),
                     GenreIDs = x.GameInGenres.Select(y => y.GenreID).ToList(),
                     Status = x.Status.ToString(),
@@ -232,7 +236,7 @@ namespace GameShop.Application.Services.Games
                 game.Gameplay = request.Gameplay;
                 game.UpdatedDate = DateTime.Now;
                 game.Status = request.Status;
-                game.Publisher = request.Publisher;
+                game.PublisherId = request.PublisherId;
                 game.Price = request.Price;
                 if (request.SRR != null)
                 {
@@ -321,7 +325,7 @@ namespace GameShop.Application.Services.Games
                 Description = x.Description,
                 Discount = x.Discount,
                 Price = x.Price,
-                Publisher = x.Publisher,
+                PublisherId = x.PublisherId,
                 ListImage = new List<string>(),
                 SRM = new SystemRequireMin()
                 {
@@ -345,7 +349,7 @@ namespace GameShop.Application.Services.Games
                     Soundcard = x.SystemRequirementRecommended.Soundcard
                 }
             }).FirstOrDefaultAsync();
-            var ratings = await _context.Rating.Where(x => x.GameId == GameID).Select(x=>x.Point).ToListAsync();
+            var ratings = await _context.Ratings.Where(x => x.GameId == GameID).Select(x=>x.Point).ToListAsync();
             if (ratings.Any())
             {
                 int pointRating = 0;
@@ -498,7 +502,7 @@ namespace GameShop.Application.Services.Games
                 GenreIDs = x.GameInGenres.Select(y => y.GenreID).ToList(),
                 Status = x.Status.ToString(),
                 Price = x.Price,
-                Publisher = x.Publisher,
+                PublisherId = x.PublisherId,
                 ListImage = new List<string>(),
                 SRM = new SystemRequireMin()
                 {
@@ -574,7 +578,7 @@ namespace GameShop.Application.Services.Games
                 GenreIDs = x.GameInGenres.Select(y => y.GenreID).ToList(),
                 Status = x.Status.ToString(),
                 Price = x.Price,
-                Publisher = x.Publisher,
+                PublisherId = x.PublisherId,
                 ListImage = new List<string>(),
                 SRM = new SystemRequireMin()
                 {
@@ -681,7 +685,7 @@ namespace GameShop.Application.Services.Games
                 Status = x.Status.ToString(),
                 Price = x.Price,
                 BuyCount = 0,
-                Publisher = x.Publisher,
+                PublisherId = x.PublisherId,
                 ListImage = new List<string>(),
                 SRM = new SystemRequireMin()
                 {

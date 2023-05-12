@@ -1,4 +1,7 @@
 using FluentValidation.AspNetCore;
+using FRT.DataReporting.Application.Utilities;
+using FRT.DataReporting.Application.Utilities.Redis;
+using FRT.DataReporting.Domain.Configurations;
 using GameShop.Application.Common;
 using GameShop.Application.Services.Carts;
 using GameShop.Application.Services.Categories;
@@ -41,6 +44,7 @@ namespace GameShop
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            
             services.AddDbContext<GameShopDbContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString(SystemConstants.MainConnectionString)));
             services.AddIdentity<AppUser, AppRole>()
@@ -61,12 +65,16 @@ namespace GameShop
             services.AddTransient<IChartService, ChartService>();
             services.AddTransient<ISaveFileService, SaveFileService>();
             services.AddTransient<ICommentService, CommentService>();
+            services.AddScoped<IRedisConnectionFactory, RedisConnectionFactory>();
+            services.AddScoped<IRedisUtil, RedisUtil>();
             services.AddSignalR();
             services.AddSingleton<IDictionary<string, AppUser>>(opts => new Dictionary<string, AppUser>());
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+            services.Configure<RedisConfig>(Configuration.GetSection("Redis"));
             //services.AddTransient<IValidator<LoginRequest>, LoginRequestValidator>();
             services.AddControllers()
              .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<LoginRequestValidator>());
+            
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Swagger GameShop Api", Version = "v1" });

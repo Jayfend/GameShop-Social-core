@@ -59,7 +59,7 @@ namespace GameShop.Application.Services.Comments
             {
                 throw new GameShopException("Bạn đã bình luận rồi");
             }
-            if(await _context.Rating.Where(x=>x.UserId == req.UserId && x.GameId == req.GameId).FirstOrDefaultAsync()!=null)
+            if(await _context.Ratings.Where(x=>x.UserId == req.UserId && x.GameId == req.GameId).FirstOrDefaultAsync()!=null)
             {
                 throw new GameShopException("Bạn đã đánh giá rồi");
             }
@@ -78,7 +78,7 @@ namespace GameShop.Application.Services.Comments
                 Point = req.Point,
                 UserId = user.Id
             };
-            await _context.Rating.AddAsync(newRating);
+            await _context.Ratings.AddAsync(newRating);
             await _context.Comments.AddAsync(newComment);
             await _context.SaveChangesAsync();
            return _mapper.Map<CommentDTO>(newComment);
@@ -100,7 +100,7 @@ namespace GameShop.Application.Services.Comments
               .Take(req.PageSize).ToList();
             foreach ( var comment in comments)
             {
-                var rating =  await _context.Rating.Where(x=>x.UserId== comment.UserId).FirstOrDefaultAsync();
+                var rating =  await _context.Ratings.Where(x=>x.UserId== comment.UserId).FirstOrDefaultAsync();
                 if(rating == null)
                 {
                     comment.Rating = 0;

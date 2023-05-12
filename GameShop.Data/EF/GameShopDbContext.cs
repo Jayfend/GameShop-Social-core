@@ -32,13 +32,14 @@ namespace GameShop.Data.EF
             modelBuilder.ApplyConfiguration(new UserAvatarConfiguration());
             modelBuilder.ApplyConfiguration(new UserThumbnailConfiguration());
             modelBuilder.ApplyConfiguration(new SoldGameConfiguration());
+            modelBuilder.ApplyConfiguration(new PublisherConfiguration());
+            modelBuilder.ApplyConfiguration(new KeyConfiguration());
             modelBuilder.Entity<Cart>().Property(x=>x.Id).ValueGeneratedOnAdd();
             modelBuilder.Entity<Game>().Property(x => x.Id).ValueGeneratedOnAdd();
             modelBuilder.Entity<Contact>().Property(x => x.Id).ValueGeneratedOnAdd();
             modelBuilder.Entity<Checkout>().Property(x => x.Id).ValueGeneratedOnAdd();
             modelBuilder.Entity<Game>().Property(x => x.Id).ValueGeneratedOnAdd();
             modelBuilder.Entity<GameImage>().Property(x => x.Id).ValueGeneratedOnAdd();
-            modelBuilder.Entity<GamePublisher>().Property(x => x.Id).ValueGeneratedOnAdd();
             modelBuilder.Entity<Genre>().Property(x => x.Id).ValueGeneratedOnAdd();
             modelBuilder.Entity<OrderedGame>().Property(x => x.Id).ValueGeneratedOnAdd();
             modelBuilder.Entity<SoldGame>().Property(x => x.Id).ValueGeneratedOnAdd();
@@ -50,6 +51,8 @@ namespace GameShop.Data.EF
             modelBuilder.Entity<Wishlist>().Property(x => x.Id).ValueGeneratedOnAdd();
             modelBuilder.Entity<Comment>().Property(x => x.Id).ValueGeneratedOnAdd();
             modelBuilder.Entity<Rating>().Property(x => x.Id).ValueGeneratedOnAdd();
+            modelBuilder.Entity<Key>().Property(x => x.Id).ValueGeneratedOnAdd();
+            modelBuilder.Entity<Publisher>().Property(x => x.Id).ValueGeneratedOnAdd();
             modelBuilder.Entity<IdentityUserClaim<Guid>>().ToTable("AppUserClaims");
             modelBuilder.Entity<IdentityUserRole<Guid>>().ToTable("AppUserRoles").HasKey(x => new { x.UserId, x.RoleId });
             modelBuilder.Entity<IdentityUserLogin<Guid>>().ToTable("AppUserLogins").HasKey(x => x.UserId);
@@ -77,7 +80,9 @@ namespace GameShop.Data.EF
         public DbSet<UserThumbnail> UserThumbnail { get; set; }
         public DbSet<SoldGame> SoldGames { get; set; }
         public DbSet<Comment> Comments { get; set; }
-        public DbSet<Rating> Rating { get; set; }
-      
+        public DbSet<Rating> Ratings { get; set; }
+        public DbSet<Publisher> Publishers { get; set; }
+        public DbSet<Key> Keys { get; set; }
+
     }
 }

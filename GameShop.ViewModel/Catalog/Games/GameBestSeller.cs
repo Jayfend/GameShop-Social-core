@@ -21,6 +21,6 @@ namespace GameShop.ViewModels.Catalog.Games
         public SystemRequirementRecommend SRR { get; set; }
         public List<string> ListImage { get; set; }
         public int BuyCount { get; set; }
-        public string Publisher { get; set; }
+        public Guid PublisherId { get; set; }
     }
 }

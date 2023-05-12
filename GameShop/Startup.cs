@@ -10,6 +10,7 @@ using GameShop.Application.Services.Checkouts;
 using GameShop.Application.Services.Comments;
 using GameShop.Application.Services.Contacts;
 using GameShop.Application.Services.Games;
+using GameShop.Application.Services.Publishers;
 using GameShop.Application.Services.Wishlists;
 using GameShop.Application.System.Roles;
 using GameShop.Application.System.Users;
@@ -65,6 +66,7 @@ namespace GameShop
             services.AddTransient<IChartService, ChartService>();
             services.AddTransient<ISaveFileService, SaveFileService>();
             services.AddTransient<ICommentService, CommentService>();
+            services.AddTransient<IPublisherService, PublisherService>();
             services.AddScoped<IRedisConnectionFactory, RedisConnectionFactory>();
             services.AddScoped<IRedisUtil, RedisUtil>();
             services.AddSignalR();

@@ -9,9 +9,17 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Mail;
+using System.Net;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using FRT.DataReporting.Application.Utilities;
+using FRT.DataReporting.Domain.Configurations;
+using Microsoft.Extensions.Options;
+using System.Security.Policy;
+using GameShop.Utilities.Exceptions;
+using Newtonsoft.Json;
 
 namespace GameShop.Application.Services.Checkouts
 {
@@ -20,12 +28,21 @@ namespace GameShop.Application.Services.Checkouts
         private readonly GameShopDbContext _context;
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
+        readonly IRedisUtil _redisUtil;
+        readonly RedisConfig _redisConfig;
 
-        public CheckoutService(GameShopDbContext context, UserManager<AppUser> useManager, SignInManager<AppUser> signInManager)
+        public CheckoutService(
+            GameShopDbContext context
+            , UserManager<AppUser> useManager
+            , SignInManager<AppUser> signInManager
+            , IRedisUtil redisUtil
+            , IOptions<RedisConfig> redisConfig)
         {
             _context = context;
             _userManager = useManager;
             _signInManager = signInManager;
+            _redisUtil = redisUtil;
+            _redisConfig = redisConfig.Value;
         }
 
         public async Task<ApiResult<Guid>> CheckoutGame(Guid UserID)
@@ -89,7 +106,47 @@ namespace GameShop.Application.Services.Checkouts
                 _context.Carts.Update(getCart);
 
                 await _context.SaveChangesAsync();
+                foreach(var gameBought in gamelist)
+                { var publisher = await _context.Publishers.Where(x => x.Id == gameBought.PublisherId).FirstOrDefaultAsync();
+                    var keys =  await _redisUtil.HashGetAllAsync(string.Format(_redisConfig.DSMKey, publisher.Name, gameBought.GameName));
+                   var keyList = new List<Key>();
+                    Key keyCode = null;
+                    foreach(var key in keys)
+                    {
+                        var parsedKey = JsonConvert.DeserializeObject<Key>(key);
+                        keyList.Add(parsedKey);
+                    }
+                     keyCode = keyList.Where(x => x.GameName == gameBought.GameName && x.Status == true).FirstOrDefault();
+                   if(keyCode != null)
+                    {
+                        using (MailMessage mail = new MailMessage())
+                        {
+                            mail.From = new MailAddress("stemgameshop@gmail.com");
+                            mail.To.Add(user.Email);
+                            mail.Subject = "Confirm Account";
+                            mail.Body = $@"<html>
+                      <body>
+                      <p>Dear {user.UserName},</p>
+                      <p>Thank for buying {gameBought.GameName},here is your key code {keyCode.KeyCode} </p>
+                      <p>Sincerely,<br>-STEM</br></p>
+                      </body>
+                      </html>
+                     ";
+                            mail.IsBodyHtml = true;
 
+                            using (SmtpClient smtp = new SmtpClient("smtp.gmail.com", 587))
+                            {
+                                smtp.Credentials = new NetworkCredential("stemgameshop@gmail.com", "tditidglubtzxojy");
+                                smtp.EnableSsl = true;
+                                smtp.Send(mail);
+                            }
+                        }
+                    }
+
+
+                    await _redisUtil.RemoveAsync(string.Format(_redisConfig.DSMKey, publisher.Name, gameBought.GameName), keyCode.Id.ToString());
+                }
+               
                 return new ApiSuccessResult<Guid>(newCheckout.Id);
             }
         }

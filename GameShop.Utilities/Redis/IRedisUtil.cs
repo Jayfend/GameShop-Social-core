@@ -12,7 +12,7 @@ namespace FRT.DataReporting.Application.Utilities
         Task<bool> SetAsync(string key, string field, string valueJson, TimeSpan? expireTime = null);
         Task<bool> RemoveAsync(string key, string field, bool isHasPrefix = false);
         Task<bool> RemoveRangeKeyAsync(List<string> keys, List<string> fields = null, bool isHasPrefix = false);
-
+        Task<List<string>> HashGetAllAsync(string key);
         List<string> GetAllKeys(string searchText);
         Task<bool> SetMultiAsync(string key, HashEntry[] field, string valueJson, TimeSpan? expireTime = null);
 

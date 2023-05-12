@@ -81,7 +81,15 @@ namespace FRT.DataReporting.Application.Utilities.Redis
 
             return result;
         }
+        public async Task<List<string>> HashGetAllAsync(string key)
+        {
+            var value = await _db.HashGetAllAsync(_redisConfig.Prefix + key);
 
+
+
+            return value.Select(z => z.Value.ToString()).ToList();
+
+        }
         public async Task<bool> RemoveAsync(string key, string field, bool isHasPrefix = false)
         {
             string prefix = isHasPrefix ? "" : _redisConfig.Prefix;

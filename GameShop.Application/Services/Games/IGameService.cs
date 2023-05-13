@@ -45,6 +45,7 @@ namespace GameShop.Application.Services.Games
         Task<ApiResult<bool>> CategoryAssign(Guid id, CategoryAssignRequest request);
 
         Task<PagedResult<GameBestSeller>> GetBestSeller(GetManageGamePagingRequest request);
+        Task<bool> ActiveGameAsync(ActiveGameDTO req);
         
     }
 }

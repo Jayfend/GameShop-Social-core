@@ -17,6 +17,12 @@ using GameShop.ViewModels.Catalog.GameImages;
 using Microsoft.AspNetCore.Mvc;
 using GameShop.ViewModels.Catalog.UserImages;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+using FRT.DataReporting.Application.Utilities;
+using FRT.DataReporting.Domain.Configurations;
+using Microsoft.Extensions.Options;
+using Microsoft.AspNetCore.Identity;
+using System.Security.Policy;
+using Newtonsoft.Json;
 
 namespace GameShop.Application.Services.Games
 {
@@ -24,11 +30,22 @@ namespace GameShop.Application.Services.Games
     {
         private readonly GameShopDbContext _context;
         private readonly IStorageService _storageService;
+        private readonly UserManager<AppUser> _userManager;
+        readonly IRedisUtil _redisUtil;
+        readonly RedisConfig _redisConfig;
 
-        public GameService(GameShopDbContext context, IStorageService storageService)
+        public GameService(GameShopDbContext context
+            , IStorageService storageService
+            , IRedisUtil redisUtil
+            ,IOptions<RedisConfig> redisConfig
+            , UserManager<AppUser> useManager)
         {
             _context = context;
             _storageService = storageService;
+            _redisUtil = redisUtil;
+            _redisConfig = redisConfig.Value;
+            _userManager = useManager;
+
         }
 
         public async Task<Guid> Create(GameCreateRequest request)
@@ -751,5 +768,47 @@ namespace GameShop.Application.Services.Games
             };
             return pagedResult;
         }
+
+        public async Task<bool> ActiveGameAsync(ActiveGameDTO req)
+        {
+            if(string.IsNullOrWhiteSpace(req.Key))
+            {
+                throw new GameShopException("Vui lòng nhập Key");
+            }
+            var user = await _userManager.FindByIdAsync(req.UserId.ToString());
+            if(user == null)
+            {
+                throw new GameShopException("Không tìm thấy user");
+            }
+            var game = await _context.Games.Where(x => x.Id == req.GameId).FirstOrDefaultAsync();
+            if(game == null)
+            {
+                throw new GameShopException("Không tìm thấy game");
+            }
+            var checkoutList = await _context.Checkouts.Where(x=>x.Cart.UserID == req.UserId).Select(x=>x.Id).ToListAsync();
+            var gameBought = await _context.SoldGames.Where(x => x.GameID == req.GameId && checkoutList.Contains(x.CheckoutID)).FirstOrDefaultAsync();
+            if(gameBought == null)
+            {
+                throw new GameShopException("Bạn chưa mua game này");
+            }
+            var publisher = await _context.Publishers.Where(x => x.Id == game.PublisherId).FirstOrDefaultAsync();
+            var keyList = await _redisUtil.HashGetAllAsync(string.Format(_redisConfig.DSMKey, publisher.Name, game.GameName));
+            foreach (var _key in keyList)
+            {
+                var dbKey = JsonConvert.DeserializeObject<Key>(_key);
+                if(req.Key == dbKey.KeyCode)
+                {
+                    if(game.GameName != dbKey.GameName && publisher.Name == dbKey.PublisherName)
+                    {
+                        throw new GameShopException("Keycode không hợp lệ");
+                    }
+                    else
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
     }
+        }
 }

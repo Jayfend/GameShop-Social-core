@@ -47,6 +47,13 @@ namespace GameShop.Controllers
             return Ok(games);
         }
 
+        [HttpPost("active-game")]
+        public async Task<IActionResult> ActiveGameAsync(ActiveGameDTO req)
+        {
+            var response = await _gameService.ActiveGameAsync(req);
+           
+            return Ok(response);
+        }
         [HttpGet("bestseller")]
         public async Task<IActionResult> GetBestSeller([FromQuery] GetManageGamePagingRequest request)
         {

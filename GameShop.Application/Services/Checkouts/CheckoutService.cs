@@ -297,7 +297,9 @@ namespace GameShop.Application.Services.Checkouts
                         Discount = x.Discount,
                         ListImage = new List<string>() { x.ImagePath },
                         FileGame = x.GameFile,
-                        CreatedDate = x.CreatedDate
+                        CreatedDate = x.CreatedDate,
+                        isActive = x.isActive
+                        
                     }).ToListAsync();
                 //var genres = _context.Genres.AsQueryable();
                 //foreach (var item in data)

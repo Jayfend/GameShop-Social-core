@@ -1,0 +1,8 @@
+[
+  {
+    "job-name": "SyncKeyJob",
+    "job-type": "GameShop.Application.Job.SyncKeyJob, GameShop.Application",
+    "cron-expression": "*/1 * * * *",
+    "timezone": "UTC"
+  }
+]

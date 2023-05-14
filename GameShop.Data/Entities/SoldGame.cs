@@ -14,5 +14,6 @@ namespace GameShop.Data.Entities
         public Guid CheckoutID { get; set; }
         public string ImagePath { get; set; }
         public string GameFile { get; set; }
+        public bool isActive { get; set; }
     }
 }

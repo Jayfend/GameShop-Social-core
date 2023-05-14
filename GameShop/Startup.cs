@@ -18,6 +18,10 @@ using GameShop.Data.EF;
 using GameShop.Data.Entities;
 using GameShop.Utilities.Constants;
 using GameShop.ViewModels.System.Users;
+using Hangfire;
+using Hangfire.Console;
+using Hangfire.RecurringJobExtensions;
+using HangfireBasicAuthenticationFilter;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -110,6 +114,15 @@ namespace GameShop
                       }
                     });
             });
+            services.AddHangfire(x =>
+            {
+                x.UseSqlServerStorage(Configuration.GetConnectionString("Hangfire"));
+
+                x.UseConsole();
+
+                x.UseRecurringJob("recurringjob.json");
+            });
+            services.AddHangfireServer();
             string issuer = Configuration.GetValue<string>("Tokens:Issuer");
             string signingKey = Configuration.GetValue<string>("Tokens:Key");
             byte[] signingKeyBytes = System.Text.Encoding.UTF8.GetBytes(signingKey);
@@ -149,6 +162,11 @@ namespace GameShop
             {
                 app.UseDeveloperExceptionPage();
             }
+            app.UseHangfireDashboard("/hangfire", new DashboardOptions()
+            {
+                AppPath = null,
+                IgnoreAntiforgeryToken = true
+            });
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();

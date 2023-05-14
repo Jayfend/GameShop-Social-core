@@ -23,6 +23,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Policy;
 using Newtonsoft.Json;
+using StackExchange.Redis;
 
 namespace GameShop.Application.Services.Games
 {
@@ -796,14 +797,21 @@ namespace GameShop.Application.Services.Games
             foreach (var _key in keyList)
             {
                 var dbKey = JsonConvert.DeserializeObject<Key>(_key);
-                if(req.Key == dbKey.KeyCode)
+                if (req.Key == dbKey.KeyCode)
                 {
-                    if(game.GameName != dbKey.GameName && publisher.Name == dbKey.PublisherName)
+                    if (game.GameName != dbKey.GameName || publisher.Name != dbKey.PublisherName || dbKey.isActive == true)
                     {
-                        throw new GameShopException("Keycode không hợp lệ");
+                        throw new GameShopException("Keycode không hợp lệ hoặc đã được sử dụng");
                     }
                     else
                     {
+                        List<HashEntry> entries = new List<HashEntry>();
+                        dbKey.isActive = true;
+                        var hashKey = new HashEntry(dbKey.Id.ToString(), JsonConvert.SerializeObject(dbKey));
+                        entries.Add(hashKey);
+                        await _redisUtil.SetMultiAsync(string.Format(_redisConfig.DSMKey, publisher.Name, gameBought.GameName), entries.ToArray(), null);
+                        gameBought.isActive = true;
+                        _context.SoldGames.Update(gameBought);
                         return true;
                     }
                 }

@@ -9,5 +9,6 @@ namespace GameShop.Data.Entities
         public string KeyCode { get; set; }
         public string PublisherName { get; set; }
         public string GameName { get; set; }
+        public bool isActive { get; set; }
     }
 }

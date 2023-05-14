@@ -11,6 +11,7 @@ namespace GameShop.Application.Services.Publishers
         Task<PublisherDTO> CreateAsync(PublisherCreateDTO req);
         Task<List<PublisherDTO>> GetAllPublisher();
         Task<List<string>> GenerateKeyAsync(Guid publisherId, int amount);
+        Task<bool> SyncKey();
 
 
 

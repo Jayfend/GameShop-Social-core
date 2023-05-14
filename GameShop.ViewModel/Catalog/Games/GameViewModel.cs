@@ -25,5 +25,6 @@ namespace GameShop.ViewModels.Catalog.Games
         public SystemRequirementRecommend SRR { get; set; }
         public List<string> ListImage { get; set; } = new List<string>();
         public string FileGame { get; set; }
+        public bool isActive { get; set; }
     }
 }

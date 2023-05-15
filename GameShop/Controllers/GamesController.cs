@@ -258,7 +258,20 @@ namespace GameShop.Controllers
                 return Ok();
             
         }
+        [HttpPost("Elastic")]
+        [AllowAnonymous]
+        public async Task<IActionResult> SyncElasticSearchGames()
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
 
+            var response =  await _gameService.SyncElasticSearchGames();
+           
+            return Ok(response);
+
+        }
         [HttpDelete("{GameID}/Images/{ImageID}")]
         [Authorize(Roles = "admin")]
         public async Task<IActionResult> DeleteImage(Guid ImageID)

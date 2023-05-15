@@ -1,4 +1,8 @@
-﻿namespace FRT.DataReporting.Domain.Configurations
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace GameShop.Utilities.Configurations
 {
     public class RedisConfig
     {

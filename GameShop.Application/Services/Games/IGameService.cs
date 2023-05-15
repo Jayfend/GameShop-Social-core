@@ -46,6 +46,7 @@ namespace GameShop.Application.Services.Games
 
         Task<PagedResult<GameBestSeller>> GetBestSeller(GetManageGamePagingRequest request);
         Task<bool> ActiveGameAsync(ActiveGameDTO req);
+        Task<bool> SyncElasticSearchGames();
         
     }
 }

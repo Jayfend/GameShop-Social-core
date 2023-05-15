@@ -2,7 +2,6 @@
 using GameShop.Data.Entities;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
@@ -14,16 +13,15 @@ using System.IO;
 using GameShop.Application.Common;
 using GameShop.Utilities.Exceptions;
 using GameShop.ViewModels.Catalog.GameImages;
-using Microsoft.AspNetCore.Mvc;
-using GameShop.ViewModels.Catalog.UserImages;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
-using FRT.DataReporting.Application.Utilities;
-using FRT.DataReporting.Domain.Configurations;
 using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Identity;
-using System.Security.Policy;
 using Newtonsoft.Json;
 using StackExchange.Redis;
+using Microsoft.AspNetCore.Server.IIS.Core;
+using GameShop.Utilities;
+using GameShop.Utilities.Configurations;
+using GameShop.Utilities.Redis;
+using AutoMapper;
 
 namespace GameShop.Application.Services.Games
 {
@@ -34,18 +32,26 @@ namespace GameShop.Application.Services.Games
         private readonly UserManager<AppUser> _userManager;
         readonly IRedisUtil _redisUtil;
         readonly RedisConfig _redisConfig;
-
+        readonly IElasticSearchUlti _elasticSearchUtil;
+        readonly ElasticSearchConfig _elasticSearchConfig;
+        readonly IMapper _mapper;
         public GameService(GameShopDbContext context
             , IStorageService storageService
             , IRedisUtil redisUtil
             ,IOptions<RedisConfig> redisConfig
-            , UserManager<AppUser> useManager)
+            , UserManager<AppUser> useManager
+            , IElasticSearchUlti elasticSearchUtil
+            , IOptions<ElasticSearchConfig> elasticSearchConfig
+            ,IMapper mapper)
         {
             _context = context;
             _storageService = storageService;
             _redisUtil = redisUtil;
             _redisConfig = redisConfig.Value;
             _userManager = useManager;
+            _elasticSearchConfig = elasticSearchConfig.Value;
+            _elasticSearchUtil= elasticSearchUtil;
+            _mapper = mapper;
 
         }
 
@@ -818,5 +824,18 @@ namespace GameShop.Application.Services.Games
             }
             return false;
     }
+
+        public async Task<bool> SyncElasticSearchGames()
+        {
+            var gameList = await _context.Games.ToListAsync();
+            foreach(var game in gameList)
+            {
+                var elasticGame = _mapper.Map<GameElasticModel>(game);
+                await _elasticSearchUtil.AddAsync(elasticGame, _elasticSearchConfig.Common.GameIndex, ElasticServer.Common);
+            }
+          
+            
+            return true;
         }
+    }
 }

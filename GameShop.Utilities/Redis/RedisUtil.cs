@@ -1,4 +1,4 @@
-﻿using FRT.DataReporting.Domain.Configurations;
+﻿using GameShop.Utilities.Configurations;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using StackExchange.Redis;
@@ -8,7 +8,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 
-namespace FRT.DataReporting.Application.Utilities.Redis
+namespace GameShop.Utilities.Redis
 {
     public class RedisUtil : IRedisUtil
     {
@@ -187,6 +187,4 @@ namespace FRT.DataReporting.Application.Utilities.Redis
 
         //}
     }
-
-
 }

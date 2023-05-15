@@ -1,9 +1,6 @@
 ﻿using StackExchange.Redis;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace GameShop.Utilities.Redis
+namespace FRT.DataReporting.Application.Utilities
 {
     public interface IRedisConnectionFactory
     {

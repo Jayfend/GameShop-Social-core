@@ -1,9 +1,11 @@
 ﻿using StackExchange.Redis;
 using System;
+using System.Collections.Generic;
 using System.Net.Sockets;
+using System.Text;
 using System.Threading;
 
-namespace FRT.DataReporting.Application.Utilities.Redis
+namespace GameShop.Utilities.Redis
 {
     public class RedisConnectionFactory : IRedisConnectionFactory
     {
@@ -163,5 +165,4 @@ namespace FRT.DataReporting.Application.Utilities.Redis
 
 
     }
-
 }

@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
-using FRT.DataReporting.Application.Utilities;
-using FRT.DataReporting.Domain.Configurations;
 using GameShop.Data.EF;
 using GameShop.Data.Entities;
+using GameShop.Utilities.Configurations;
 using GameShop.Utilities.Exceptions;
+using GameShop.Utilities.Redis;
 using GameShop.ViewModels.Catalog.Publishers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;

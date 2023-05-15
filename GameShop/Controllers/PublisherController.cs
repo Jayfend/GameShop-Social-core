@@ -1,9 +1,11 @@
-﻿using GameShop.Application.Services.Publishers;
+﻿using FRT.MasterDataCore.Customs;
+using GameShop.Application.Services.Publishers;
 using GameShop.ViewModels.Catalog.Publishers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
+using System.Transactions;
 
 namespace GameShop.Controllers
 {
@@ -12,9 +14,11 @@ namespace GameShop.Controllers
     public class PublisherController : ControllerBase
     {
         private readonly IPublisherService _publisherService;
-        public PublisherController(IPublisherService publisherService) 
+        readonly ITransactionCustom _transactionCustom;
+        public PublisherController(IPublisherService publisherService, ITransactionCustom transactionCustom) 
         {
             _publisherService = publisherService;
+            _transactionCustom = transactionCustom;
 
         }
         [HttpPost]
@@ -24,8 +28,11 @@ namespace GameShop.Controllers
             {
                 return BadRequest(ModelState);
             }
-            var response =  await _publisherService.CreateAsync(req);
-            return Ok(response);
+            using (var transaction = _transactionCustom.CreateTransaction(isolationLevel: IsolationLevel.ReadUncommitted))
+            {
+                var response = await _publisherService.CreateAsync(req);
+                return Ok(response);
+            }
         }
         [HttpGet]
         public async Task<IActionResult> GetAsync()
@@ -36,8 +43,11 @@ namespace GameShop.Controllers
         [HttpPost("Generate-key")]
         public async Task<IActionResult> GenerateAsync(Guid publisherId, int amount)
         {
-            var response = await _publisherService.GenerateKeyAsync(publisherId, amount);
-            return Ok(response);
+            using (var transaction = _transactionCustom.CreateTransaction(isolationLevel: IsolationLevel.ReadUncommitted))
+            {
+                var response = await _publisherService.GenerateKeyAsync(publisherId, amount);
+                return Ok(response);
+            }
         }
     }
 }

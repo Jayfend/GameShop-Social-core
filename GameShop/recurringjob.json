@@ -4,5 +4,11 @@
     "job-type": "GameShop.Application.Job.SyncKeyJob, GameShop.Application",
     "cron-expression": "*/1 * * * *",
     "timezone": "UTC"
+  },
+  {
+    "job-name": "DeleteInactiveAccountJob",
+    "job-type": "GameShop.Application.Job.DeleteInactiveAccountJob, GameShop.Application",
+    "cron-expression": "0 20 * * *",
+    "timezone": "UTC"
   }
 ]

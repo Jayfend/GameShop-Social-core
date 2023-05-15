@@ -1,10 +1,12 @@
-﻿using GameShop.Application.Services.Carts;
+﻿using FRT.MasterDataCore.Customs;
+using GameShop.Application.Services.Carts;
 using GameShop.Application.System.Users;
 using GameShop.ViewModels.Catalog.Carts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
+using System.Transactions;
 
 namespace GameShop.Controllers
 {
@@ -14,10 +16,11 @@ namespace GameShop.Controllers
     public class CartsController : ControllerBase
     {
         private readonly ICartService _cartService;
-
-        public CartsController(ICartService cartService)
+        readonly ITransactionCustom _transactionCustom;
+        public CartsController(ICartService cartService, ITransactionCustom transactionCustom)
         {
             _cartService = cartService;
+            _transactionCustom = transactionCustom;
         }
 
         [HttpPost("UserID")]
@@ -27,12 +30,15 @@ namespace GameShop.Controllers
             {
                 return BadRequest(ModelState);
             }
-            var result = await _cartService.AddToCart(UserID, cartCreateRequest);
-            if (!result.IsSuccess)
+            using (var transaction = _transactionCustom.CreateTransaction(isolationLevel: IsolationLevel.ReadUncommitted))
             {
-                return BadRequest(result);
+                var result = await _cartService.AddToCart(UserID, cartCreateRequest);
+                if (!result.IsSuccess)
+                {
+                    return BadRequest(result);
+                }
+                return Ok(result);
             }
-            return Ok(result);
         }
 
         [HttpGet("UserID")]
@@ -56,14 +62,17 @@ namespace GameShop.Controllers
             {
                 return BadRequest();
             }
-            var result = await _cartService.DeleteItem(UserID, orderItemDelete);
-            if (!result.IsSuccess)
+            using (var transaction = _transactionCustom.CreateTransaction(isolationLevel: IsolationLevel.ReadUncommitted))
             {
-                return BadRequest(result);
-            }
-            else
-            {
-                return Ok(result);
+                var result = await _cartService.DeleteItem(UserID, orderItemDelete);
+                if (!result.IsSuccess)
+                {
+                    return BadRequest(result);
+                }
+                else
+                {
+                    return Ok(result);
+                }
             }
         }
     }

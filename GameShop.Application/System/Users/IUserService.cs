@@ -38,5 +38,6 @@ namespace GameShop.Application.System.Users
         Task<ApiResult<string>> AddThumbnail(string UserID, UserImageCreateRequest request);
 
         Task<ApiResult<bool>> SendEmail(SendEmailRequest request);
+        Task<bool> DeleteInactiveAccount();
     }
 }

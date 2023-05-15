@@ -2,6 +2,7 @@ using FluentValidation.AspNetCore;
 using FRT.DataReporting.Application.Utilities;
 using FRT.DataReporting.Application.Utilities.Redis;
 using FRT.DataReporting.Domain.Configurations;
+using FRT.MasterDataCore.Customs;
 using GameShop.Application.Common;
 using GameShop.Application.Services.Carts;
 using GameShop.Application.Services.Categories;
@@ -55,6 +56,7 @@ namespace GameShop
             services.AddIdentity<AppUser, AppRole>()
                .AddEntityFrameworkStores<GameShopDbContext>()
                .AddDefaultTokenProviders();
+            services.AddScoped<ITransactionCustom, TransactionCustom>();
             services.AddTransient<IGameService, GameService>();
             services.AddTransient<IStorageService, FileStorageService>();
             services.AddTransient<UserManager<AppUser>, UserManager<AppUser>>();

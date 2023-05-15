@@ -1,8 +1,10 @@
-﻿using GameShop.Application.Services.Contacts;
+﻿using FRT.MasterDataCore.Customs;
+using GameShop.Application.Services.Contacts;
 using GameShop.ViewModels.Catalog.Contacts;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
+using System.Transactions;
 
 namespace GameShop.Controllers
 {
@@ -11,10 +13,11 @@ namespace GameShop.Controllers
     public class ContactController : ControllerBase
     {
         private readonly IContactService _contactService;
-
-        public ContactController(IContactService contactService)
+        readonly ITransactionCustom _transactionCustom;
+        public ContactController(IContactService contactService, ITransactionCustom transactionCustom)
         {
             _contactService = contactService;
+            _transactionCustom = transactionCustom;
         }
 
         [HttpPost]
@@ -24,12 +27,15 @@ namespace GameShop.Controllers
             {
                 return BadRequest(ModelState);
             }
-            var result = await _contactService.SendContact(request);
-            if (!result.IsSuccess)
+            using (var transaction = _transactionCustom.CreateTransaction(isolationLevel: IsolationLevel.ReadUncommitted))
             {
-                return BadRequest(result);
+                var result = await _contactService.SendContact(request);
+                if (!result.IsSuccess)
+                {
+                    return BadRequest(result);
+                }
+                return Ok(result);
             }
-            return Ok(result);
         }
 
         [HttpGet]

@@ -1,17 +1,13 @@
-﻿using GameShop.Application.Services.Games;
+﻿using FRT.MasterDataCore.Customs;
+using GameShop.Application.Services.Games;
 using GameShop.ViewModels.Catalog.GameImages;
 using GameShop.ViewModels.Catalog.Games;
-using GameShop.ViewModels.Catalog.UserImages;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Hosting.Server;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Threading.Tasks;
+using System.Transactions;
 
 namespace GameShop.Controllers
 {
@@ -20,10 +16,11 @@ namespace GameShop.Controllers
     public class GamesController : ControllerBase
     {
         private readonly IGameService _gameService;
-
-        public GamesController(IGameService gameService, IWebHostEnvironment webHostEnvironment)
+        readonly ITransactionCustom _transactionCustom;
+        public GamesController(IGameService gameService, IWebHostEnvironment webHostEnvironment, ITransactionCustom transactionCustom)
         {
             _gameService = gameService;
+            _transactionCustom = transactionCustom;
         }
 
         //https:://localhost:port/game
@@ -50,9 +47,12 @@ namespace GameShop.Controllers
         [HttpPost("active-game")]
         public async Task<IActionResult> ActiveGameAsync(ActiveGameDTO req)
         {
-            var response = await _gameService.ActiveGameAsync(req);
-           
-            return Ok(response);
+            using (var transaction = _transactionCustom.CreateTransaction(isolationLevel: IsolationLevel.ReadUncommitted))
+            {
+                var response = await _gameService.ActiveGameAsync(req);
+
+                return Ok(response);
+            }
         }
         [HttpGet("bestseller")]
         public async Task<IActionResult> GetBestSeller([FromQuery] GetManageGamePagingRequest request)
@@ -123,13 +123,16 @@ namespace GameShop.Controllers
             //    SRM = JsonConvert.DeserializeObject<SystemRequireMin>(request.SRM),
             //    SRR = JsonConvert.DeserializeObject<SystemRequirementRecommend>(request.SRR),
             //};
-            var gameID = await _gameService.Create(request);
-            if (gameID == Guid.Empty)
+            using (var transaction = _transactionCustom.CreateTransaction(isolationLevel: IsolationLevel.ReadUncommitted))
             {
-                return BadRequest();
+                var gameID = await _gameService.Create(request);
+                if (gameID == Guid.Empty)
+                {
+                    return BadRequest();
+                }
+                var game = await _gameService.GetById(gameID);
+                return Created(nameof(GetById), game);
             }
-            var game = await _gameService.GetById(gameID);
-            return Created(nameof(GetById), game);
         }
 
         [HttpPut("{GameID}")]
@@ -155,39 +158,48 @@ namespace GameShop.Controllers
             //    SRM = JsonConvert.DeserializeObject<SystemRequireMin>(request.SRM),
             //    SRR = JsonConvert.DeserializeObject<SystemRequirementRecommend>(request.SRR),
             //};
-            var affedtedResult = await _gameService.Update(GameID, request);
-            if (affedtedResult == 0)
+            using (var transaction = _transactionCustom.CreateTransaction(isolationLevel: IsolationLevel.ReadUncommitted))
             {
-                return BadRequest();
-            }
+                var affedtedResult = await _gameService.Update(GameID, request);
+                if (affedtedResult == 0)
+                {
+                    return BadRequest();
+                }
 
-            return Ok();
+                return Ok();
+            }
         }
 
         [HttpDelete("{GameID}")]
         [Authorize(Roles = "admin")]
         public async Task<IActionResult> Delete(Guid GameID)
         {
-            var affedtedResult = await _gameService.Delete(GameID);
-            if (affedtedResult == 0)
+            using (var transaction = _transactionCustom.CreateTransaction(isolationLevel: IsolationLevel.ReadUncommitted))
             {
-                return BadRequest();
-            }
+                var affedtedResult = await _gameService.Delete(GameID);
+                if (affedtedResult == 0)
+                {
+                    return BadRequest();
+                }
 
-            return Ok();
+                return Ok();
+            }
         }
 
         [HttpPatch("price/{GameID}/{newPrice}")]
         [Authorize(Roles = "admin")]
         public async Task<IActionResult> UpdatePrice([FromRoute] Guid GameID, decimal newPrice)
         {
-            var isSuccess = await _gameService.UpdatePrice(GameID, newPrice);
-            if (isSuccess == false)
+            using (var transaction = _transactionCustom.CreateTransaction(isolationLevel: IsolationLevel.ReadUncommitted))
             {
-                return BadRequest();
-            }
+                var isSuccess = await _gameService.UpdatePrice(GameID, newPrice);
+                if (isSuccess == false)
+                {
+                    return BadRequest();
+                }
 
-            return Ok();
+                return Ok();
+            }
         }
 
         // Image
@@ -200,7 +212,9 @@ namespace GameShop.Controllers
             {
                 return BadRequest(ModelState);
             }
-            else
+
+
+            using (var transaction = _transactionCustom.CreateTransaction(isolationLevel: IsolationLevel.ReadUncommitted))
             {
                 var imageid = await _gameService.AddImage(GameID, request);
                 if (imageid == Guid.Empty)
@@ -210,6 +224,7 @@ namespace GameShop.Controllers
                 var image = await _gameService.GetImageById(imageid);
                 return CreatedAtAction(nameof(GetImageByID), new { ImageID = imageid, GameID = GameID }, image);
             }
+
         }
 
         [HttpGet("{GameID}/Images/{ImageID}")]
@@ -237,15 +252,18 @@ namespace GameShop.Controllers
         [HttpPut("{GameID}/Images/{ImageID}")]
         [Authorize(Roles = "admin")]
         public async Task<IActionResult> UpdateImage(Guid ImageID, [FromForm] GameImageUpdateRequest request)
-        {
+        {   
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            var result = await _gameService.UpdateImage(ImageID, request);
-            if (result == 0)
-                return BadRequest();
-            return Ok();
+            using (var transaction = _transactionCustom.CreateTransaction(isolationLevel: IsolationLevel.ReadUncommitted))
+            {
+                var result = await _gameService.UpdateImage(ImageID, request);
+                if (result == 0)
+                    return BadRequest();
+                return Ok();
+            }
         }
 
         [HttpDelete("{GameID}/Images/{ImageID}")]
@@ -256,12 +274,15 @@ namespace GameShop.Controllers
             {
                 return BadRequest(ModelState);
             }
-            var result = await _gameService.RemoveImage(ImageID);
-            if (result == 0)
+            using (var transaction = _transactionCustom.CreateTransaction(isolationLevel: IsolationLevel.ReadUncommitted))
             {
-                return BadRequest();
+                var result = await _gameService.RemoveImage(ImageID);
+                if (result == 0)
+                {
+                    return BadRequest();
+                }
+                return Ok();
             }
-            return Ok();
         }
 
         [HttpPut("{id}/genres")]
@@ -270,13 +291,15 @@ namespace GameShop.Controllers
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
-
-            var result = await _gameService.CategoryAssign(id, request);
-            if (!result.IsSuccess)
+            using (var transaction = _transactionCustom.CreateTransaction(isolationLevel: IsolationLevel.ReadUncommitted))
             {
-                return BadRequest(result);
+                var result = await _gameService.CategoryAssign(id, request);
+                if (!result.IsSuccess)
+                {
+                    return BadRequest(result);
+                }
+                return Ok(result);
             }
-            return Ok(result);
         }
     }
 }

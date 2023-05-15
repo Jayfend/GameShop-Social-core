@@ -12,6 +12,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.JSInterop;
 using System;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.IO;
 using System.Linq;
@@ -532,6 +533,22 @@ namespace GameShop.Application.System.Users
             {
                 return new ApiErrorResult<bool>("Đăng ký không thành công");
             }
+        }
+
+        public async Task<bool> DeleteInactiveAccount()
+        {
+            var userList = await _context.Users.ToListAsync();
+            var deleteList = new List<AppUser>();
+            foreach(var user in userList)
+            {
+                if(user.isConfirmed == false)
+                {
+                    deleteList.Add(user);
+                }
+            }
+            _context.Users.RemoveRange(deleteList);
+            await _context.SaveChangesAsync();
+            return true;
         }
     }
 }

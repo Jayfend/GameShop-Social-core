@@ -1,8 +1,10 @@
-﻿using GameShop.Application.Services.Wishlists;
+﻿using FRT.MasterDataCore.Customs;
+using GameShop.Application.Services.Wishlists;
 using GameShop.ViewModels.Catalog.Wishlists;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
+using System.Transactions;
 
 namespace GameShop.Controllers
 {
@@ -11,10 +13,12 @@ namespace GameShop.Controllers
     public class WishlistController : ControllerBase
     {
         private readonly IWishlistService _wishlistService;
+        readonly ITransactionCustom _transactionCustom;
 
-        public WishlistController(IWishlistService wishlistService)
+        public WishlistController(IWishlistService wishlistService, ITransactionCustom transactionCustoms)
         {
             _wishlistService = wishlistService;
+            _transactionCustom = transactionCustoms;
         }
 
         [HttpPost("UserID")]
@@ -24,12 +28,15 @@ namespace GameShop.Controllers
             {
                 return BadRequest();
             }
-            var result = await _wishlistService.AddWishlist(UserID, addWishlistRequest);
-            if (!result.IsSuccess)
+            using (var transaction = _transactionCustom.CreateTransaction(isolationLevel: IsolationLevel.ReadUncommitted))
             {
-                return BadRequest(result);
+                var result = await _wishlistService.AddWishlist(UserID, addWishlistRequest);
+                if (!result.IsSuccess)
+                {
+                    return BadRequest(result);
+                }
+                return Ok(result);
             }
-            return Ok(result);
         }
 
         [HttpGet("UserID")]
@@ -53,14 +60,17 @@ namespace GameShop.Controllers
             {
                 return BadRequest();
             }
-            var result = await _wishlistService.DeleteItem(UserID, deleteItemRequest);
-            if (!result.IsSuccess)
+            using (var transaction = _transactionCustom.CreateTransaction(isolationLevel: IsolationLevel.ReadUncommitted))
             {
-                return BadRequest(result);
-            }
-            else
-            {
-                return Ok(result);
+                var result = await _wishlistService.DeleteItem(UserID, deleteItemRequest);
+                if (!result.IsSuccess)
+                {
+                    return BadRequest(result);
+                }
+                else
+                {
+                    return Ok(result);
+                }
             }
         }
     }

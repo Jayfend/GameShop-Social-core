@@ -196,7 +196,9 @@ namespace GameShop.Data.Extensions
                 SecurityStamp = string.Empty,
                 FirstName = "Luan",
                 LastName = "Nguyen Phung Le",
-                Dob = new DateTime(2001, 07, 01)
+                Dob = new DateTime(2001, 07, 01),
+                isConfirmed= true,
+                ConfirmCode= "676767"
             });
 
             modelBuilder.Entity<IdentityUserRole<Guid>>().HasData(new IdentityUserRole<Guid>

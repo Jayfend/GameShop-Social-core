@@ -1,10 +1,12 @@
-﻿using GameShop.Application.Services.Categories;
+﻿using FRT.MasterDataCore.Customs;
+using GameShop.Application.Services.Categories;
 using GameShop.ViewModels.Catalog.Categories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
+using System.Transactions;
 
 namespace GameShop.Controllers
 {
@@ -13,11 +15,12 @@ namespace GameShop.Controllers
     public class CategoriesController : ControllerBase
     {
         private readonly ICategoryService _categoryService;
-
+        readonly ITransactionCustom _transactionCustom;
         public CategoriesController(
-            ICategoryService categoryService)
+            ICategoryService categoryService, ITransactionCustom transactionCustom)
         {
             _categoryService = categoryService;
+            _transactionCustom = transactionCustom;
         }
 
         [HttpGet]
@@ -42,12 +45,15 @@ namespace GameShop.Controllers
             {
                 return BadRequest(ModelState);
             }
-            var result = await _categoryService.CreateCategory(request);
-            if (!result.IsSuccess)
+            using (var transaction = _transactionCustom.CreateTransaction(isolationLevel: IsolationLevel.ReadUncommitted))
             {
-                return BadRequest(result);
+                var result = await _categoryService.CreateCategory(request);
+                if (!result.IsSuccess)
+                {
+                    return BadRequest(result);
+                }
+                return Ok(result);
             }
-            return Ok(result);
         }
 
         [HttpPut]
@@ -58,12 +64,15 @@ namespace GameShop.Controllers
             {
                 return BadRequest(ModelState);
             }
-            var result = await _categoryService.EditCategory(request);
-            if (!result.IsSuccess)
+            using (var transaction = _transactionCustom.CreateTransaction(isolationLevel: IsolationLevel.ReadUncommitted))
             {
-                return BadRequest(result);
+                var result = await _categoryService.EditCategory(request);
+                if (!result.IsSuccess)
+                {
+                    return BadRequest(result);
+                }
+                return Ok(result);
             }
-            return Ok(result);
         }
     }
 }

@@ -1,9 +1,11 @@
-﻿using GameShop.Application.Services.Checkouts;
+﻿using FRT.MasterDataCore.Customs;
+using GameShop.Application.Services.Checkouts;
 using GameShop.ViewModels.Catalog.Games;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
+using System.Transactions;
 
 namespace GameShop.Controllers
 {
@@ -13,21 +15,26 @@ namespace GameShop.Controllers
     public class CheckoutsController : ControllerBase
     {
         private readonly ICheckoutService _checkoutService;
-
-        public CheckoutsController(ICheckoutService checkoutService)
+        readonly ITransactionCustom _transactionCustom;
+        public CheckoutsController(ICheckoutService checkoutService, ITransactionCustom transactionCustom)
         {
             _checkoutService = checkoutService;
+            _transactionCustom = transactionCustom;
         }
 
         [HttpPost("UserID")]
         public async Task<IActionResult> Checkout(Guid UserID)
         {
-            var result = await _checkoutService.CheckoutGame(UserID);
-            if (!result.IsSuccess)
+            using (var transaction = _transactionCustom.CreateTransaction(isolationLevel: IsolationLevel.ReadUncommitted))
             {
-                return BadRequest(result);
+                var result = await _checkoutService.CheckoutGame(UserID);
+                if (!result.IsSuccess)
+                {
+                    return BadRequest(result);
+                }
+                return Ok(result);
+
             }
-            return Ok(result);
         }
 
         [HttpGet("CheckoutID")]

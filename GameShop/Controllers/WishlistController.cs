@@ -1,4 +1,4 @@
-﻿using FRT.MasterDataCore.Customs;
+﻿using GameShop.Application;
 using GameShop.Application.Services.Wishlists;
 using GameShop.ViewModels.Catalog.Wishlists;
 using Microsoft.AspNetCore.Mvc;
@@ -13,12 +13,12 @@ namespace GameShop.Controllers
     public class WishlistController : ControllerBase
     {
         private readonly IWishlistService _wishlistService;
-        readonly ITransactionCustom _transactionCustom;
+      
 
-        public WishlistController(IWishlistService wishlistService, ITransactionCustom transactionCustoms)
+        public WishlistController(IWishlistService wishlistService)
         {
             _wishlistService = wishlistService;
-            _transactionCustom = transactionCustoms;
+           
         }
 
         [HttpPost("UserID")]
@@ -28,15 +28,14 @@ namespace GameShop.Controllers
             {
                 return BadRequest();
             }
-            using (var transaction = _transactionCustom.CreateTransaction(isolationLevel: IsolationLevel.ReadUncommitted))
-            {
+         
                 var result = await _wishlistService.AddWishlist(UserID, addWishlistRequest);
                 if (!result.IsSuccess)
                 {
                     return BadRequest(result);
                 }
                 return Ok(result);
-            }
+            
         }
 
         [HttpGet("UserID")]
@@ -60,8 +59,7 @@ namespace GameShop.Controllers
             {
                 return BadRequest();
             }
-            using (var transaction = _transactionCustom.CreateTransaction(isolationLevel: IsolationLevel.ReadUncommitted))
-            {
+           
                 var result = await _wishlistService.DeleteItem(UserID, deleteItemRequest);
                 if (!result.IsSuccess)
                 {
@@ -71,7 +69,7 @@ namespace GameShop.Controllers
                 {
                     return Ok(result);
                 }
-            }
+            
         }
     }
 }

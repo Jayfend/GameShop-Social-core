@@ -2,7 +2,7 @@ using FluentValidation.AspNetCore;
 using FRT.DataReporting.Application.Utilities;
 using FRT.DataReporting.Application.Utilities.Redis;
 using FRT.DataReporting.Domain.Configurations;
-using FRT.MasterDataCore.Customs;
+using GameShop.Application;
 using GameShop.Application.Common;
 using GameShop.Application.Services.Carts;
 using GameShop.Application.Services.Categories;
@@ -22,7 +22,6 @@ using GameShop.ViewModels.System.Users;
 using Hangfire;
 using Hangfire.Console;
 using Hangfire.RecurringJobExtensions;
-using HangfireBasicAuthenticationFilter;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -78,6 +77,7 @@ namespace GameShop
             services.AddSignalR();
             services.AddSingleton<IDictionary<string, AppUser>>(opts => new Dictionary<string, AppUser>());
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+            services.AddScoped<ITransactionCustom, TransactionCustom>();
             services.Configure<RedisConfig>(Configuration.GetSection("Redis"));
             //services.AddTransient<IValidator<LoginRequest>, LoginRequestValidator>();
             services.AddControllers()

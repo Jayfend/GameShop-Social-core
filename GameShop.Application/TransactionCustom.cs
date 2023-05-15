@@ -1,6 +1,9 @@
-﻿using System.Transactions;
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Transactions;
 
-namespace FRT.MasterDataCore.Customs
+namespace GameShop.Application
 {
     public interface ITransactionCustom
     {

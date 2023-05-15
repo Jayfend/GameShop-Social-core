@@ -1,9 +1,8 @@
-﻿using FRT.MasterDataCore.Customs;
+﻿using GameShop.Application;
 using GameShop.Application.System.Users;
 using GameShop.ViewModels.Catalog.UserImages;
 using GameShop.ViewModels.System.Users;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
@@ -16,12 +15,11 @@ namespace GameShop.Controllers
     public class UsersController : ControllerBase
     {
         private readonly IUserService _userService;
-        readonly ITransactionCustom _transactionCustom;
-
-        public UsersController(IUserService userService, ITransactionCustom transactionCustom)
+        
+        public UsersController(IUserService userService)
         {
             _userService = userService;
-            _transactionCustom = transactionCustom;
+            
         }
 
         [HttpPost("authenticate")]
@@ -115,15 +113,14 @@ namespace GameShop.Controllers
             {
                 return BadRequest(ModelState);
             }
-            using (var transaction = _transactionCustom.CreateTransaction(isolationLevel: IsolationLevel.ReadUncommitted))
-            {
+            
                 var result = await _userService.UpdateUser(request);
                 if (!result.IsSuccess)
                 {
                     return BadRequest(result);
                 }
                 return Ok(result);
-            }
+            
         }
 
         [HttpPut("{id}/roles")]
@@ -134,15 +131,14 @@ namespace GameShop.Controllers
             {
                 return BadRequest(ModelState);
             }
-            using (var transaction = _transactionCustom.CreateTransaction(isolationLevel: IsolationLevel.ReadUncommitted))
-            {
+           
                 var result = await _userService.RoleAssign(Id, request);
                 if (!result.IsSuccess)
                 {
                     return BadRequest(result);
                 }
                 return Ok(result);
-            }
+            
         }
 
         [HttpGet("paging")]
@@ -163,11 +159,10 @@ namespace GameShop.Controllers
         [Authorize(Roles = "admin")]
         public async Task<IActionResult> Delete(Guid id)
         {
-            using (var transaction = _transactionCustom.CreateTransaction(isolationLevel: IsolationLevel.ReadUncommitted))
-            {
+           
                 var result = await _userService.Delete(id);
                 return Ok(result);
-            }
+            
         }
 
         [Authorize]
@@ -179,15 +174,14 @@ namespace GameShop.Controllers
             {
                 return BadRequest(ModelState);
             }
-            using (var transaction = _transactionCustom.CreateTransaction(isolationLevel: IsolationLevel.ReadUncommitted))
-            {
+            
                 var result = await _userService.AddAvatar(UserID, request);
                 if (!result.IsSuccess)
                 {
                     return BadRequest(result);
                 }
                 return Ok(result);
-            }
+            
         }
 
         [Authorize]
@@ -199,15 +193,14 @@ namespace GameShop.Controllers
             {
                 return BadRequest(ModelState);
             }
-            using (var transaction = _transactionCustom.CreateTransaction(isolationLevel: IsolationLevel.ReadUncommitted))
-            {
+           
                 var result = await _userService.AddThumbnail(UserID, request);
                 if (!result.IsSuccess)
                 {
                     return BadRequest(result);
                 }
                 return Ok(result);
-            }
+            
         }
 
         [AllowAnonymous]
@@ -218,15 +211,14 @@ namespace GameShop.Controllers
             {
                 return BadRequest(ModelState);
             }
-            using (var transaction = _transactionCustom.CreateTransaction(isolationLevel: IsolationLevel.ReadUncommitted))
-            {
+           
                 var result = await _userService.ConfirmAccount(request);
                 if (!result.IsSuccess)
                 {
                     return BadRequest(result);
                 }
                 return Ok(result);
-            }
+            
         }
 
         [AllowAnonymous]

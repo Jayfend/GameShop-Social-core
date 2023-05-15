@@ -1,9 +1,7 @@
-﻿using FRT.MasterDataCore.Customs;
+﻿using GameShop.Application;
 using GameShop.Application.Services.Carts;
-using GameShop.Application.System.Users;
 using GameShop.ViewModels.Catalog.Carts;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using System.Transactions;
@@ -16,11 +14,11 @@ namespace GameShop.Controllers
     public class CartsController : ControllerBase
     {
         private readonly ICartService _cartService;
-        readonly ITransactionCustom _transactionCustom;
-        public CartsController(ICartService cartService, ITransactionCustom transactionCustom)
+      
+        public CartsController(ICartService cartService)
         {
             _cartService = cartService;
-            _transactionCustom = transactionCustom;
+           
         }
 
         [HttpPost("UserID")]
@@ -30,15 +28,14 @@ namespace GameShop.Controllers
             {
                 return BadRequest(ModelState);
             }
-            using (var transaction = _transactionCustom.CreateTransaction(isolationLevel: IsolationLevel.ReadUncommitted))
-            {
+            
                 var result = await _cartService.AddToCart(UserID, cartCreateRequest);
                 if (!result.IsSuccess)
                 {
                     return BadRequest(result);
                 }
                 return Ok(result);
-            }
+            
         }
 
         [HttpGet("UserID")]
@@ -62,8 +59,7 @@ namespace GameShop.Controllers
             {
                 return BadRequest();
             }
-            using (var transaction = _transactionCustom.CreateTransaction(isolationLevel: IsolationLevel.ReadUncommitted))
-            {
+           
                 var result = await _cartService.DeleteItem(UserID, orderItemDelete);
                 if (!result.IsSuccess)
                 {
@@ -73,7 +69,7 @@ namespace GameShop.Controllers
                 {
                     return Ok(result);
                 }
-            }
+            
         }
     }
 }

@@ -1,8 +1,7 @@
-﻿using FRT.MasterDataCore.Customs;
+﻿using GameShop.Application;
 using GameShop.Application.Services.Categories;
 using GameShop.ViewModels.Catalog.Categories;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
@@ -15,12 +14,12 @@ namespace GameShop.Controllers
     public class CategoriesController : ControllerBase
     {
         private readonly ICategoryService _categoryService;
-        readonly ITransactionCustom _transactionCustom;
+       
         public CategoriesController(
-            ICategoryService categoryService, ITransactionCustom transactionCustom)
+            ICategoryService categoryService)
         {
             _categoryService = categoryService;
-            _transactionCustom = transactionCustom;
+           
         }
 
         [HttpGet]
@@ -45,15 +44,14 @@ namespace GameShop.Controllers
             {
                 return BadRequest(ModelState);
             }
-            using (var transaction = _transactionCustom.CreateTransaction(isolationLevel: IsolationLevel.ReadUncommitted))
-            {
+           
                 var result = await _categoryService.CreateCategory(request);
                 if (!result.IsSuccess)
                 {
                     return BadRequest(result);
                 }
                 return Ok(result);
-            }
+            
         }
 
         [HttpPut]
@@ -64,15 +62,14 @@ namespace GameShop.Controllers
             {
                 return BadRequest(ModelState);
             }
-            using (var transaction = _transactionCustom.CreateTransaction(isolationLevel: IsolationLevel.ReadUncommitted))
-            {
+            
                 var result = await _categoryService.EditCategory(request);
                 if (!result.IsSuccess)
                 {
                     return BadRequest(result);
                 }
                 return Ok(result);
-            }
+            
         }
     }
 }

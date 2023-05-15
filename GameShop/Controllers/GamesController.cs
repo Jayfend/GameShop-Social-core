@@ -1,4 +1,4 @@
-﻿using FRT.MasterDataCore.Customs;
+﻿using GameShop.Application;
 using GameShop.Application.Services.Games;
 using GameShop.ViewModels.Catalog.GameImages;
 using GameShop.ViewModels.Catalog.Games;
@@ -16,11 +16,11 @@ namespace GameShop.Controllers
     public class GamesController : ControllerBase
     {
         private readonly IGameService _gameService;
-        readonly ITransactionCustom _transactionCustom;
-        public GamesController(IGameService gameService, IWebHostEnvironment webHostEnvironment, ITransactionCustom transactionCustom)
+      
+        public GamesController(IGameService gameService, IWebHostEnvironment webHostEnvironment)
         {
             _gameService = gameService;
-            _transactionCustom = transactionCustom;
+       
         }
 
         //https:://localhost:port/game
@@ -47,12 +47,11 @@ namespace GameShop.Controllers
         [HttpPost("active-game")]
         public async Task<IActionResult> ActiveGameAsync(ActiveGameDTO req)
         {
-            using (var transaction = _transactionCustom.CreateTransaction(isolationLevel: IsolationLevel.ReadUncommitted))
-            {
+          
                 var response = await _gameService.ActiveGameAsync(req);
 
                 return Ok(response);
-            }
+            
         }
         [HttpGet("bestseller")]
         public async Task<IActionResult> GetBestSeller([FromQuery] GetManageGamePagingRequest request)
@@ -123,8 +122,7 @@ namespace GameShop.Controllers
             //    SRM = JsonConvert.DeserializeObject<SystemRequireMin>(request.SRM),
             //    SRR = JsonConvert.DeserializeObject<SystemRequirementRecommend>(request.SRR),
             //};
-            using (var transaction = _transactionCustom.CreateTransaction(isolationLevel: IsolationLevel.ReadUncommitted))
-            {
+            
                 var gameID = await _gameService.Create(request);
                 if (gameID == Guid.Empty)
                 {
@@ -132,7 +130,7 @@ namespace GameShop.Controllers
                 }
                 var game = await _gameService.GetById(gameID);
                 return Created(nameof(GetById), game);
-            }
+            
         }
 
         [HttpPut("{GameID}")]
@@ -158,8 +156,7 @@ namespace GameShop.Controllers
             //    SRM = JsonConvert.DeserializeObject<SystemRequireMin>(request.SRM),
             //    SRR = JsonConvert.DeserializeObject<SystemRequirementRecommend>(request.SRR),
             //};
-            using (var transaction = _transactionCustom.CreateTransaction(isolationLevel: IsolationLevel.ReadUncommitted))
-            {
+            
                 var affedtedResult = await _gameService.Update(GameID, request);
                 if (affedtedResult == 0)
                 {
@@ -167,15 +164,14 @@ namespace GameShop.Controllers
                 }
 
                 return Ok();
-            }
+            
         }
 
         [HttpDelete("{GameID}")]
         [Authorize(Roles = "admin")]
         public async Task<IActionResult> Delete(Guid GameID)
         {
-            using (var transaction = _transactionCustom.CreateTransaction(isolationLevel: IsolationLevel.ReadUncommitted))
-            {
+            
                 var affedtedResult = await _gameService.Delete(GameID);
                 if (affedtedResult == 0)
                 {
@@ -183,15 +179,14 @@ namespace GameShop.Controllers
                 }
 
                 return Ok();
-            }
+            
         }
 
         [HttpPatch("price/{GameID}/{newPrice}")]
         [Authorize(Roles = "admin")]
         public async Task<IActionResult> UpdatePrice([FromRoute] Guid GameID, decimal newPrice)
         {
-            using (var transaction = _transactionCustom.CreateTransaction(isolationLevel: IsolationLevel.ReadUncommitted))
-            {
+            
                 var isSuccess = await _gameService.UpdatePrice(GameID, newPrice);
                 if (isSuccess == false)
                 {
@@ -199,7 +194,7 @@ namespace GameShop.Controllers
                 }
 
                 return Ok();
-            }
+            
         }
 
         // Image
@@ -214,8 +209,7 @@ namespace GameShop.Controllers
             }
 
 
-            using (var transaction = _transactionCustom.CreateTransaction(isolationLevel: IsolationLevel.ReadUncommitted))
-            {
+            
                 var imageid = await _gameService.AddImage(GameID, request);
                 if (imageid == Guid.Empty)
                 {
@@ -223,7 +217,7 @@ namespace GameShop.Controllers
                 }
                 var image = await _gameService.GetImageById(imageid);
                 return CreatedAtAction(nameof(GetImageByID), new { ImageID = imageid, GameID = GameID }, image);
-            }
+            
 
         }
 
@@ -257,13 +251,12 @@ namespace GameShop.Controllers
             {
                 return BadRequest(ModelState);
             }
-            using (var transaction = _transactionCustom.CreateTransaction(isolationLevel: IsolationLevel.ReadUncommitted))
-            {
+            
                 var result = await _gameService.UpdateImage(ImageID, request);
                 if (result == 0)
                     return BadRequest();
                 return Ok();
-            }
+            
         }
 
         [HttpDelete("{GameID}/Images/{ImageID}")]
@@ -274,15 +267,14 @@ namespace GameShop.Controllers
             {
                 return BadRequest(ModelState);
             }
-            using (var transaction = _transactionCustom.CreateTransaction(isolationLevel: IsolationLevel.ReadUncommitted))
-            {
+           
                 var result = await _gameService.RemoveImage(ImageID);
                 if (result == 0)
                 {
                     return BadRequest();
                 }
                 return Ok();
-            }
+            
         }
 
         [HttpPut("{id}/genres")]
@@ -291,15 +283,14 @@ namespace GameShop.Controllers
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
-            using (var transaction = _transactionCustom.CreateTransaction(isolationLevel: IsolationLevel.ReadUncommitted))
-            {
+           
                 var result = await _gameService.CategoryAssign(id, request);
                 if (!result.IsSuccess)
                 {
                     return BadRequest(result);
                 }
                 return Ok(result);
-            }
+            
         }
     }
 }

@@ -77,7 +77,7 @@ namespace GameShop.Application.Services.Games
                 RatePoint = 0,
                 Status = request.Status
             };
-            var genrelist = await _context.Genres.Where(x => request.Genre.Contains(x.Id)).ToListAsync();
+            var genrelist = await _context.Genres.Where(x => request.GenreList.Contains(x.Id)).ToListAsync();
 
             var newGameInGenreList = new List<GameinGenre>();
             foreach(var genre in genrelist)

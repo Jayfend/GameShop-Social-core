@@ -1,5 +1,6 @@
 ﻿using Abp.Application.Services.Dto;
 using GameShop.Data.ElasticSearch;
+using GameShop.ViewModels.Catalog.Games;
 using GameShop.ViewModels.Common;
 using Nest;
 using System.Collections.Generic;
@@ -27,6 +28,7 @@ namespace GameShop.Utilities
         Task<bool> DeleteAllDataAsync<T>(string indexName, string server = null) where T : BaseDocumentElasticSearch;
 
         Task<bool> InitIndex<T>(string indexName, string server = null) where T : BaseDocumentElasticSearch;
+        Task<List<GameElasticModel>> SearchSuggestion(string keyword, string indexName, string server = null);
 
     }
 }

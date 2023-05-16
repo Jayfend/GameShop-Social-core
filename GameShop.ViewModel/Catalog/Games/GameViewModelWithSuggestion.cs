@@ -1,13 +1,10 @@
-﻿using GameShop.Data.ElasticSearch;
-using Nest;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace GameShop.ViewModels.Catalog.Games
 {
-    [ElasticsearchType(RelationName = "Device", IdProperty = nameof(Id))]
-    public class GameElasticModel : BaseDocumentElasticSearch
+    public class GameViewModelWithSuggestion
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
@@ -27,7 +24,7 @@ namespace GameShop.ViewModels.Catalog.Games
         public SystemRequirementRecommend SRR { get; set; }
         public List<string> ListImage { get; set; } = new List<string>();
         public string FileGame { get; set; }
-        public bool isActive { get; set; }
-        public CompletionField GenreSuggest { get; set; }
+        public bool IsActive { get; set; }
+        public List<GameElasticModel> GameSuggestionList { get; set; }
     }
 }

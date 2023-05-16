@@ -12,7 +12,7 @@ namespace GameShop.Application.Mapper
     {
         public GameProfile()
         {
-            CreateMap<Game, GameElasticModel>()
+            CreateMap<GameViewModel, GameElasticModel>()
                  .ForMember(dest => dest.ESId, opt => opt.MapFrom(src => src.Id))
                 .ReverseMap(); 
         }

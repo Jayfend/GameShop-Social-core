@@ -70,7 +70,7 @@ namespace GameShop.Application.Services.Publishers
                         PublisherName = publisher.Name,
                         GameName = game.GameName,
                         Status = true,
-                        isActive = false
+                        IsActive = false
                     };
                     await _context.Keys.AddAsync(newKey);
                     keyList.Add(ciphertext);
@@ -136,7 +136,7 @@ namespace GameShop.Application.Services.Publishers
                             PublisherName = publisher.Name,
                             GameName = game.GameName,
                             Status = true,
-                            isActive = false
+                            IsActive = false
                         };
                         await _context.Keys.AddAsync(newKey);
                         var hashKey = new HashEntry(newKey.Id.ToString(), JsonConvert.SerializeObject(newKey));

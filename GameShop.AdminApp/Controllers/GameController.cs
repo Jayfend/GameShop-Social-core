@@ -68,24 +68,24 @@ namespace GameShop.AdminApp.Controllers
             return View();
         }
 
-        [HttpPost]
-        [Consumes("multipart/form-data")]
-        public async Task<IActionResult> Create([FromForm] GameCreateRequest request, Guid GenreId)
-        {
-            if (!ModelState.IsValid)
-                return View(request);
+        //[HttpPost]
+        //[Consumes("multipart/form-data")]
+        //public async Task<IActionResult> Create([FromForm] GameCreateRequest request, Guid GenreId)
+        //{
+        //    if (!ModelState.IsValid)
+        //        return View(request);
 
-            request.Genre = GenreId;
-            var result = await _gameApiClient.CreateGame(request);
-            if (result)
-            {
-                TempData["result"] = "Thêm mới sản phẩm thành công";
-                return RedirectToAction("Index");
-            }
+        //    request.Genre = GenreId;
+        //    var result = await _gameApiClient.CreateGame(request);
+        //    if (result)
+        //    {
+        //        TempData["result"] = "Thêm mới sản phẩm thành công";
+        //        return RedirectToAction("Index");
+        //    }
 
-            ModelState.AddModelError("", "Thêm sản phẩm thất bại");
-            return View(request);
-        }
+        //    ModelState.AddModelError("", "Thêm sản phẩm thất bại");
+        //    return View(request);
+        //}
 
         [HttpGet]
         public async Task<IActionResult> CategoryAssign(Guid id)

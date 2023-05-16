@@ -3,6 +3,7 @@ using GameShop.Data.ElasticSearch;
 using GameShop.Utilities;
 using GameShop.Utilities.Configurations;
 using GameShop.Utilities.Exceptions;
+using GameShop.ViewModels.Catalog.Games;
 using GameShop.ViewModels.Common;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -306,6 +307,29 @@ namespace GameShop.Application.Utilities
             return true;
         }
 
+        public async Task<List<GameElasticModel>> SearchSuggestion(string keyword,string indexName, string server = null)
+        {
+            InitElasticService(server);
 
+            var response = await _elasticClient.SearchAsync<GameElasticModel>(s => s
+            .Suggest(su => su
+                .Completion("genreSuggest", cs => cs
+                    .Field(f => f.GenreSuggest)
+                    .Prefix(keyword)
+                    .Fuzzy(f => f
+                        .Fuzziness(Fuzziness.Auto)
+                    )
+                    .Size(5)
+                )
+            )
+        );
+
+            var suggestions = response.Suggest["genreSuggest"]
+                .SelectMany(t => t.Options)
+                .Select(o => o.Source)
+                .ToList();
+           
+            return suggestions;
+        }
     }
 }

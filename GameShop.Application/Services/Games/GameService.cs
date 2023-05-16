@@ -1,29 +1,30 @@
-﻿using GameShop.Data.EF;
+﻿using AutoMapper;
+using GameShop.Application.Common;
+using GameShop.Data.EF;
 using GameShop.Data.Entities;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
-using System.Linq;
-using Microsoft.EntityFrameworkCore;
+using GameShop.Utilities;
+using GameShop.Utilities.Configurations;
+using GameShop.Utilities.Exceptions;
+using GameShop.Utilities.Redis;
+using GameShop.ViewModels.Catalog.GameImages;
 using GameShop.ViewModels.Catalog.Games;
 using GameShop.ViewModels.Common;
 using Microsoft.AspNetCore.Http;
-using System.Net.Http.Headers;
-using System.IO;
-using GameShop.Application.Common;
-using GameShop.Utilities.Exceptions;
-using GameShop.ViewModels.Catalog.GameImages;
-using Microsoft.AspNetCore.Mvc;
-using GameShop.ViewModels.Catalog.UserImages;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
-using FRT.DataReporting.Application.Utilities;
-using FRT.DataReporting.Domain.Configurations;
-using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Identity;
-using System.Security.Policy;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.Extensions.Options;
+using Nest;
 using Newtonsoft.Json;
 using StackExchange.Redis;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Net.Http.Headers;
+using System.Threading.Tasks;
 
 namespace GameShop.Application.Services.Games
 {
@@ -34,24 +35,32 @@ namespace GameShop.Application.Services.Games
         private readonly UserManager<AppUser> _userManager;
         readonly IRedisUtil _redisUtil;
         readonly RedisConfig _redisConfig;
-
+        readonly IElasticSearchUlti _elasticSearchUtil;
+        readonly ElasticSearchConfig _elasticSearchConfig;
+        readonly IMapper _mapper;
         public GameService(GameShopDbContext context
             , IStorageService storageService
             , IRedisUtil redisUtil
-            ,IOptions<RedisConfig> redisConfig
-            , UserManager<AppUser> useManager)
+            , IOptions<RedisConfig> redisConfig
+            , UserManager<AppUser> useManager
+            , IElasticSearchUlti elasticSearchUtil
+            , IOptions<ElasticSearchConfig> elasticSearchConfig
+            , IMapper mapper)
         {
             _context = context;
             _storageService = storageService;
             _redisUtil = redisUtil;
             _redisConfig = redisConfig.Value;
             _userManager = useManager;
+            _elasticSearchConfig = elasticSearchConfig.Value;
+            _elasticSearchUtil = elasticSearchUtil;
+            _mapper = mapper;
 
         }
 
         public async Task<Guid> Create(GameCreateRequest request)
         {
-            if(await _context.Publishers.Where(x=>x.Id == request.PublisherId).FirstOrDefaultAsync() == null)
+            if (await _context.Publishers.Where(x => x.Id == request.PublisherId).FirstOrDefaultAsync() == null)
             {
                 throw new GameShopException("Không tìm thấy nhà phát hành");
             }
@@ -68,16 +77,20 @@ namespace GameShop.Application.Services.Games
                 RatePoint = 0,
                 Status = request.Status
             };
-            var genrelist = from g in _context.Genres select g;
+            var genrelist = await _context.Genres.Where(x => request.GenreList.Contains(x.Id)).ToListAsync();
 
-            var genre = genrelist.FirstOrDefault(x => x.Id == request.Genre);
-
-            var newgameingenre = new GameinGenre()
+            var newGameInGenreList = new List<GameinGenre>();
+            foreach(var genre in genrelist)
             {
-                Game = game,
-                Genre = genre
-            };
-            _context.GameinGenres.Add(newgameingenre);
+                var newgameingenre = new GameinGenre()
+                {
+                    Game = game,
+                    Genre = genre
+                };
+                newGameInGenreList.Add(newgameingenre);
+            }
+
+             _context.GameinGenres.AddRange(newGameInGenreList);
 
             if (request.ThumbnailImage != null)
             {
@@ -181,6 +194,7 @@ namespace GameShop.Application.Services.Games
                     Gameplay = x.Gameplay,
                     Discount = x.Discount,
                     PublisherId = x.PublisherId,
+                    PublisherName = x.Publisher.Name,
                     GenreName = new List<string>(),
                     GenreIDs = x.GameInGenres.Select(y => y.GenreID).ToList(),
                     Status = x.Status.ToString(),
@@ -232,6 +246,8 @@ namespace GameShop.Application.Services.Games
                 PageSize = request.PageSize,
                 Items = data
             };
+            //elastic
+            //var suggestions = _elasticSearchUtil.SearchSuggestion(request.Keyword, _elasticSearchConfig.Common.GameIndex, ElasticServer.Common);
             return pagedResult;
         }
 
@@ -325,13 +341,13 @@ namespace GameShop.Application.Services.Games
             }
         }
 
-        public async Task<GameViewModel> GetById(Guid GameID)
+        public async Task<GameViewModelWithSuggestion> GetById(Guid GameID)
         {
             var categories = await (from c in _context.Genres
                                     join pic in _context.GameinGenres on c.Id equals pic.GenreID
                                     where pic.GameId == GameID
                                     select c.GenreName).ToListAsync();
-            var gameview = await _context.Games.Where(x => x.Id == GameID).Select(x => new GameViewModel()
+            var gameview = await _context.Games.Where(x => x.Id == GameID).Select(x => new GameViewModelWithSuggestion()
             {
                 Id = x.Id,
                 Name = x.GameName,
@@ -344,6 +360,7 @@ namespace GameShop.Application.Services.Games
                 Discount = x.Discount,
                 Price = x.Price,
                 PublisherId = x.PublisherId,
+                PublisherName = x.Publisher.Name,
                 ListImage = new List<string>(),
                 SRM = new SystemRequireMin()
                 {
@@ -367,7 +384,7 @@ namespace GameShop.Application.Services.Games
                     Soundcard = x.SystemRequirementRecommended.Soundcard
                 }
             }).FirstOrDefaultAsync();
-            var ratings = await _context.Ratings.Where(x => x.GameId == GameID).Select(x=>x.Point).ToListAsync();
+            var ratings = await _context.Ratings.Where(x => x.GameId == GameID).Select(x => x.Point).ToListAsync();
             if (ratings.Any())
             {
                 int pointRating = 0;
@@ -394,6 +411,13 @@ namespace GameShop.Application.Services.Games
             var listgame = thumbnailimage.Where(x => x.GameID == gameview.Id).Select(y => y.ImagePath).ToList();
             gameview.ListImage = listgame;
 
+
+            //elastic
+            var keyword = string.Join(",", gameview.GenreName);
+            var suggestions = await _elasticSearchUtil.SearchSuggestion(keyword, _elasticSearchConfig.Common.GameIndex, ElasticServer.Common);
+            var deleteItem = suggestions.Where(x=>x.Id == gameview.Id).FirstOrDefault();
+            suggestions.Remove(deleteItem);
+            gameview.GameSuggestionList = suggestions.Distinct().ToList();
             return gameview;
         }
 
@@ -772,23 +796,23 @@ namespace GameShop.Application.Services.Games
 
         public async Task<bool> ActiveGameAsync(ActiveGameDTO req)
         {
-            if(string.IsNullOrWhiteSpace(req.Key))
+            if (string.IsNullOrWhiteSpace(req.Key))
             {
                 throw new GameShopException("Vui lòng nhập Key");
             }
             var user = await _userManager.FindByIdAsync(req.UserId.ToString());
-            if(user == null)
+            if (user == null)
             {
                 throw new GameShopException("Không tìm thấy user");
             }
             var game = await _context.Games.Where(x => x.Id == req.GameId).FirstOrDefaultAsync();
-            if(game == null)
+            if (game == null)
             {
                 throw new GameShopException("Không tìm thấy game");
             }
-            var checkoutList = await _context.Checkouts.Where(x=>x.Cart.UserID == req.UserId).Select(x=>x.Id).ToListAsync();
+            var checkoutList = await _context.Checkouts.Where(x => x.Cart.UserID == req.UserId).Select(x => x.Id).ToListAsync();
             var gameBought = await _context.SoldGames.Where(x => x.GameID == req.GameId && checkoutList.Contains(x.CheckoutID)).FirstOrDefaultAsync();
-            if(gameBought == null)
+            if (gameBought == null)
             {
                 throw new GameShopException("Bạn chưa mua game này");
             }
@@ -796,17 +820,17 @@ namespace GameShop.Application.Services.Games
             var keyList = await _redisUtil.HashGetAllAsync(string.Format(_redisConfig.DSMKey, publisher.Name, game.GameName));
             foreach (var _key in keyList)
             {
-                var dbKey = JsonConvert.DeserializeObject<Key>(_key);
+                var dbKey = JsonConvert.DeserializeObject<Data.Entities.Key>(_key);
                 if (req.Key == dbKey.KeyCode)
                 {
-                    if (game.GameName != dbKey.GameName || publisher.Name != dbKey.PublisherName || dbKey.isActive == true)
+                    if (game.GameName != dbKey.GameName || publisher.Name != dbKey.PublisherName || dbKey.IsActive == true)
                     {
                         throw new GameShopException("Keycode không hợp lệ hoặc đã được sử dụng");
                     }
                     else
                     {
                         List<HashEntry> entries = new List<HashEntry>();
-                        dbKey.isActive = true;
+                        dbKey.IsActive = true;
                         var hashKey = new HashEntry(dbKey.Id.ToString(), JsonConvert.SerializeObject(dbKey));
                         entries.Add(hashKey);
                         await _redisUtil.SetMultiAsync(string.Format(_redisConfig.DSMKey, publisher.Name, gameBought.GameName), entries.ToArray(), null);
@@ -817,6 +841,78 @@ namespace GameShop.Application.Services.Games
                 }
             }
             return false;
-    }
         }
+
+        public async Task<bool> SyncElasticSearchGames()
+        {
+            var gameList = _context.Games.AsQueryable();
+            var data = await gameList.Select(x => new GameViewModel()
+            {
+                CreatedDate = x.CreatedDate,
+                Id = x.Id,
+                Name = x.GameName,
+                Description = x.Description,
+                UpdatedDate = x.UpdatedDate,
+                Gameplay = x.Gameplay,
+                Discount = x.Discount,
+                PublisherId = x.PublisherId,
+                PublisherName = x.Publisher.Name,
+                GenreName = new List<string>(),
+                GenreIDs = x.GameInGenres.Select(y => y.GenreID).ToList(),
+                Status = x.Status.ToString(),
+                Price = x.Price,
+                ListImage = new List<string>(),
+                SRM = new SystemRequireMin()
+                {
+                    OS = x.SystemRequirementMin.OS,
+                    Processor = x.SystemRequirementMin.Processor,
+                    Memory = x.SystemRequirementMin.Memory,
+                    Graphics = x.SystemRequirementMin.Graphics,
+                    Storage = x.SystemRequirementMin.Storage,
+                    AdditionalNotes = x.SystemRequirementMin.Storage,
+                    Soundcard = x.SystemRequirementMin.Soundcard
+                },
+
+                SRR = new SystemRequirementRecommend()
+                {
+                    OS = x.SystemRequirementRecommended.OS,
+                    Processor = x.SystemRequirementRecommended.Processor,
+                    Memory = x.SystemRequirementRecommended.Memory,
+                    Graphics = x.SystemRequirementRecommended.Graphics,
+                    Storage = x.SystemRequirementRecommended.Storage,
+                    AdditionalNotes = x.SystemRequirementRecommended.Storage,
+                    Soundcard = x.SystemRequirementRecommended.Soundcard
+                }
+            })
+               .ToListAsync();
+            var genres = _context.Genres.AsQueryable();
+            foreach (var item in data)
+            {
+                foreach (var genre in item.GenreIDs)
+                {
+                    var name = genres.Where(x => x.Id == genre).Select(y => y.GenreName).FirstOrDefault();
+                    item.GenreName.Add(name);
+                }
+            }
+            var thumbnailimage = _context.GameImages.AsQueryable();
+            foreach (var item in data)
+            {
+                var listgame = thumbnailimage.Where(x => x.GameID == item.Id).Select(y => y.ImagePath).ToList();
+                item.ListImage = listgame;
+            }
+            foreach (var game in data)
+            {
+                var elasticGame = _mapper.Map<GameElasticModel>(game);
+                elasticGame.GenreSuggest = new CompletionField
+                {
+                    Input = elasticGame.GenreName.ToArray()
+                };
+
+                await _elasticSearchUtil.AddAsync(elasticGame, _elasticSearchConfig.Common.GameIndex, ElasticServer.Common);
+            }
+
+
+            return true;
+        }
+    }
 }

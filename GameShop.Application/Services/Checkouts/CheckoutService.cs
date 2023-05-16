@@ -14,14 +14,14 @@ using System.Net;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
-using FRT.DataReporting.Application.Utilities;
-using FRT.DataReporting.Domain.Configurations;
 using Microsoft.Extensions.Options;
 using System.Security.Policy;
 using GameShop.Utilities.Exceptions;
 using Newtonsoft.Json;
 using StackExchange.Redis;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using GameShop.Utilities.Configurations;
+using GameShop.Utilities.Redis;
 
 namespace GameShop.Application.Services.Checkouts
 {

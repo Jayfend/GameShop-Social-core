@@ -10,7 +10,7 @@ namespace GameShop.ViewModels.Common
 
         public int PageSize { get; set; }
 
-        public int TotalRecords { get; set; }
+        public long TotalRecords { get; set; }
 
         public int PageCount
         {

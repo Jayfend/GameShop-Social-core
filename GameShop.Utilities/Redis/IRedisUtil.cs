@@ -1,9 +1,10 @@
 ﻿using StackExchange.Redis;
 using System;
 using System.Collections.Generic;
+using System.Text;
 using System.Threading.Tasks;
 
-namespace FRT.DataReporting.Application.Utilities
+namespace GameShop.Utilities.Redis
 {
     public interface IRedisUtil
     {

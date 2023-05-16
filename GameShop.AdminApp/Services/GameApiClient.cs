@@ -90,7 +90,7 @@ namespace GameShop.AdminApp.Services
 
             requestContent.Add(new StringContent(request.Discount.ToString()), "discount");
             requestContent.Add(new StringContent(string.IsNullOrEmpty(request.Gameplay) ? "" : request.Gameplay.ToString()), "gameplay");
-            requestContent.Add(new StringContent(request.Genre.ToString()), "genre");
+            requestContent.Add(new StringContent(request.GenreList.ToString()), "genre");
 
             if (request.SRM != null)
             {

@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
-using FRT.DataReporting.Application.Utilities;
-using FRT.DataReporting.Domain.Configurations;
 using GameShop.Data.EF;
 using GameShop.Data.Entities;
+using GameShop.Utilities.Configurations;
 using GameShop.Utilities.Exceptions;
+using GameShop.Utilities.Redis;
 using GameShop.ViewModels.Catalog.Publishers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -70,7 +70,7 @@ namespace GameShop.Application.Services.Publishers
                         PublisherName = publisher.Name,
                         GameName = game.GameName,
                         Status = true,
-                        isActive = false
+                        IsActive = false
                     };
                     await _context.Keys.AddAsync(newKey);
                     keyList.Add(ciphertext);
@@ -136,7 +136,7 @@ namespace GameShop.Application.Services.Publishers
                             PublisherName = publisher.Name,
                             GameName = game.GameName,
                             Status = true,
-                            isActive = false
+                            IsActive = false
                         };
                         await _context.Keys.AddAsync(newKey);
                         var hashKey = new HashEntry(newKey.Id.ToString(), JsonConvert.SerializeObject(newKey));

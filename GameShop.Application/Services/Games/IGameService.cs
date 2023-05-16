@@ -38,7 +38,7 @@ namespace GameShop.Application.Services.Games
 
         Task<List<GameImageViewModel>> GetListImages(Guid GameID);
 
-        Task<GameViewModel> GetById(Guid GameID);
+        Task<GameViewModelWithSuggestion> GetById(Guid GameID);
 
         Task<GameImageViewModel> GetImageById(Guid imageId);
 
@@ -46,6 +46,7 @@ namespace GameShop.Application.Services.Games
 
         Task<PagedResult<GameBestSeller>> GetBestSeller(GetManageGamePagingRequest request);
         Task<bool> ActiveGameAsync(ActiveGameDTO req);
+        Task<bool> SyncElasticSearchGames();
         
     }
 }

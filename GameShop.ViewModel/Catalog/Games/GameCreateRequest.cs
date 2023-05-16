@@ -13,7 +13,7 @@ namespace GameShop.ViewModels.Catalog.Games
         public int Discount { get; set; }
         public string Description { get; set; }
         public string Gameplay { get; set; }
-        public Guid Genre { get; set; }
+        public List<Guid> GenreList { get; set; }
         public bool Status { get; set; }
         public Guid PublisherId { get; set; }
         public IFormFile ThumbnailImage { get; set; }

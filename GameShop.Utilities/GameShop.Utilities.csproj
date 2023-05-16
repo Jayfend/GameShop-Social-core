@@ -5,9 +5,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Abp" Version="8.2.0" />
     <PackageReference Include="Microsoft.Extensions.Options" Version="7.0.1" />
+    <PackageReference Include="NEST" Version="7.17.5" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="StackExchange.Redis" Version="2.6.111" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\GameShop.Data\GameShop.Data.csproj" />
+    <ProjectReference Include="..\GameShop.ViewModel\GameShop.ViewModels.csproj" />
   </ItemGroup>
 
 </Project>

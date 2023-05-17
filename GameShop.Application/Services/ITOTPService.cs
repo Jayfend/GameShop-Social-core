@@ -17,6 +17,7 @@ namespace GameShop.Application.Services
         Task<bool> Validate(ValidateOTPDTO req);
         Task<Bitmap> GenerateQrCodeImage(string userName, string passWord);
         Task<string> GenerateQrCodeUri(string userName, string passWord);
+        Task<bool> ForgotQRScan(string email);
 
     }
 }

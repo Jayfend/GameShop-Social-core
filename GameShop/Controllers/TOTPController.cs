@@ -63,5 +63,12 @@ namespace GameShop.Controllers
             var response = await _totpService.Validate(req);
             return Ok(response);
         }
+        [HttpPost("forgot-qr")]
+        public async Task<IActionResult> ForgotScanQr(string email)
+        {
+         
+            var response = await _totpService.ForgotQRScan(email);
+            return Ok(response);
+        }
     }
 }

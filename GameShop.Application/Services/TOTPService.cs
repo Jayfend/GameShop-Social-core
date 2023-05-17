@@ -10,9 +10,15 @@ using QRCoder;
 using System;
 using System.Drawing;
 using System.Linq;
+using System.Net.Mail;
+using System.Net;
 using System.Security.Cryptography;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
+using static System.Runtime.CompilerServices.RuntimeHelpers;
+using Nest;
+using System.Drawing.Imaging;
+using System.IO;
 
 namespace GameShop.Application.Services
 {
@@ -143,7 +149,52 @@ namespace GameShop.Application.Services
                 .Select(s => s[random.Next(s.Length)]).ToArray());
         }
 
+        public async Task<bool> ForgotQRScan(string email)
+        {
+           if(email == null)
+            {
+                throw new GameShopException("Vui lòng nhập Email");
+            }
+           var user = await _userManager.FindByEmailAsync(email);
+            if (user == null)
+            {
+                throw new GameShopException("Email không tồn tại");
+            }
+            QRCodeGenerator qrGenerator = new QRCodeGenerator();
+            QRCodeData qrCodeData = qrGenerator.CreateQrCode(string.Format(
+            AuthenticatorUriFormat,
+                _urlEncoder.Encode(AuthenticatorIssuer),
+                _urlEncoder.Encode(user.UserName),
+                user.OTPValue), QRCodeGenerator.ECCLevel.Q);
+            QRCode qrCode = new QRCode(qrCodeData);
+            Bitmap qrCodeImage = qrCode.GetGraphic(5);
+            MemoryStream ms = new MemoryStream();
+            qrCodeImage.Save(ms, ImageFormat.Jpeg);
+            byte[] byteImage = ms.ToArray();
+            var SigBase64 = Convert.ToBase64String(byteImage);
+            using (MailMessage mail = new MailMessage())
+            {
+                mail.From = new MailAddress("stemgameshop@gmail.com");
+                mail.To.Add(user.Email);
+                mail.Subject = "Confirm Account";
+                mail.Body = $@"<html>
+                      <body>
+                      <p>Dear {user.UserName},</p>
+                     <td><img src=data:image/jpg;base64,{SigBase64}></td>
+                      <p>Sincerely,<br>-STEM</br></p>
+                      </body>
+                      </html>
+                     ";
+                mail.IsBodyHtml = true;
 
-
+                using (SmtpClient smtp = new SmtpClient("smtp.gmail.com", 587))
+                {
+                    smtp.Credentials = new NetworkCredential("stemgameshop@gmail.com", "tditidglubtzxojy");
+                    smtp.EnableSsl = true;
+                    smtp.Send(mail);
+                }
+            }
+            return true;
+        }
     }
 }

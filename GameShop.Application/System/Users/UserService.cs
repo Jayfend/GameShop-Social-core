@@ -556,8 +556,9 @@ namespace GameShop.Application.System.Users
             var userList = await _context.Users.ToListAsync();
             var deleteList = new List<AppUser>();
             foreach(var user in userList)
-            {   var time = DateTime.Now - user.Creationtime;
-                if(user.isConfirmed == false && time > TimeSpan.Parse("10"))
+            {   var time = (DateTime.Now - user.Creationtime).TotalMinutes;
+                var tenminute = new TimeSpan(0,10,0).TotalMinutes;
+                if(user.isConfirmed == false &&  time > tenminute)
                 {
                     deleteList.Add(user);
                 }

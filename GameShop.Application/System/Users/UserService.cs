@@ -255,7 +255,8 @@ namespace GameShop.Application.System.Users
                 UserAvatar = useravatar,
                 UserThumbnail = userthumbnail,
                 isConfirmed = false,
-                ConfirmCode = sixDigitNumber
+                ConfirmCode = sixDigitNumber,
+                Creationtime = DateTime.Now
                 //FirstName = request.FirstName,
                 //LastName = request.LastName,
                 //PhoneNumber = request.PhoneNumber,
@@ -338,7 +339,7 @@ namespace GameShop.Application.System.Users
             user.FirstName = request.FirstName;
             user.LastName = request.LastName;
             user.PhoneNumber = request.PhoneNumber;
-
+            user.LastUpdated = DateTime.Now;
             var result = await _userManager.UpdateAsync(user);
             if (result.Succeeded)
             {
@@ -555,8 +556,8 @@ namespace GameShop.Application.System.Users
             var userList = await _context.Users.ToListAsync();
             var deleteList = new List<AppUser>();
             foreach(var user in userList)
-            {
-                if(user.isConfirmed == false)
+            {   var time = DateTime.Now - user.Creationtime;
+                if(user.isConfirmed == false && time > TimeSpan.Parse("10"))
                 {
                     deleteList.Add(user);
                 }

@@ -199,7 +199,8 @@ namespace GameShop.Data.Extensions
                 Dob = new DateTime(2001, 07, 01),
                 isConfirmed= true,
                 ConfirmCode= "676767",
-                OTPValue = "OBRYUMXL3D2LG3NIE36TGFAE6HJBO55C"
+                OTPValue = "OBRYUMXL3D2LG3NIE36TGFAE6HJBO55C",
+                Creationtime = DateTime.Now
             });
 
             modelBuilder.Entity<IdentityUserRole<Guid>>().HasData(new IdentityUserRole<Guid>

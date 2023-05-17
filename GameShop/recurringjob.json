@@ -8,7 +8,7 @@
   {
     "job-name": "DeleteInactiveAccountJob",
     "job-type": "GameShop.Application.Job.DeleteInactiveAccountJob, GameShop.Application",
-    "cron-expression": "0 20 * * *",
+    "cron-expression": "0 10 * * *",
     "timezone": "UTC"
   }
 ]

@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace GameShop.Data.Migrations
 {
-    public partial class Initial : Migration
+    public partial class initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -46,7 +46,8 @@ namespace GameShop.Data.Migrations
                     Dob = table.Column<DateTime>(nullable: false),
                     isConfirmed = table.Column<bool>(nullable: false),
                     ConfirmCode = table.Column<string>(nullable: true),
-                    Room = table.Column<string>(nullable: true)
+                    Room = table.Column<string>(nullable: true),
+                    OTPValue = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -632,29 +633,29 @@ namespace GameShop.Data.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Description", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { new Guid("8d04dce2-969a-435d-bba4-df3f325983dc"), "b3ab1fb8-1f5b-4539-85ef-c0cc8c853b8b", "Administrator role", "admin", "ADMIN" },
-                    { new Guid("52503f03-bdea-4bf8-8a1a-d21ae2646483"), "bed70edb-8987-4499-b7eb-9e35bc4f423d", "User role", "User", "USER" }
+                    { new Guid("8d04dce2-969a-435d-bba4-df3f325983dc"), "0485e75a-b76c-4bb8-929f-2db318aa3034", "Administrator role", "admin", "ADMIN" },
+                    { new Guid("52503f03-bdea-4bf8-8a1a-d21ae2646483"), "4db3c18d-4699-41e4-81ac-d86fb780475a", "User role", "User", "USER" }
                 });
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
-                columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "ConfirmCode", "Dob", "Email", "EmailConfirmed", "FirstName", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "Room", "SecurityStamp", "TwoFactorEnabled", "UserName", "isConfirmed" },
-                values: new object[] { new Guid("69bd714f-9576-45ba-b5b7-f00649be00de"), 0, "0a0c2f81-f864-49cd-b7ff-83dd5757cb0b", "676767", new DateTime(2001, 7, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "leenguyen1721@gmail.com", true, "Luan", "Nguyen Phung Le", false, null, "LEENGUYEN1721@gmail.com", "JAYFEND", "AQAAAAEAACcQAAAAEKM3x9A5hkzQ8yrNWoHB9dVJ0ZHYdxzbrqPVSHI4WS367Fb7bg9FkjFmj0d1grj/ug==", null, false, null, "", false, "Jayfend", true });
+                columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "ConfirmCode", "Dob", "Email", "EmailConfirmed", "FirstName", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "OTPValue", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "Room", "SecurityStamp", "TwoFactorEnabled", "UserName", "isConfirmed" },
+                values: new object[] { new Guid("69bd714f-9576-45ba-b5b7-f00649be00de"), 0, "383961da-e6f0-4a8d-8501-ad9727e2f18b", "676767", new DateTime(2001, 7, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "leenguyen1721@gmail.com", true, "Luan", "Nguyen Phung Le", false, null, "LEENGUYEN1721@gmail.com", "JAYFEND", null, "AQAAAAEAACcQAAAAEP/OdcD10UTqXbaaycidGbxnwK0YA+F62DCh2wy/AaPWSROERtdu+wrZWyN3v455fQ==", null, false, null, "", false, "Jayfend", true });
 
             migrationBuilder.InsertData(
                 table: "Genres",
                 columns: new[] { "Id", "CreatedDate", "GenreName", "Status", "UpdatedDate" },
                 values: new object[,]
                 {
-                    { new Guid("f3eaafd2-b65d-4754-a0a5-2f5be031b6a4"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Action", false, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
-                    { new Guid("b96de4ca-9ccd-41a6-adee-6b6413658db5"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Open-World", false, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
-                    { new Guid("c49e260e-c96c-4b7f-919b-f8524521573e"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Multiplayer", false, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
-                    { new Guid("d9256da2-e168-449d-aa15-7357b3322a83"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Action RPG", false, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
-                    { new Guid("7b84f8dc-5aba-40fe-b348-8f4e1518967b"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Simulation", false, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
-                    { new Guid("7130af69-0f5a-420a-b0ca-10211f99e161"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Horror", false, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
-                    { new Guid("9b38837e-8d97-413e-824b-217c3af2cacf"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Sports & Racing", false, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
-                    { new Guid("f1c23cc2-bdbe-41e2-9933-b8de6c65d4dc"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Role-Playing", false, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
-                    { new Guid("9b2b1031-fa03-41e2-a5ac-ededfdc1cb84"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Visual Novel", false, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) }
+                    { new Guid("02e3909f-b4b9-4396-8f83-400b6e9fe8ad"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Action", false, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { new Guid("1bcdd192-d7b5-4557-8274-c850e6e47e12"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Open-World", false, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { new Guid("432b2d3a-856c-4191-b1c1-39e47a863a13"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Multiplayer", false, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { new Guid("3c1a1cda-ac01-491a-9993-7af428e5fa2c"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Action RPG", false, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { new Guid("6bf9c50f-0152-4c6f-a148-63990cfef07f"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Simulation", false, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { new Guid("7bb07616-dadc-4564-b980-bd86ec75e9da"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Horror", false, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { new Guid("8e7d1e0f-0e97-4158-98bc-05183db0de3c"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Sports & Racing", false, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { new Guid("f98cdb78-6a53-47be-b17d-c9eaecea0a69"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Role-Playing", false, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { new Guid("0fe7c1b7-2fd7-407a-9ac9-796c5c73cc9f"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Visual Novel", false, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) }
                 });
 
             migrationBuilder.InsertData(
@@ -665,12 +666,12 @@ namespace GameShop.Data.Migrations
             migrationBuilder.InsertData(
                 table: "UserAvatar",
                 columns: new[] { "Id", "CreatedDate", "ImagePath", "Status", "UpdateDate", "UpdatedDate", "UserID" },
-                values: new object[] { new Guid("5db1356e-fdc4-42fe-8e67-ce9b754c86f0"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "imgnotfound.jpg", false, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new Guid("69bd714f-9576-45ba-b5b7-f00649be00de") });
+                values: new object[] { new Guid("5598483d-f6bc-4782-ba59-33977f480e9a"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "imgnotfound.jpg", false, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new Guid("69bd714f-9576-45ba-b5b7-f00649be00de") });
 
             migrationBuilder.InsertData(
                 table: "UserThumbnail",
                 columns: new[] { "Id", "CreatedDate", "ImagePath", "Status", "UpdateDate", "UpdatedDate", "UserID" },
-                values: new object[] { new Guid("fa459b0c-13d4-4b45-b997-4365567995b0"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "imgnotfound.jpg", false, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new Guid("69bd714f-9576-45ba-b5b7-f00649be00de") });
+                values: new object[] { new Guid("ecee67d2-7c2d-4201-b49f-8de11400f177"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "imgnotfound.jpg", false, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new Guid("69bd714f-9576-45ba-b5b7-f00649be00de") });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",

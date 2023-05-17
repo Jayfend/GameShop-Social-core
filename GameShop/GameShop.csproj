@@ -9,6 +9,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="AspNetCore.Totp" Version="2.3.0" />
     <PackageReference Include="AutoMapper" Version="12.0.1" />
     <PackageReference Include="Ding.Hangfire.RecurringJobExtensions" Version="1.1.8" />
     <PackageReference Include="Elasticsearch.Net" Version="7.17.5" />

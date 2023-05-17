@@ -1,4 +1,5 @@
 ﻿using GameShop.Application.Common;
+using GameShop.Application.Services;
 using GameShop.Data.EF;
 using GameShop.Data.Entities;
 using GameShop.ViewModels.Catalog.UserImages;
@@ -33,9 +34,10 @@ namespace GameShop.Application.System.Users
         private readonly IConfiguration _config;
         private readonly GameShopDbContext _context;
         private readonly IStorageService _storageService;
+        private readonly ITOTPService _totpService;
 
         public UserService(UserManager<AppUser> useManager,
-            SignInManager<AppUser> signInManager, RoleManager<AppRole> roleManager, IConfiguration config, GameShopDbContext context, IStorageService storageService)
+            SignInManager<AppUser> signInManager, RoleManager<AppRole> roleManager, IConfiguration config, GameShopDbContext context, IStorageService storageService,ITOTPService totpService)
         {
             _userManager = useManager;
             _signInManager = signInManager;
@@ -43,6 +45,7 @@ namespace GameShop.Application.System.Users
             _config = config;
             _context = context;
             _storageService = storageService;
+            _totpService = totpService;
         }
 
         public async Task<ApiResult<LoginResponse>> Authenticate(LoginRequest request)
@@ -51,6 +54,16 @@ namespace GameShop.Application.System.Users
             if (user == null)
             {
                 return new ApiErrorResult<LoginResponse>("Tài khoản không tồn tại");
+            }
+            var validateReq = new ValidateOTPDTO()
+            {
+                userName = request.UserName,
+                password = request.Password,
+                Code = request.Code,
+            };
+            if(await _totpService.Validate(validateReq)== false)
+            {
+                return new ApiErrorResult<LoginResponse>("Mã OTP hoặc mật khẩu sai");
             }
 
             var result = await _signInManager.PasswordSignInAsync(user, request.Password, request.RememberMe, true);
@@ -249,8 +262,10 @@ namespace GameShop.Application.System.Users
             };
 
             var result = await _userManager.CreateAsync(user, request.Password);
+
             if (result.Succeeded)
             {
+                await _totpService.GetCode(user.UserName,request.Password);
                 using (MailMessage mail = new MailMessage())
                 {
                     mail.From = new MailAddress("stemgameshop@gmail.com");

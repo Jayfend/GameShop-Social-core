@@ -21,5 +21,6 @@ namespace GameShop.Data.Entities
         public string ConfirmCode { get; set; }
         public string Room { get; set; }
         public List<Rating> Ratings { get; set; }
+        public string OTPValue { get; set; }
     }
 }

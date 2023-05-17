@@ -2,6 +2,7 @@ using FluentValidation.AspNetCore;
 using GameShop.Application;
 using GameShop.Application.Common;
 using GameShop.Application.Module;
+using GameShop.Application.Services;
 using GameShop.Application.Services.Carts;
 using GameShop.Application.Services.Categories;
 using GameShop.Application.Services.Charts;
@@ -81,7 +82,7 @@ namespace GameShop
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddScoped<ITransactionCustom, TransactionCustom>();
             services.AddScoped<IElasticSearchUlti, ElasticSearchUlti>();
-
+            services.AddTransient<ITOTPService, TOTPService>();
             services.Configure<RedisConfig>(Configuration.GetSection("Redis"));
             services.Configure<ElasticSearchConfig>(Configuration.GetSection("ElasticSearch"));
             services.Configure<ESConfig>(Configuration.GetSection("RemoteServices:ESService"));

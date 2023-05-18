@@ -38,6 +38,22 @@ namespace GameShop.Controllers
 
             return Ok(result);
         }
+        [HttpPost("admin-authenticate")]
+        [AllowAnonymous]
+        public async Task<IActionResult> AdminAuthenticate([FromBody] AdminLoginRequest request)
+        {
+            if (ModelState.IsValid == false)
+            {
+                return BadRequest(ModelState);
+            }
+            var result = await _userService.AdminAuthenticate(request);
+            if (result.ResultObj == null)
+            {
+                return Unauthorized(result);
+            }
+
+            return Ok(result);
+        }
 
         [HttpPost("changepassword")]
         [Authorize]

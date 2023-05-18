@@ -567,5 +567,52 @@ namespace GameShop.Application.System.Users
             await _context.SaveChangesAsync();
             return true;
         }
+
+        public async Task<ApiResult<LoginResponse>> AdminAuthenticate(AdminLoginRequest request)
+        {
+            var user = await _userManager.FindByNameAsync(request.UserName);
+            if (user == null)
+            {
+                return new ApiErrorResult<LoginResponse>("Tài khoản không tồn tại");
+            }
+
+            var result = await _signInManager.PasswordSignInAsync(user, request.Password, request.RememberMe, true);
+            if (!result.Succeeded)
+            {
+                return new ApiErrorResult<LoginResponse>("Đăng nhập không đúng");
+            }
+            else
+            {
+                if (user.isConfirmed == false)
+                {
+                    await _signInManager.SignOutAsync();
+                    return new ApiErrorResult<LoginResponse>("Tài khoản chưa kích hoạt");
+                }
+            }
+            var roles = await _userManager.GetRolesAsync(user);
+            var claims = new[]
+            {   new Claim("NameIdentifier",user.Id.ToString()),
+                new Claim(ClaimTypes.Email,user.Email),
+                new Claim(ClaimTypes.Name,user.UserName),
+                new Claim(ClaimTypes.Role,String.Join(";",roles))
+             };
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Tokens:Key"]));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+            string _issuer = _config.GetValue<string>("Tokens:Issuer");
+            var token = new JwtSecurityToken(
+                issuer: _issuer,
+                audience: _issuer,
+                claims,
+                expires: DateTime.Now.AddHours(3),
+                signingCredentials: creds);
+
+            LoginResponse response = new LoginResponse()
+            {
+                UserId = user.Id.ToString(),
+                isConfirmed = user.isConfirmed,
+                Token = new JwtSecurityTokenHandler().WriteToken(token)
+            };
+            return new ApiSuccessResult<LoginResponse>(response);
+        }
     }
 }

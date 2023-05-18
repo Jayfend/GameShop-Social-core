@@ -14,6 +14,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using static GameShop.Application.Module.ElasticsearchModule;
+using static Microsoft.Extensions.Logging.EventSource.LoggingEventSource;
 
 namespace GameShop.Application.Utilities
 {
@@ -307,29 +308,34 @@ namespace GameShop.Application.Utilities
             return true;
         }
 
-        public async Task<List<GameElasticModel>> SearchSuggestion(string keyword,string indexName, string server = null)
+        public async Task<List<GameElasticModel>> SearchSuggestion(List<string> keyWords,string indexName, string server = null)
         {
             InitElasticService(server);
+            List<GameElasticModel> result = new List<GameElasticModel>(); 
+            foreach(var keyWord in keyWords)
+            {
+                var response = await _elasticClient.SearchAsync<GameElasticModel>(s => s
+         .Suggest(su => su
+             .Completion("genreSuggest", cs => cs
+                 .Field(f => f.GenreSuggest)
+                 .Prefix(keyWord)
+                 .Fuzzy(f => f
+                     .Fuzziness(Fuzziness.Auto)
+                 )
+                 .Size(5)
+             )
+         )
+     );
 
-            var response = await _elasticClient.SearchAsync<GameElasticModel>(s => s
-            .Suggest(su => su
-                .Completion("genreSuggest", cs => cs
-                    .Field(f => f.GenreSuggest)
-                    .Prefix(keyword)
-                    .Fuzzy(f => f
-                        .Fuzziness(Fuzziness.Auto)
-                    )
-                    .Size(5)
-                )
-            )
-        );
-
-            var suggestions = response.Suggest["genreSuggest"]
-                .SelectMany(t => t.Options)
-                .Select(o => o.Source)
-                .ToList();
+                var suggestions = response.Suggest["genreSuggest"]
+                    .SelectMany(t => t.Options)
+                    .Select(o => o.Source)
+                    .ToList();
+                result = result.Concat(suggestions).Distinct().ToList();
+            }
+         
            
-            return suggestions;
+            return result.Distinct().Take(5).ToList();
         }
     }
 }

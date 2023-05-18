@@ -318,6 +318,7 @@ namespace GameShop.Application.Services.Games
             var game = await _context.Games.Where(x => x.Id == GameID)
                 .Include(y => y.SystemRequirementMin)
                 .Include(g => g.SystemRequirementRecommended)
+                .Include(x=>x.Publisher)
                 .FirstOrDefaultAsync();
             if (game == null)
             {
@@ -332,7 +333,6 @@ namespace GameShop.Application.Services.Games
                 game.Gameplay = request.Gameplay;
                 game.UpdatedDate = DateTime.Now;
                 game.Status = request.Status;
-                game.PublisherId = request.PublisherId;
                 game.Price = request.Price;
                 if (request.SRR != null)
                 {

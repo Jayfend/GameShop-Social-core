@@ -13,8 +13,8 @@ namespace GameShop.Data.Configurations
         {
             builder.ToTable("Keys");
             builder.HasKey(x => x.Id);
-            builder.HasOne(x=>x.Publisher).WithMany(x=>x.Keys).HasForeignKey(x=>x.PublisherId);
-          
+           
+
         }
     }
 }

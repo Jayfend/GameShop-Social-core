@@ -123,7 +123,7 @@ namespace GameShop.AdminApp.Controllers
             {
                 categoryAssignRequest.Categories.Add(new SelectItem()
                 {
-                    Id = role.Id.ToString(),
+                    Id = role.Id,
                     Name = role.Name,
                     Selected = productObj.GenreName.Contains(role.Name)
                 });

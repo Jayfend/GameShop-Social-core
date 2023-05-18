@@ -1,4 +1,5 @@
 ﻿using GameShop.Application.Common;
+using GameShop.Application.Services;
 using GameShop.Data.EF;
 using GameShop.Data.Entities;
 using GameShop.ViewModels.Catalog.UserImages;
@@ -33,9 +34,10 @@ namespace GameShop.Application.System.Users
         private readonly IConfiguration _config;
         private readonly GameShopDbContext _context;
         private readonly IStorageService _storageService;
+        private readonly ITOTPService _totpService;
 
         public UserService(UserManager<AppUser> useManager,
-            SignInManager<AppUser> signInManager, RoleManager<AppRole> roleManager, IConfiguration config, GameShopDbContext context, IStorageService storageService)
+            SignInManager<AppUser> signInManager, RoleManager<AppRole> roleManager, IConfiguration config, GameShopDbContext context, IStorageService storageService,ITOTPService totpService)
         {
             _userManager = useManager;
             _signInManager = signInManager;
@@ -43,6 +45,7 @@ namespace GameShop.Application.System.Users
             _config = config;
             _context = context;
             _storageService = storageService;
+            _totpService = totpService;
         }
 
         public async Task<ApiResult<LoginResponse>> Authenticate(LoginRequest request)
@@ -51,6 +54,20 @@ namespace GameShop.Application.System.Users
             if (user == null)
             {
                 return new ApiErrorResult<LoginResponse>("Tài khoản không tồn tại");
+            }
+            if(user.OTPValue != null && request.Code == null)
+            {
+                return new ApiErrorResult<LoginResponse>("Vui lòng nhập OTP");
+            }
+            var validateReq = new ValidateOTPDTO()
+            {
+                userName = request.UserName,
+                password = request.Password,
+                Code = request.Code,
+            };
+            if(await _totpService.Validate(validateReq)== false)
+            {
+                return new ApiErrorResult<LoginResponse>("Mã OTP hoặc mật khẩu sai");
             }
 
             var result = await _signInManager.PasswordSignInAsync(user, request.Password, request.RememberMe, true);
@@ -242,13 +259,15 @@ namespace GameShop.Application.System.Users
                 UserAvatar = useravatar,
                 UserThumbnail = userthumbnail,
                 isConfirmed = false,
-                ConfirmCode = sixDigitNumber
+                ConfirmCode = sixDigitNumber,
+                Creationtime = DateTime.Now
                 //FirstName = request.FirstName,
                 //LastName = request.LastName,
                 //PhoneNumber = request.PhoneNumber,
             };
 
             var result = await _userManager.CreateAsync(user, request.Password);
+
             if (result.Succeeded)
             {
                 using (MailMessage mail = new MailMessage())
@@ -323,7 +342,7 @@ namespace GameShop.Application.System.Users
             user.FirstName = request.FirstName;
             user.LastName = request.LastName;
             user.PhoneNumber = request.PhoneNumber;
-
+            user.LastUpdated = DateTime.Now;
             var result = await _userManager.UpdateAsync(user);
             if (result.Succeeded)
             {
@@ -540,8 +559,9 @@ namespace GameShop.Application.System.Users
             var userList = await _context.Users.ToListAsync();
             var deleteList = new List<AppUser>();
             foreach(var user in userList)
-            {
-                if(user.isConfirmed == false)
+            {   var time = (DateTime.Now - user.Creationtime).TotalMinutes;
+                var tenminute = new TimeSpan(0,10,0).TotalMinutes;
+                if(user.isConfirmed == false &&  time > tenminute)
                 {
                     deleteList.Add(user);
                 }
@@ -549,6 +569,53 @@ namespace GameShop.Application.System.Users
             _context.Users.RemoveRange(deleteList);
             await _context.SaveChangesAsync();
             return true;
+        }
+
+        public async Task<ApiResult<LoginResponse>> AdminAuthenticate(AdminLoginRequest request)
+        {
+            var user = await _userManager.FindByNameAsync(request.UserName);
+            if (user == null)
+            {
+                return new ApiErrorResult<LoginResponse>("Tài khoản không tồn tại");
+            }
+
+            var result = await _signInManager.PasswordSignInAsync(user, request.Password, request.RememberMe, true);
+            if (!result.Succeeded)
+            {
+                return new ApiErrorResult<LoginResponse>("Đăng nhập không đúng");
+            }
+            else
+            {
+                if (user.isConfirmed == false)
+                {
+                    await _signInManager.SignOutAsync();
+                    return new ApiErrorResult<LoginResponse>("Tài khoản chưa kích hoạt");
+                }
+            }
+            var roles = await _userManager.GetRolesAsync(user);
+            var claims = new[]
+            {   new Claim("NameIdentifier",user.Id.ToString()),
+                new Claim(ClaimTypes.Email,user.Email),
+                new Claim(ClaimTypes.Name,user.UserName),
+                new Claim(ClaimTypes.Role,String.Join(";",roles))
+             };
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Tokens:Key"]));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+            string _issuer = _config.GetValue<string>("Tokens:Issuer");
+            var token = new JwtSecurityToken(
+                issuer: _issuer,
+                audience: _issuer,
+                claims,
+                expires: DateTime.Now.AddHours(3),
+                signingCredentials: creds);
+
+            LoginResponse response = new LoginResponse()
+            {
+                UserId = user.Id.ToString(),
+                isConfirmed = user.isConfirmed,
+                Token = new JwtSecurityTokenHandler().WriteToken(token)
+            };
+            return new ApiSuccessResult<LoginResponse>(response);
         }
     }
 }

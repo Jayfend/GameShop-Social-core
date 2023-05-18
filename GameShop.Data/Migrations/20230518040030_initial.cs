@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace GameShop.Data.Migrations
 {
-    public partial class Initial : Migration
+    public partial class initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -46,7 +46,10 @@ namespace GameShop.Data.Migrations
                     Dob = table.Column<DateTime>(nullable: false),
                     isConfirmed = table.Column<bool>(nullable: false),
                     ConfirmCode = table.Column<string>(nullable: true),
-                    Room = table.Column<string>(nullable: true)
+                    Room = table.Column<string>(nullable: true),
+                    OTPValue = table.Column<string>(nullable: true),
+                    Creationtime = table.Column<DateTime>(nullable: false),
+                    LastUpdated = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -325,31 +328,6 @@ namespace GameShop.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Keys",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(nullable: false),
-                    CreatedDate = table.Column<DateTime>(nullable: false),
-                    UpdatedDate = table.Column<DateTime>(nullable: false),
-                    Status = table.Column<bool>(nullable: false),
-                    KeyCode = table.Column<string>(nullable: true),
-                    PublisherName = table.Column<string>(nullable: true),
-                    GameName = table.Column<string>(nullable: true),
-                    IsActive = table.Column<bool>(nullable: false),
-                    PublisherId = table.Column<Guid>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Keys", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Keys_Publishers_PublisherId",
-                        column: x => x.PublisherId,
-                        principalTable: "Publishers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Checkouts",
                 columns: table => new
                 {
@@ -455,6 +433,38 @@ namespace GameShop.Data.Migrations
                         principalTable: "Genres",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Keys",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    CreatedDate = table.Column<DateTime>(nullable: false),
+                    UpdatedDate = table.Column<DateTime>(nullable: false),
+                    Status = table.Column<bool>(nullable: false),
+                    KeyCode = table.Column<string>(nullable: true),
+                    PublisherName = table.Column<string>(nullable: true),
+                    GameName = table.Column<string>(nullable: true),
+                    IsActive = table.Column<bool>(nullable: false),
+                    GameId = table.Column<Guid>(nullable: true),
+                    PublisherId = table.Column<Guid>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Keys", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Keys_Games_GameId",
+                        column: x => x.GameId,
+                        principalTable: "Games",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Keys_Publishers_PublisherId",
+                        column: x => x.PublisherId,
+                        principalTable: "Publishers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -632,29 +642,29 @@ namespace GameShop.Data.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Description", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { new Guid("8d04dce2-969a-435d-bba4-df3f325983dc"), "b3ab1fb8-1f5b-4539-85ef-c0cc8c853b8b", "Administrator role", "admin", "ADMIN" },
-                    { new Guid("52503f03-bdea-4bf8-8a1a-d21ae2646483"), "bed70edb-8987-4499-b7eb-9e35bc4f423d", "User role", "User", "USER" }
+                    { new Guid("8d04dce2-969a-435d-bba4-df3f325983dc"), "fee0831a-bba2-4e62-a83b-6be0384cc030", "Administrator role", "admin", "ADMIN" },
+                    { new Guid("52503f03-bdea-4bf8-8a1a-d21ae2646483"), "a2215fb8-689f-455c-969d-1717f17db1a6", "User role", "User", "USER" }
                 });
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
-                columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "ConfirmCode", "Dob", "Email", "EmailConfirmed", "FirstName", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "Room", "SecurityStamp", "TwoFactorEnabled", "UserName", "isConfirmed" },
-                values: new object[] { new Guid("69bd714f-9576-45ba-b5b7-f00649be00de"), 0, "0a0c2f81-f864-49cd-b7ff-83dd5757cb0b", "676767", new DateTime(2001, 7, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "leenguyen1721@gmail.com", true, "Luan", "Nguyen Phung Le", false, null, "LEENGUYEN1721@gmail.com", "JAYFEND", "AQAAAAEAACcQAAAAEKM3x9A5hkzQ8yrNWoHB9dVJ0ZHYdxzbrqPVSHI4WS367Fb7bg9FkjFmj0d1grj/ug==", null, false, null, "", false, "Jayfend", true });
+                columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "ConfirmCode", "Creationtime", "Dob", "Email", "EmailConfirmed", "FirstName", "LastName", "LastUpdated", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "OTPValue", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "Room", "SecurityStamp", "TwoFactorEnabled", "UserName", "isConfirmed" },
+                values: new object[] { new Guid("69bd714f-9576-45ba-b5b7-f00649be00de"), 0, "b9ea220a-3ce3-45b5-8091-8a0b7694c158", "676767", new DateTime(2023, 5, 18, 11, 0, 30, 139, DateTimeKind.Local).AddTicks(4587), new DateTime(2001, 7, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "leenguyen1721@gmail.com", true, "Luan", "Nguyen Phung Le", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), false, null, "LEENGUYEN1721@gmail.com", "JAYFEND", "OBRYUMXL3D2LG3NIE36TGFAE6HJBO55C", "AQAAAAEAACcQAAAAED8KW3JaxMgBIdDLsA9YhoMPs1fx1vDpBBRWeYEed5dd9V7dPEutuC34BJUBPSZRDA==", null, false, null, "", false, "Jayfend", true });
 
             migrationBuilder.InsertData(
                 table: "Genres",
                 columns: new[] { "Id", "CreatedDate", "GenreName", "Status", "UpdatedDate" },
                 values: new object[,]
                 {
-                    { new Guid("f3eaafd2-b65d-4754-a0a5-2f5be031b6a4"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Action", false, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
-                    { new Guid("b96de4ca-9ccd-41a6-adee-6b6413658db5"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Open-World", false, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
-                    { new Guid("c49e260e-c96c-4b7f-919b-f8524521573e"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Multiplayer", false, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
-                    { new Guid("d9256da2-e168-449d-aa15-7357b3322a83"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Action RPG", false, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
-                    { new Guid("7b84f8dc-5aba-40fe-b348-8f4e1518967b"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Simulation", false, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
-                    { new Guid("7130af69-0f5a-420a-b0ca-10211f99e161"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Horror", false, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
-                    { new Guid("9b38837e-8d97-413e-824b-217c3af2cacf"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Sports & Racing", false, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
-                    { new Guid("f1c23cc2-bdbe-41e2-9933-b8de6c65d4dc"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Role-Playing", false, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
-                    { new Guid("9b2b1031-fa03-41e2-a5ac-ededfdc1cb84"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Visual Novel", false, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) }
+                    { new Guid("5ecdc71d-d7ba-4176-a546-7db1ace8b9a9"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Action", false, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { new Guid("02950d04-ce41-4da9-8e6b-fe2ed6a9a580"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Open-World", false, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { new Guid("278b7ef1-5f99-4a29-b375-0a1b7ea4a4ae"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Multiplayer", false, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { new Guid("8384f671-a501-4a3c-99dd-2333d4e9efbc"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Action RPG", false, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { new Guid("cab51e15-a8ba-472a-8709-fda6594664b2"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Simulation", false, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { new Guid("763375ea-ec89-4e22-bb67-83a162102971"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Horror", false, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { new Guid("2a88842c-aa81-4010-b369-6598b701d99e"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Sports & Racing", false, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { new Guid("3fd21156-b2af-4741-bcad-34f93aac450b"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Role-Playing", false, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { new Guid("007b2916-6b6f-4215-8c2a-37c31abec623"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Visual Novel", false, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) }
                 });
 
             migrationBuilder.InsertData(
@@ -665,12 +675,12 @@ namespace GameShop.Data.Migrations
             migrationBuilder.InsertData(
                 table: "UserAvatar",
                 columns: new[] { "Id", "CreatedDate", "ImagePath", "Status", "UpdateDate", "UpdatedDate", "UserID" },
-                values: new object[] { new Guid("5db1356e-fdc4-42fe-8e67-ce9b754c86f0"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "imgnotfound.jpg", false, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new Guid("69bd714f-9576-45ba-b5b7-f00649be00de") });
+                values: new object[] { new Guid("18238aa7-dc41-4995-9ed5-8ddc6c006fad"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "imgnotfound.jpg", false, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new Guid("69bd714f-9576-45ba-b5b7-f00649be00de") });
 
             migrationBuilder.InsertData(
                 table: "UserThumbnail",
                 columns: new[] { "Id", "CreatedDate", "ImagePath", "Status", "UpdateDate", "UpdatedDate", "UserID" },
-                values: new object[] { new Guid("fa459b0c-13d4-4b45-b997-4365567995b0"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "imgnotfound.jpg", false, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new Guid("69bd714f-9576-45ba-b5b7-f00649be00de") });
+                values: new object[] { new Guid("e72c36ce-5b16-4acd-a4e6-f12096b2fce9"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "imgnotfound.jpg", false, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new Guid("69bd714f-9576-45ba-b5b7-f00649be00de") });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -751,6 +761,11 @@ namespace GameShop.Data.Migrations
                 name: "IX_Games_PublisherId",
                 table: "Games",
                 column: "PublisherId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Keys_GameId",
+                table: "Keys",
+                column: "GameId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Keys_PublisherId",

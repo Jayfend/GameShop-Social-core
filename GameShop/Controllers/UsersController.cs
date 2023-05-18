@@ -38,6 +38,22 @@ namespace GameShop.Controllers
 
             return Ok(result);
         }
+        [HttpPost("admin-authenticate")]
+        [AllowAnonymous]
+        public async Task<IActionResult> AdminAuthenticate([FromBody] AdminLoginRequest request)
+        {
+            if (ModelState.IsValid == false)
+            {
+                return BadRequest(ModelState);
+            }
+            var result = await _userService.AdminAuthenticate(request);
+            if (result.ResultObj == null)
+            {
+                return Unauthorized(result);
+            }
+
+            return Ok(result);
+        }
 
         [HttpPost("changepassword")]
         [Authorize]
@@ -90,7 +106,7 @@ namespace GameShop.Controllers
         }
 
         [HttpPost("adminregister")]
-        [AllowAnonymous]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> AdminRegister([FromBody] RegisterRequest request)
         {
             if (!ModelState.IsValid)
@@ -123,7 +139,7 @@ namespace GameShop.Controllers
             
         }
 
-        [HttpPut("{id}/roles")]
+        [HttpPut("{Id}/roles")]
         [Authorize(Roles = "admin")]
         public async Task<IActionResult> RoleAssign(Guid Id, [FromBody] RoleAssignRequest request)
         {
@@ -131,8 +147,8 @@ namespace GameShop.Controllers
             {
                 return BadRequest(ModelState);
             }
-           
-                var result = await _userService.RoleAssign(Id, request);
+
+            var result = await _userService.RoleAssign(Id, request);
                 if (!result.IsSuccess)
                 {
                     return BadRequest(result);

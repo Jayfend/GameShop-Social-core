@@ -12,6 +12,7 @@ namespace GameShop.Application.System.Users
     public interface IUserService
     {
         Task<ApiResult<LoginResponse>> Authenticate(LoginRequest request);
+        Task<ApiResult<LoginResponse>> AdminAuthenticate(AdminLoginRequest request);
 
         Task<ApiResult<bool>> Register(RegisterRequest request);
 

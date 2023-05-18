@@ -14,7 +14,10 @@ namespace GameShop.Application.Mapper
         {
             CreateMap<GameViewModel, GameElasticModel>()
                  .ForMember(dest => dest.ESId, opt => opt.MapFrom(src => src.Id))
-                .ReverseMap(); 
+                .ReverseMap();
+            CreateMap<Game, GameElasticModel>()
+                .ForMember(dest => dest.ESId, opt => opt.MapFrom(src => src.Id))
+               .ReverseMap();
         }
     }
 }

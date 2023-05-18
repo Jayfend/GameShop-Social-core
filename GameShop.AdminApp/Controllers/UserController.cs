@@ -185,7 +185,7 @@ namespace GameShop.AdminApp.Controllers
             {
                 rolesAssignRequest.Roles.Add(new SelectItem()
                 {
-                    Id = role.Id.ToString(),
+                    Id = role.Id,
                     Name = role.Name,
                     Selected = userObj.ResultObj.Roles.Contains(role.Name)
                 });

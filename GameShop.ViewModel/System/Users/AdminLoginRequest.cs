@@ -5,13 +5,12 @@ using System.Text;
 
 namespace GameShop.ViewModels.System.Users
 {
-    public class LoginRequest
+    public class AdminLoginRequest
     {
         [Required]
         public string UserName { get; set; }
         [Required]
         public string Password { get; set; }
-        public string Code { get; set; }
         public bool RememberMe { get; set; }
     }
 }

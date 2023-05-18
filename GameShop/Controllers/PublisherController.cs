@@ -36,7 +36,6 @@ namespace GameShop.Controllers
             
         }
         [HttpGet]
-        [Authorize(Roles = "admin")]
         public async Task<IActionResult> GetAsync()
         {
             var response = await _publisherService.GetAllPublisher();

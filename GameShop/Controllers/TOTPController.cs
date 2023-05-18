@@ -13,6 +13,7 @@ using System.Text;
 using System.Threading.Tasks;
 using static System.Net.Mime.MediaTypeNames;
 using GameShop.ViewModels.Catalog;
+using Microsoft.AspNetCore.Authorization;
 
 namespace GameShop.Controllers
 {
@@ -26,12 +27,14 @@ namespace GameShop.Controllers
         }
 
         [HttpGet("OTP-on")]
+        [Authorize]
         public async Task<IActionResult> TurnOnOTP([FromQuery]OTPSwitchDTO req)
         {
             var response = await _totpService.TurnOnOTP(req);
             return Ok(response);
         }
         [HttpGet("OTP-off")]
+        [Authorize]
         public async Task<IActionResult> TurnOffOTP([FromQuery] OTPSwitchDTO req)
         {
             var response = await _totpService.TurnOffOTP(req);
@@ -45,6 +48,7 @@ namespace GameShop.Controllers
         }
 
         [HttpGet("qr-code-image")]
+        [Authorize]
         public async Task<IActionResult> GetQrImage(string userName, string passWord)
         {
             var response = await _totpService.GenerateQrCodeImage(userName, passWord);

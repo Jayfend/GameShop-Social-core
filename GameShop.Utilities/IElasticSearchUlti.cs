@@ -28,7 +28,7 @@ namespace GameShop.Utilities
         Task<bool> DeleteAllDataAsync<T>(string indexName, string server = null) where T : BaseDocumentElasticSearch;
 
         Task<bool> InitIndex<T>(string indexName, string server = null) where T : BaseDocumentElasticSearch;
-        Task<List<GameElasticModel>> SearchSuggestion(string keyword, string indexName, string server = null);
+        Task<List<GameElasticModel>> SearchSuggestion(List<string> keyWords, string indexName, string server = null);
 
     }
 }

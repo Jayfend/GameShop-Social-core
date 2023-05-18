@@ -534,8 +534,7 @@ namespace GameShop.Application.Services.Games
 
 
             //elastic
-            var keyword = string.Join(",", gameview.GenreName);
-            var suggestions = await _elasticSearchUtil.SearchSuggestion(keyword, _elasticSearchConfig.Common.GameIndex, ElasticServer.Common);
+            var suggestions = await _elasticSearchUtil.SearchSuggestion(gameview.GenreName, _elasticSearchConfig.Common.GameIndex, ElasticServer.Common);
             var deleteItem = suggestions.Where(x=>x.Id == gameview.Id).FirstOrDefault();
             suggestions.Remove(deleteItem);
             gameview.GameSuggestionList = suggestions.Distinct().ToList();
@@ -939,6 +938,7 @@ namespace GameShop.Application.Services.Games
             }
             var publisher = await _context.Publishers.Where(x => x.Id == game.PublisherId).FirstOrDefaultAsync();
             var keyList = await _redisUtil.HashGetAllAsync(string.Format(_redisConfig.DSMKey, publisher.Name, game.GameName));
+            var gameUpdateList = new List<SoldGame>();
             foreach (var _key in keyList)
             {
                 var dbKey = JsonConvert.DeserializeObject<Data.Entities.Key>(_key);
@@ -956,11 +956,14 @@ namespace GameShop.Application.Services.Games
                         entries.Add(hashKey);
                         await _redisUtil.SetMultiAsync(string.Format(_redisConfig.DSMKey, publisher.Name, gameBought.GameName), entries.ToArray(), null);
                         gameBought.isActive = true;
-                        _context.SoldGames.Update(gameBought);
+                        gameUpdateList.Add(gameBought);
+
+
                         return true;
                     }
                 }
             }
+            _context.SoldGames.UpdateRange(gameUpdateList);
             await _context.SaveChangesAsync();
             return false;
         }

@@ -46,10 +46,8 @@ namespace GameShop.Controllers
         [Authorize(Roles = "admin")]
         public async Task<IActionResult> GenerateAsync(Guid publisherId, int amount)
         {
-            
                 var response = await _publisherService.GenerateKeyAsync(publisherId, amount);
                 return Ok(response);
-            
         }
     }
 }

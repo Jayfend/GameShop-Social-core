@@ -139,7 +139,7 @@ namespace GameShop.Controllers
             
         }
 
-        [HttpPut("{id}/roles")]
+        [HttpPut("{Id}/roles")]
         [Authorize(Roles = "admin")]
         public async Task<IActionResult> RoleAssign(Guid Id, [FromBody] RoleAssignRequest request)
         {
@@ -147,8 +147,8 @@ namespace GameShop.Controllers
             {
                 return BadRequest(ModelState);
             }
-           
-                var result = await _userService.RoleAssign(Id, request);
+
+            var result = await _userService.RoleAssign(Id, request);
                 if (!result.IsSuccess)
                 {
                     return BadRequest(result);

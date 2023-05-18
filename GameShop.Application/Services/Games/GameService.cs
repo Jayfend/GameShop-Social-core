@@ -335,6 +335,7 @@ namespace GameShop.Application.Services.Games
                 game.Gameplay = request.Gameplay;
                 game.UpdatedDate = DateTime.Now;
                 game.Status = request.Status;
+                game.PublisherId = request.PublisherId;
                 game.Price = request.Price;
                 if (request.SRR != null)
                 {

@@ -318,6 +318,8 @@ namespace GameShop.Application.Services.Games
             var game = await _context.Games.Where(x => x.Id == GameID)
                 .Include(y => y.SystemRequirementMin)
                 .Include(g => g.SystemRequirementRecommended)
+                .Include(x=>x.GameInGenres)
+                .Include(x=>x.GameImages)
                 .Include(x=>x.Publisher)
                 .FirstOrDefaultAsync();
             if (game == null)
@@ -468,21 +470,21 @@ namespace GameShop.Application.Services.Games
                                     join pic in _context.GameinGenres on c.Id equals pic.GenreID
                                     where pic.GameId == GameID
                                     select c.GenreName).ToListAsync();
-            var gameview = await _context.Games.Where(x => x.Id == GameID).Select(x => new GameViewModelWithSuggestion()
+            var gameview = await _context.Games.Where(x => x.Id == GameID).Include(x=>x.GameInGenres).Include(x=>x.GameImages).Select(x => new GameViewModelWithSuggestion()
             {
                 Id = x.Id,
                 Name = x.GameName,
                 Gameplay = x.Gameplay,
                 CreatedDate = x.CreatedDate,
                 UpdatedDate = x.UpdatedDate,
-                GenreIDs = new List<Guid>(),
+                GenreIDs = x.GameInGenres.Select(x=>x.GenreID).ToList(),
                 GenreName = categories,
                 Description = x.Description,
                 Discount = x.Discount,
                 Price = x.Price,
                 PublisherId = x.PublisherId,
                 PublisherName = x.Publisher.Name,
-                ListImage = new List<string>(),
+                ListImage = x.GameImages.Select(x=>x.ImagePath).ToList(),
                 SRM = new SystemRequireMin()
                 {
                     OS = x.SystemRequirementMin.OS,
@@ -521,16 +523,16 @@ namespace GameShop.Application.Services.Games
                 gameview.RatePoint = 0;
             }
 
-            var genres = await _context.GameinGenres.Where(x => x.GameId == gameview.Id).ToListAsync();
+            //var genres = await _context.GameinGenres.Where(x => x.GameId == gameview.Id).ToListAsync();
 
-            foreach (var genre in genres)
-            {
-                gameview.GenreIDs.Add(genre.GenreID);
-            }
-            var thumbnailimage = _context.GameImages.AsQueryable();
+            //foreach (var genre in genres)
+            //{
+            //    gameview.GenreIDs.Add(genre.GenreID);
+            //}
+            //var thumbnailimage = await _context.GameImages.ToListAsync();
 
-            var listgame = thumbnailimage.Where(x => x.GameID == gameview.Id).Select(y => y.ImagePath).ToList();
-            gameview.ListImage = listgame;
+            //var listGameImage = thumbnailimage.Where(x => x.GameID == gameview.Id).Select(y => y.ImagePath).ToList();
+            //gameview.ListImage = listGameImage;
 
 
             //elastic

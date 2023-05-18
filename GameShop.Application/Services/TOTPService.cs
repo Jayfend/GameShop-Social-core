@@ -19,6 +19,7 @@ using static System.Runtime.CompilerServices.RuntimeHelpers;
 using Nest;
 using System.Drawing.Imaging;
 using System.IO;
+using GameShop.ViewModels.Catalog;
 
 namespace GameShop.Application.Services
 {
@@ -81,14 +82,14 @@ namespace GameShop.Application.Services
                 _urlEncoder.Encode(user.UserName),
                 user.OTPValue);
         }
-        public async Task<string> GetCode(string userName, string passWord)
+        public async Task<bool> TurnOnOTP(OTPSwitchDTO req)
         {
-            var user = await _userManager.FindByNameAsync(userName);
+            var user = await _userManager.FindByEmailAsync(req.Email);
             if (user == null)
             {
                 throw new GameShopException("Tài khoản hoặc mật khẩu không chính xác");
             }
-            if (await _userManager.CheckPasswordAsync(user, passWord) == false)
+            if (await _userManager.CheckPasswordAsync(user, req.Password) == false)
             {
                 throw new GameShopException("Tài khoản hoặc mật khẩu không chính xác");
             }
@@ -96,7 +97,7 @@ namespace GameShop.Application.Services
             var secretKey = GenerateRecoveryCodes();
             user.OTPValue = secretKey;
             await _userManager.UpdateAsync(user);
-            return secretKey;
+            return true;
         }
 
         //public async Task<TotpSetup> GetQR(string email)
@@ -195,6 +196,43 @@ namespace GameShop.Application.Services
                 }
             }
             return true;
+        }
+
+        public async Task<bool> TurnOffOTP(OTPSwitchDTO req)
+        {
+            var user = await _userManager.FindByEmailAsync(req.Email);
+            if (user == null)
+            {
+                throw new GameShopException("Tài khoản hoặc mật khẩu không chính xác");
+            }
+            if (await _userManager.CheckPasswordAsync(user, req.Password) == false)
+            {
+                throw new GameShopException("Tài khoản hoặc mật khẩu không chính xác");
+            }
+            user.OTPValue = null;
+            await _userManager.UpdateAsync(user);
+            return true;
+        }
+
+        public async Task<bool> CheckIsOn(OTPCheckDTO req)
+        {
+            var user = await _userManager.FindByNameAsync(req.UserName);
+            if (user == null)
+            {
+                throw new GameShopException("Tài khoản hoặc mật khẩu không chính xác");
+            }
+            if (await _userManager.CheckPasswordAsync(user, req.Password) == false)
+            {
+                throw new GameShopException("Tài khoản hoặc mật khẩu không chính xác");
+            }
+            if(user.OTPValue == null)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
         }
     }
 }

@@ -55,6 +55,10 @@ namespace GameShop.Application.System.Users
             {
                 return new ApiErrorResult<LoginResponse>("Tài khoản không tồn tại");
             }
+            if(user.OTPValue != null && request.Code == null)
+            {
+                return new ApiErrorResult<LoginResponse>("Vui lòng nhập OTP");
+            }
             var validateReq = new ValidateOTPDTO()
             {
                 userName = request.UserName,
@@ -266,7 +270,6 @@ namespace GameShop.Application.System.Users
 
             if (result.Succeeded)
             {
-                await _totpService.GetCode(user.UserName,request.Password);
                 using (MailMessage mail = new MailMessage())
                 {
                     mail.From = new MailAddress("stemgameshop@gmail.com");

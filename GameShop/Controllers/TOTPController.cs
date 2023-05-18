@@ -12,6 +12,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using static System.Net.Mime.MediaTypeNames;
+using GameShop.ViewModels.Catalog;
 
 namespace GameShop.Controllers
 {
@@ -24,10 +25,22 @@ namespace GameShop.Controllers
             _totpService= totpService;  
         }
 
-        [HttpGet("code")]
-        public async Task<IActionResult> GetCode(string userName, string passWord)
+        [HttpGet("OTP-on")]
+        public async Task<IActionResult> TurnOnOTP([FromBody]OTPSwitchDTO req)
         {
-            var response = await _totpService.GetCode(userName, passWord);
+            var response = await _totpService.TurnOnOTP(req);
+            return Ok(response);
+        }
+        [HttpGet("OTP-off")]
+        public async Task<IActionResult> TurnOffOTP([FromBody] OTPSwitchDTO req)
+        {
+            var response = await _totpService.TurnOffOTP(req);
+            return Ok(response);
+        }
+        [HttpGet("OTP-check")]
+        public async Task<IActionResult> CheckOTP([FromBody] OTPCheckDTO req)
+        {
+            var response = await _totpService.CheckIsOn(req);
             return Ok(response);
         }
 

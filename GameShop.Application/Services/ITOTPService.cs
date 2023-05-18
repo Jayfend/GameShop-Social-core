@@ -1,4 +1,5 @@
 ﻿using AspNetCore.Totp.Interface.Models;
+using GameShop.ViewModels.Catalog;
 using GameShop.ViewModels.System.Users;
 using Microsoft.AspNetCore.Http;
 using System;
@@ -12,7 +13,9 @@ namespace GameShop.Application.Services
 {
     public interface ITOTPService
     {
-        Task<string> GetCode(string userName, string passWord);
+        Task<bool> TurnOnOTP(OTPSwitchDTO req);
+        Task<bool> TurnOffOTP(OTPSwitchDTO req);
+        Task<bool> CheckIsOn(OTPCheckDTO req);
         //Task<TotpSetup> GetQR(string email);
         Task<bool> Validate(ValidateOTPDTO req);
         Task<Bitmap> GenerateQrCodeImage(string userName, string passWord);

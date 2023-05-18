@@ -222,10 +222,6 @@ namespace GameShop.Application.Services.Games
 
                 _context.Games.Remove(game);
                 var elasticGame = _mapper.Map<GameElasticModel>(game);
-                elasticGame.GenreSuggest = new CompletionField
-                {
-                    Input = elasticGame.GenreName.ToArray()
-                };
 
                  await _elasticSearchUtil.DeleteAsync<GameElasticModel>(elasticGame.ESId, _elasticSearchConfig.Common.GameIndex, ElasticServer.Common);
                 return await _context.SaveChangesAsync();
@@ -388,13 +384,65 @@ namespace GameShop.Application.Services.Games
                     game.FilePath = await Savefile(request.FileGame);
                 }
                 _context.Games.Update(game);
-                var elasticGame = _mapper.Map<GameElasticModel>(game);
+                var gameView = new GameViewModel()
+                {
+                    CreatedDate = game.CreatedDate,
+                    Id = game.Id,
+                    Name = game.GameName,
+                    Description = game.Description,
+                    UpdatedDate = game.UpdatedDate,
+                    Gameplay = game.Gameplay,
+                    Discount = game.Discount,
+                    PublisherId = game.PublisherId,
+                    PublisherName = game.Publisher.Name,
+                    GenreName = new List<string>(),
+                    GenreIDs = game.GameInGenres.Select(y => y.GenreID).ToList(),
+                    Status = game.Status.ToString(),
+                    Price = game.Price,
+                    ListImage = new List<string>(),
+                    SRM = new SystemRequireMin()
+                    {
+                        OS = game.SystemRequirementMin.OS,
+                        Processor = game.SystemRequirementMin.Processor,
+                        Memory = game.SystemRequirementMin.Memory,
+                        Graphics = game.SystemRequirementMin.Graphics,
+                        Storage = game.SystemRequirementMin.Storage,
+                        AdditionalNotes = game.SystemRequirementMin.Storage,
+                        Soundcard = game.SystemRequirementMin.Soundcard
+                    },
+
+                    SRR = new SystemRequirementRecommend()
+                    {
+                        OS = game.SystemRequirementRecommended.OS,
+                        Processor = game.SystemRequirementRecommended.Processor,
+                        Memory = game.SystemRequirementRecommended.Memory,
+                        Graphics = game.SystemRequirementRecommended.Graphics,
+                        Storage = game.SystemRequirementRecommended.Storage,
+                        AdditionalNotes = game.SystemRequirementRecommended.Storage,
+                        Soundcard = game.SystemRequirementRecommended.Soundcard
+                    }
+                };
+                var genres = _context.Genres.AsQueryable();
+
+                foreach (var genre in gameView.GenreIDs)
+                {
+                    var name = genres.Where(x => x.Id == genre).Select(y => y.GenreName).FirstOrDefault();
+                    gameView.GenreName.Add(name);
+                }
+
+                var thumbnailimage = _context.GameImages.AsQueryable();
+
+                var listgame = thumbnailimage.Where(x => x.GameID == gameView.Id).Select(y => y.ImagePath).ToList();
+                gameView.ListImage = listgame;
+
+                var elasticGame = _mapper.Map<GameElasticModel>(gameView);
                 elasticGame.GenreSuggest = new CompletionField
                 {
                     Input = elasticGame.GenreName.ToArray()
                 };
 
                 await _elasticSearchUtil.UpdateAsync(elasticGame, _elasticSearchConfig.Common.GameIndex, ElasticServer.Common);
+
                 return await _context.SaveChangesAsync();
             }
         }

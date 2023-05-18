@@ -26,19 +26,19 @@ namespace GameShop.Controllers
         }
 
         [HttpGet("OTP-on")]
-        public async Task<IActionResult> TurnOnOTP([FromBody]OTPSwitchDTO req)
+        public async Task<IActionResult> TurnOnOTP([FromQuery]OTPSwitchDTO req)
         {
             var response = await _totpService.TurnOnOTP(req);
             return Ok(response);
         }
         [HttpGet("OTP-off")]
-        public async Task<IActionResult> TurnOffOTP([FromBody] OTPSwitchDTO req)
+        public async Task<IActionResult> TurnOffOTP([FromQuery] OTPSwitchDTO req)
         {
             var response = await _totpService.TurnOffOTP(req);
             return Ok(response);
         }
         [HttpGet("OTP-check")]
-        public async Task<IActionResult> CheckOTP([FromBody] OTPCheckDTO req)
+        public async Task<IActionResult> CheckOTP([FromQuery] OTPCheckDTO req)
         {
             var response = await _totpService.CheckIsOn(req);
             return Ok(response);

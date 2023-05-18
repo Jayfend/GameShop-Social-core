@@ -93,7 +93,10 @@ namespace GameShop.Application.Services
             {
                 throw new GameShopException("Tài khoản hoặc mật khẩu không chính xác");
             }
-
+            if(user.OTPValue != null)
+            {
+                throw new GameShopException("Bạn đã bật OTP rồi");
+            }
             var secretKey = GenerateRecoveryCodes();
             user.OTPValue = secretKey;
             await _userManager.UpdateAsync(user);

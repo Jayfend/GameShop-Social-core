@@ -940,7 +940,6 @@ namespace GameShop.Application.Services.Games
             }
             var publisher = await _context.Publishers.Where(x => x.Id == game.PublisherId).FirstOrDefaultAsync();
             var keyList = await _redisUtil.HashGetAllAsync(string.Format(_redisConfig.DSMKey, publisher.Name, game.GameName));
-            var gameUpdateList = new List<SoldGame>();
             foreach (var _key in keyList)
             {
                 var dbKey = JsonConvert.DeserializeObject<Data.Entities.Key>(_key);
@@ -958,15 +957,14 @@ namespace GameShop.Application.Services.Games
                         entries.Add(hashKey);
                         await _redisUtil.SetMultiAsync(string.Format(_redisConfig.DSMKey, publisher.Name, gameBought.GameName), entries.ToArray(), null);
                         gameBought.isActive = true;
-                        gameUpdateList.Add(gameBought);
-
+                        _context.SoldGames.Update(gameBought);
+                        await _context.SaveChangesAsync();
 
                         return true;
                     }
                 }
             }
-            _context.SoldGames.UpdateRange(gameUpdateList);
-            await _context.SaveChangesAsync();
+           
             return false;
         }
 

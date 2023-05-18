@@ -106,7 +106,7 @@ namespace GameShop.Controllers
         }
 
         [HttpPost("adminregister")]
-        [AllowAnonymous]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> AdminRegister([FromBody] RegisterRequest request)
         {
             if (!ModelState.IsValid)

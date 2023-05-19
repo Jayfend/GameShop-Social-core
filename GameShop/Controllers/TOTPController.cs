@@ -47,6 +47,7 @@ namespace GameShop.Controllers
             return Ok(response);
         }
         [HttpGet("OTP-check-withoutpassword")]
+        [Authorize]
         public async Task<IActionResult> CheckOTPWithoutPassword(string userName)
         {
             var response = await _totpService.CheckIsOnWithoutPassword(userName);

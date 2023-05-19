@@ -14,7 +14,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using static GameShop.Application.Module.ElasticsearchModule;
-using static Microsoft.Extensions.Logging.EventSource.LoggingEventSource;
 
 namespace GameShop.Application.Utilities
 {
@@ -308,11 +307,11 @@ namespace GameShop.Application.Utilities
             return true;
         }
 
-        public async Task<List<GameElasticModel>> SearchSuggestion(List<string> keyWords,string indexName, string server = null)
+        public async Task<List<GameElasticModel>> SearchSuggestion(List<string> keyWords, string indexName, string server = null)
         {
             InitElasticService(server);
-            List<GameElasticModel> result = new List<GameElasticModel>(); 
-            foreach(var keyWord in keyWords)
+            List<GameElasticModel> result = new List<GameElasticModel>();
+            foreach (var keyWord in keyWords)
             {
                 var response = await _elasticClient.SearchAsync<GameElasticModel>(s => s
          .Suggest(su => su
@@ -323,6 +322,7 @@ namespace GameShop.Application.Utilities
                      .Fuzziness(Fuzziness.Auto)
                  )
                  .Size(5)
+                 .SkipDuplicates(false)
              )
          )
      );
@@ -330,12 +330,16 @@ namespace GameShop.Application.Utilities
                 var suggestions = response.Suggest["genreSuggest"]
                     .SelectMany(t => t.Options)
                     .Select(o => o.Source)
+                    .Distinct()
                     .ToList();
-                result = result.Concat(suggestions).Distinct().ToList();
+                result = result.Concat(suggestions).Distinct()
+                     .GroupBy(p => p.Id)
+                  .Select(g => g.First())
+                  .ToList();
+
             }
-         
-           
-            return result.Distinct().Take(5).ToList();
+
+            return result.ToList();
         }
     }
 }

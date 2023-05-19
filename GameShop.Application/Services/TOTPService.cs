@@ -97,10 +97,14 @@ namespace GameShop.Application.Services
             {
                 return false;
             }
-            var secretKey = GenerateRecoveryCodes();
-            user.OTPValue = secretKey;
-            await _userManager.UpdateAsync(user);
-            return true;
+            else
+            {
+                var secretKey = GenerateRecoveryCodes();
+                user.OTPValue = secretKey;
+                await _userManager.UpdateAsync(user);
+                return true;
+            }
+          
         }
 
         //public async Task<TotpSetup> GetQR(string email)

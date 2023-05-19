@@ -95,7 +95,7 @@ namespace GameShop.Application.Services
             }
             if(user.OTPValue != null)
             {
-                throw new GameShopException("Bạn đã bật OTP rồi");
+                return false;
             }
             var secretKey = GenerateRecoveryCodes();
             user.OTPValue = secretKey;

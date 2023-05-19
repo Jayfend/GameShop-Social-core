@@ -241,5 +241,23 @@ namespace GameShop.Application.Services
                 return true;
             }
         }
+
+        public async Task<bool> CheckIsOnWithoutPassword(string userName)
+        {
+            var user = await _userManager.FindByNameAsync(userName);
+            if (user == null)
+            {
+                return false;
+            }
+           
+            if (user.OTPValue == null)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
     }
 }

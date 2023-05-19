@@ -538,8 +538,12 @@ namespace GameShop.Application.Services.Games
 
             //elastic
             var suggestions = await _elasticSearchUtil.SearchSuggestion(gameview.GenreName, _elasticSearchConfig.Common.GameIndex, ElasticServer.Common);
-            var deleteItem = suggestions.Where(x=>x.Id == gameview.Id).FirstOrDefault();
-            suggestions.Remove(deleteItem);
+            var deleteItemList = suggestions.Where(x=>x.Id == gameview.Id).ToList();
+            foreach(var deleteItem in deleteItemList)
+            {
+                suggestions.Remove(deleteItem);
+            }
+           
             gameview.GameSuggestionList = suggestions.Distinct().ToList();
             return gameview;
         }

@@ -16,6 +16,7 @@ namespace GameShop.Application.Services
         Task<bool> TurnOnOTP(OTPSwitchDTO req);
         Task<bool> TurnOffOTP(OTPSwitchDTO req);
         Task<bool> CheckIsOn(OTPCheckDTO req);
+        Task<bool> CheckIsOnWithoutPassword(string userName);
         //Task<TotpSetup> GetQR(string email);
         Task<bool> Validate(ValidateOTPDTO req);
         Task<Bitmap> GenerateQrCodeImage(string userName, string passWord);

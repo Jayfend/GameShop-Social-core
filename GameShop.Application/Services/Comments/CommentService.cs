@@ -50,19 +50,20 @@ namespace GameShop.Application.Services.Comments
             {
                 throw new GameShopException("không tìm thấy game");
             }
+            if (await _context.Comments.Where(x => x.UserId == req.UserId && x.GameId == req.GameId).FirstOrDefaultAsync() != null)
+            {
+                throw new GameShopException("Bạn đã bình luận rồi");
+            }
+            if (await _context.Ratings.Where(x => x.UserId == req.UserId && x.GameId == req.GameId).FirstOrDefaultAsync() != null)
+            {
+                throw new GameShopException("Bạn đã đánh giá rồi");
+            }
             var checkBought = await _context.Checkouts.Where(x => x.Username == user.UserName && x.SoldGames.Any(x => x.GameID == req.GameId)).FirstOrDefaultAsync();
             if (checkBought == null)
             {
                 throw new GameShopException("Bạn chưa mua game này");
             }
-            if( await _context.Comments.Where(x=>x.UserId == req.UserId && x.GameId == req.GameId).FirstOrDefaultAsync() != null)
-            {
-                throw new GameShopException("Bạn đã bình luận rồi");
-            }
-            if(await _context.Ratings.Where(x=>x.UserId == req.UserId && x.GameId == req.GameId).FirstOrDefaultAsync()!=null)
-            {
-                throw new GameShopException("Bạn đã đánh giá rồi");
-            }
+          
             var newComment = new Comment()
             {
                Game = game,

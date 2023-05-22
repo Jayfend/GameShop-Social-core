@@ -50,6 +50,10 @@ namespace GameShop.Application.Services.Checkouts
         public async Task<ApiResult<Guid>> CheckoutGame(Guid UserID)
         {
             var user = await _userManager.FindByIdAsync(UserID.ToString());
+            if(user.Email == null)
+            {
+                return new ApiErrorResult<Guid>("Vui lòng cập nhật Email trước khi mua hàng");
+            }
             decimal total = 0;
             var getCart = await _context.Carts.FirstOrDefaultAsync(x => x.UserID == UserID && x.Status == true);
             if (getCart == null)

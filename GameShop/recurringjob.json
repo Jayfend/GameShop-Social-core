@@ -2,7 +2,7 @@
   {
     "job-name": "SyncKeyJob",
     "job-type": "GameShop.Application.Job.SyncKeyJob, GameShop.Application",
-    "cron-expression": "*/1 * * * *",
+    "cron-expression": "*/5 * * * *",
     "timezone": "UTC"
   },
   {

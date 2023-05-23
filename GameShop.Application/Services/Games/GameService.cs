@@ -213,14 +213,14 @@ namespace GameShop.Application.Services.Games
             }
             else
             {
-                var thumbnailImages = _context.GameImages.Where(i => i.GameID == GameID);
-                foreach (var item in thumbnailImages)
-                {
-                    await _storageService.DeleteFileAsync(item.ImagePath);
-                    _context.GameImages.Remove(item);
-                }
-
-                _context.Games.Remove(game);
+                //var thumbnailImages = _context.GameImages.Where(i => i.GameID == GameID);
+                //foreach (var item in thumbnailImages)
+                //{
+                //    await _storageService.DeleteFileAsync(item.ImagePath);
+                //    _context.GameImages.Remove(item);
+                //}
+                game.IsDelete = true;
+                _context.Games.Update(game);
                 var elasticGame = _mapper.Map<GameElasticModel>(game);
 
                  await _elasticSearchUtil.DeleteAsync<GameElasticModel>(elasticGame.ESId, _elasticSearchConfig.Common.GameIndex, ElasticServer.Common);
@@ -230,7 +230,7 @@ namespace GameShop.Application.Services.Games
 
         public async Task<PagedResult<GameViewModel>> GetAllPaging(GetManageGamePagingRequest request)
         {
-            var query = _context.Games.AsQueryable();
+            var query = _context.Games.Where(x=>x.IsDelete == false).AsQueryable();
 
             // filter
             if (!string.IsNullOrEmpty(request.Keyword))
@@ -644,7 +644,7 @@ namespace GameShop.Application.Services.Games
 
         public async Task<PagedResult<GameViewModel>> GetAll(GetManageGamePagingRequest request)
         {
-            var query = _context.Games.AsQueryable();
+            var query = _context.Games.Where(x=>x.IsDelete == false).AsQueryable();
 
             // filter
             if (!string.IsNullOrEmpty(request.Keyword))
@@ -728,7 +728,7 @@ namespace GameShop.Application.Services.Games
 
         public async Task<PagedResult<GameViewModel>> GetSaleGames(GetManageGamePagingRequest request)
         {
-            var query = _context.Games.Where(x => x.Discount > 0);
+            var query = _context.Games.Where(x => x.Discount > 0 && x.IsDelete == false);
 
             // filter
 
@@ -841,7 +841,7 @@ namespace GameShop.Application.Services.Games
 
         public async Task<PagedResult<GameBestSeller>> GetBestSeller(GetManageGamePagingRequest request)
         {
-            var games = await _context.Games.Select(x => new GameBestSeller()
+            var games = await _context.Games.Where(x=>x.IsDelete == false).Select(x => new GameBestSeller()
             {
                 CreatedDate = x.CreatedDate,
                 GameID = x.Id,
@@ -976,7 +976,7 @@ namespace GameShop.Application.Services.Games
 
         public async Task<bool> SyncElasticSearchGames()
         {
-            var gameList = _context.Games.AsQueryable();
+            var gameList = _context.Games.Where(x=>x.IsDelete == false).AsQueryable();
             var data = await gameList.Select(x => new GameViewModel()
             {
                 CreatedDate = x.CreatedDate,

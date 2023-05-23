@@ -25,5 +25,6 @@ namespace GameShop.Data.Entities
         public string FilePath { get; set; }
         public float RatePoint { get; set; }
         public List<Rating> Ratings { get; set; }
+        public bool IsDelete { get; set; }
     }
 }

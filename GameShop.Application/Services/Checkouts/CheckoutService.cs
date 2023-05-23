@@ -22,6 +22,7 @@ using StackExchange.Redis;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using GameShop.Utilities.Configurations;
 using GameShop.Utilities.Redis;
+using static System.Runtime.CompilerServices.RuntimeHelpers;
 
 namespace GameShop.Application.Services.Checkouts
 {
@@ -112,7 +113,7 @@ namespace GameShop.Application.Services.Checkouts
                 _context.Carts.Update(getCart);
 
                 await _context.SaveChangesAsync();
-                
+                var keyCodeList = new Dictionary<string,string>();
                 foreach (var gameBought in gamelist)
                 { var publisher = await _context.Publishers.Where(x => x.Id == gameBought.PublisherId).FirstOrDefaultAsync();
                     var keys =  await _redisUtil.HashGetAllAsync(string.Format(_redisConfig.DSMKey, publisher.Name, gameBought.GameName));
@@ -125,38 +126,43 @@ namespace GameShop.Application.Services.Checkouts
                     }
                      var keyCode = keyList.Where(x => x.GameName == gameBought.GameName && x.Status == true).FirstOrDefault();
                     keyCode.Status = false;
-                    if (keyCode != null)
-                    {
-                        using (MailMessage mail = new MailMessage())
-                        {
-                            mail.From = new MailAddress("stemgameshop@gmail.com");
-                            mail.To.Add(user.Email);
-                            mail.Subject = "Confirm Account";
-                            mail.Body = $@"<html>
-                      <body>
-                      <p>Dear {user.UserName},</p>
-                      <p>Thank for buying {gameBought.GameName},here is your key code {keyCode.KeyCode} </p>
-                      <p>Sincerely,<br>-STEM</br></p>
-                      </body>
-                      </html>
-                     ";
-                            mail.IsBodyHtml = true;
-
-                            using (SmtpClient smtp = new SmtpClient("smtp.gmail.com", 587))
-                            {
-                                smtp.Credentials = new NetworkCredential("stemgameshop@gmail.com", "tditidglubtzxojy");
-                                smtp.EnableSsl = true;
-                                smtp.Send(mail);
-                            }
-                        }
-                    }
+                    keyCodeList.Add(gameBought.GameName, keyCode.KeyCode);
                     List<HashEntry> entries = new List<HashEntry>();
                     var hashKey = new HashEntry(keyCode.Id.ToString(), JsonConvert.SerializeObject(keyCode));
                     entries.Add(hashKey);
                     await _redisUtil.SetMultiAsync(string.Format(_redisConfig.DSMKey, publisher.Name, gameBought.GameName),entries.ToArray(),null);
 
                 }
-              
+                var EmailFormat = "<table><thead><tr><th>Game Name</th><th>Key</th></thead>";
+                foreach (var gameKey in keyCodeList)
+                {
+                    EmailFormat += $"<tr><td>{gameKey.Key}</td><td>{gameKey.Value}</td></tr>";
+                }
+                EmailFormat += "</table>";
+                using (MailMessage mail = new MailMessage())
+                {
+                    mail.From = new MailAddress("stemgameshop@gmail.com");
+                    mail.To.Add(user.Email);
+                    mail.Subject = "Confirm Account";
+                    mail.Body = $@"<html>
+                      <body>
+                      <p>Dear 
+                    {user.UserName},</p>
+                      <p>Thank for buying our games,here is your key code </p>
+                        {EmailFormat}
+                      <p>Sincerely,<br>-STEM</br></p>
+                      </body>
+                      </html>
+                     ";
+                    mail.IsBodyHtml = true;
+
+                    using (SmtpClient smtp = new SmtpClient("smtp.gmail.com", 587))
+                    {
+                        smtp.Credentials = new NetworkCredential("stemgameshop@gmail.com", "tditidglubtzxojy");
+                        smtp.EnableSsl = true;
+                        smtp.Send(mail);
+                    }
+                }
                 return new ApiSuccessResult<Guid>(newCheckout.Id);
             }
         }

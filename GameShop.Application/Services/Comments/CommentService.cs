@@ -69,7 +69,8 @@ namespace GameShop.Application.Services.Comments
                Game = game,
                AppUser = user,
                 Content = req.Content,
-                UserId = user.Id
+                UserId = user.Id,
+                Status = true
                
             };
             var newRating = new Rating()
@@ -77,7 +78,8 @@ namespace GameShop.Application.Services.Comments
                 Game = game,
                 AppUser = user,
                 Point = req.Point,
-                UserId = user.Id
+                UserId = user.Id,
+                Status = true
             };
             await _context.Ratings.AddAsync(newRating);
             await _context.Comments.AddAsync(newComment);

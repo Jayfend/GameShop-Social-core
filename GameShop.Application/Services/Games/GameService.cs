@@ -487,6 +487,7 @@ namespace GameShop.Application.Services.Games
                 PublisherId = x.PublisherId,
                 PublisherName = x.Publisher.Name,
                 ListImage = x.GameImages.Select(x=>x.ImagePath).ToList(),
+                IsDelete = x.IsDelete,
                 SRM = new SystemRequireMin()
                 {
                     OS = x.SystemRequirementMin.OS,

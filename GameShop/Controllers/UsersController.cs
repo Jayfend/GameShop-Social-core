@@ -140,7 +140,7 @@ namespace GameShop.Controllers
         }
 
         [HttpPut("{Id}/roles")]
-        [Authorize(Roles = "admin")]
+        [AllowAnonymous]
         public async Task<IActionResult> RoleAssign(Guid Id, [FromBody] RoleAssignRequest request)
         {
             if (!ModelState.IsValid)

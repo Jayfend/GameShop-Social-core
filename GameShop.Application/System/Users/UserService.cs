@@ -265,8 +265,9 @@ namespace GameShop.Application.System.Users
                 //LastName = request.LastName,
                 //PhoneNumber = request.PhoneNumber,
             };
-
+          
             var result = await _userManager.CreateAsync(user, request.Password);
+            await _userManager.AddToRoleAsync(user, "User");
 
             if (result.Succeeded)
             {
@@ -542,8 +543,8 @@ namespace GameShop.Application.System.Users
                 //LastName = request.LastName,
                 //PhoneNumber = request.PhoneNumber,
             };
-
             var result = await _userManager.CreateAsync(user, request.Password);
+            await _userManager.AddToRoleAsync(user, "User");
             if (result.Succeeded)
             {
                 return new ApiSuccessResult<bool>();

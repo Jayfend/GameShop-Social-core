@@ -70,7 +70,7 @@ namespace GameShop.Application.Services.Comments
                AppUser = user,
                 Content = req.Content,
                 UserId = user.Id,
-                Status = true
+                Status = true,
                
             };
             var newRating = new Rating()
@@ -96,7 +96,6 @@ namespace GameShop.Application.Services.Comments
                 throw new GameShopException("không tìm thấy game");
             }
             var commentList = await _context.Comments.Where(x=>x.GameId == req.GameId).ToListAsync();
-            
             var totalRow = commentList.Count();
             var comments = _mapper.Map<List<CommentDTO>>(commentList);          
                 comments = comments.Skip((req.PageIndex - 1) * req.PageSize)
@@ -111,6 +110,11 @@ namespace GameShop.Application.Services.Comments
                 else
                 {
                     comment.Rating = rating.Point;
+                }
+                var userImage = await _context.UserAvatar.Where(x=>x.UserID == comment.UserId).FirstOrDefaultAsync();
+                if(userImage != null) 
+                {
+                    comment.ImagePath = userImage.ImagePath;
                 }
             }
                 //select and projection

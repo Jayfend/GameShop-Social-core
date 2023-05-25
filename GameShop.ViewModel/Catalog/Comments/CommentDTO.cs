@@ -14,6 +14,7 @@ namespace GameShop.ViewModels.Catalog.Comments
         public Guid GameId { get; set; }
         public Guid UserId { get; set; }
         public int Rating { get; set; }
+        public string ImagePath { get; set; }
 
     }
 }

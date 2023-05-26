@@ -48,5 +48,6 @@ namespace GameShop.Controllers
                 var response = await _publisherService.GenerateKeyAsync(publisherId, amount);
                 return Ok(response);
         }
+   
     }
 }

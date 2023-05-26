@@ -51,7 +51,7 @@ namespace GameShop.Application.Services.Publishers
 
         public async Task<List<string>> GenerateKeyAsync(Guid publisherId, int amount)
         {
-            var publisher = await _context.Publishers.Where(x => x.Id == publisherId).Include(x => x.Games).FirstOrDefaultAsync();
+            var publisher = await _context.Publishers.Where(x => x.Id == publisherId).Include(x => x.Games.Where(x=>x.IsDelete == false)).FirstOrDefaultAsync();
             if (publisher == null)
             {
                 throw new GameShopException("không tìm thấy publisher");
@@ -114,7 +114,7 @@ namespace GameShop.Application.Services.Publishers
             var publisherList = await _context.Publishers.ToListAsync();
             foreach (var publisher in publisherList)
             {
-                var gameList = await _context.Games.Where(x => x.PublisherId == publisher.Id).ToListAsync();
+                var gameList = await _context.Games.Where(x => x.PublisherId == publisher.Id && x.IsDelete == false).ToListAsync();
 
                 foreach (var game in gameList)
                 {
